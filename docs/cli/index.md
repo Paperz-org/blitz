@@ -1,0 +1,11 @@
+# Installation
+
+## Using [pipx](https://pipx.pypa.io/stable/installation/) (recommanded)
+```bash
+pipx install git+ssh://git@github.com/Paperz-org/blitz.git@feature/add-doc
+```
+
+## Using pip
+```bash
+pip install --user git+ssh://git@github.com/Paperz-org/blitz.git@feature/add-doc 
+```

@@ -1,0 +1,2 @@
+class NoChangesDetectedError(Exception):
+    pass
