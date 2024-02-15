@@ -1,0 +1,106 @@
+site_name: Blitz
+site_url: https://paperz-org.github.io/blitz/
+
+repo_name: Paperz-org/blitz
+repo_url: https://github.com/Paperz-org/blitz
+
+theme:
+  name: material
+  favicon: "images/logo.png"
+  icon:
+    repo: fontawesome/brands/github-alt
+    annotation: material/plus-circle
+  logo: "images/logo.png"
+  palette:
+    - media: "(prefers-color-scheme: dark)"
+      primary: black
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+    - media: "(prefers-color-scheme: light)"
+      primary: blue grey
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+  features:
+    - content.tabs.link
+    - content.code.annotate
+    - content.code.copy
+    - announce.dismiss
+    - navigation.tabs
+    - navigation.footer
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Paperz-org
+
+extra_css:
+  - css/termynal.css
+  - css/custom.css
+extra_javascript:
+  - js/termynal.js
+  - js/custom.js
+
+plugins:
+  search: null
+  mkdocstrings:
+    handlers:
+      python:
+        options:
+          extensions:
+            - griffe_typingdoc
+          show_root_heading: true
+          show_if_no_docstring: true
+          preload_modules:
+            - httpx
+            - starlette
+          inherited_members: true
+          members_order: source
+          separate_signature: true
+          unwrap_annotated: true
+          filters:
+            - "!^_"
+          merge_init_into_class: true
+          docstring_section_style: spacy
+          signature_crossrefs: true
+          show_symbol_type_heading: true
+          show_symbol_type_toc: true
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - mkdocs-typer
+
+nav:
+  - Get Started:
+      - Welcome to Blitz: index.md
+      - Features: features.md
+      - Installation: installation.md
+      - Quickstart: quickstart.md
+  - Blitz file:
+      - Overview: blitzfile/index.md
+      - Config: blitzfile/config.md
+      - Resources: blitzfile/resources.md
+      - Relationships: blitzfile/relationships.md
+      - Blitz file reference: blitzfile/reference.md
+  - CLI:
+      - Installation: cli/index.md
+      - Commands:
+          - Create: cli/create.md
+          - Start: cli/start.md
+          - List: cli/list.md
+          - Release: cli/release.md
+      - References: cli/references.md
+  - API:
+      - Blitz API: api/index.md
+  - Dashboard:
+      - Dashboard: dashboard.md

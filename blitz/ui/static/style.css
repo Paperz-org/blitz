@@ -1,0 +1,29 @@
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+    background-color: #fefefe;
+    font-family: "Fira Sans", Roboto, -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --q-dark-page: #1e2129;
+  }
+
+html:has(.body--dark) {
+    background-color: #1e2129;
+}
+
+.body--dark .q-header {
+    background-color: #14151a;
+  }
+
+a:link:not(.browser-window *),
+a:visited:not(.browser-window *) {
+  color: inherit !important;
+  text-decoration: none;
+}
+
+.q-card {
+    background-color: #f8f8f8;
+}
+.q-card--dark {
+    background-color: #1e2129;
+}
