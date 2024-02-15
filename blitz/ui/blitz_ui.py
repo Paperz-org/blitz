@@ -1,4 +1,6 @@
 from functools import lru_cache
+from pathlib import Path
+from typing import Any
 from blitz.app import BlitzApp
 from blitz.core import BlitzCore
 from blitz.settings import Settings, get_settings
@@ -23,15 +25,15 @@ class BlitzUI:
         self._current_app = None
 
     @property
-    def current_project(self):
+    def current_project(self) -> str | None:
         return self._current_project
 
     @property
-    def current_app(self):
+    def current_app(self) -> BlitzApp | None:
         return self._current_app
 
     @current_app.setter
-    def current_app(self, app: BlitzApp):
+    def current_app(self, app: BlitzApp) -> None:
         if not self.current_app:
             self._current_app = app
             self._current_project = app.name
@@ -43,7 +45,7 @@ class BlitzUI:
     #         self._current_project = project
     #         self._current_app = self.get_current_app()
 
-    def get_ressources(self):
+    def get_ressources(self) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
         columns = [
             {
                 "name": "name",
@@ -71,18 +73,19 @@ class BlitzUI:
 
         return columns, rows
 
-    def get_current_app(self):
+    def get_current_app(self) -> BlitzApp | None:
         if self.current_project:
             return self.blitz_app.get_app(self.current_project)
+        return None
 
     def add(self, blitz_app: BlitzCore) -> None:
         self.blitz_app = blitz_app
 
-    def _get_preprompt(self):
-        with open("blitz/ui/preprompt.txt", "r") as f:
+    def _get_preprompt(self) -> str:
+        with open(Path(__file__).parent / "./preprompt.txt", "r") as f:
             return f.read()
 
-    def reset_preprompt(self):
+    def reset_preprompt(self) -> None:
         self.preprompt = self._get_preprompt()
         print(self.preprompt)
 

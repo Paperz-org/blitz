@@ -16,7 +16,7 @@ Choose the format of the blitz file [json/yaml] (yaml):
 
 <span style="color: #af87ff; font-weight: bold;">your-blitz-app</span> created successfully !
 To start your app, you can use:
-    <span style="color: #af87ff; font-weight: bold;">blitz start tutu</span>
+    <span style="color: #af87ff; font-weight: bold;">blitz start your-blitz-app</span>
 ```
 
 </div>
