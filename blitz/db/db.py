@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from sqlmodel import Session, create_engine
 from typing import Any, Generator
 from functools import lru_cache
@@ -48,7 +46,7 @@ def get_db(blitz_app: "BlitzApp", in_memory: bool, file_name: str) -> Generator[
         try:
             yield session
             session.commit()
-        except:
+        except Exception:
             session.rollback()
         finally:
             session.close()

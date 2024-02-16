@@ -11,17 +11,13 @@ if TYPE_CHECKING:
 
 
 class BlitzAdmin:
-    def __init__(
-        self, blitz_app: "BlitzApp", settings: Settings = get_settings()
-    ) -> None:
+    def __init__(self, blitz_app: "BlitzApp", settings: Settings = get_settings()) -> None:
         self.blitz_app = blitz_app
         self.admin = Admin(
             title=f"{blitz_app.name} Admin",
             # FIXME find a better way to get the engine
-            engine=get_sqlite_engine(
-                blitz_app, in_memory=blitz_app._in_memory, file_name="app.db"
-            ),
-            base_url=f"/admin/",
+            engine=get_sqlite_engine(blitz_app, in_memory=blitz_app._in_memory, file_name="app.db"),
+            base_url="/admin/",
         )
         for resource in blitz_app.resources:
             self.admin.add_view(ModelView(resource.model))

@@ -22,7 +22,7 @@ Here is an example of how simple a Blitz file is:
     name: Hello world
     description: Here is a simple blitz configuration file.
     version: 0.1.0
-  models:
+  resources:
   - name: TodoList
     fields:
       name: str

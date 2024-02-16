@@ -12,14 +12,13 @@ class ProjectDetail:
         description: str = "",
         version: str = "",
     ) -> None:
-        self.app_name=app_name
+        self.app_name = app_name
         self.project_name = project_name
         self.date = date
         self.description = description
         self.version = version
 
-
-    def render(self):
+    def render(self) -> None:
         with ui.link(target=f"/projects/{self.app_name}").classes("w-full hover:bg-slate-700 rounded-sm"), ui.grid(
             columns=20
         ).classes("w-full my-2"):
@@ -34,20 +33,16 @@ class HomePage:
     def __init__(self, blitz_ui: BlitzUI = get_blitz_ui()) -> None:
         self.blitz_ui = blitz_ui
 
-    def render_page(self):
-        with ui.element("div").classes(
-            "w-full justify-center items-center content-center p-10"
-        ):
+    def render_page(self) -> None:
+        with ui.element("div").classes("w-full justify-center items-center content-center p-10"):
             with ui.card().classes("no-shadow border align-center"):
                 with ui.row().classes("w-full justify-between items-center"):
                     ui.label("Blitz Projects").classes("text-2xl")
                     with ui.button("New").props("disabled").props("flat"):
-                        ui.tooltip(
-                            "This feature is not developed yet. Create a new project with the CLI."
-                        )
-                ui.input(label="Search for project").props(
-                    "borderless standout dense"
-                ).classes(" rounded-lg px-2 border-solid border w-full my-5")
+                        ui.tooltip("This feature is not developed yet. Create a new project with the CLI.")
+                ui.input(label="Search for project").props("borderless standout dense").classes(
+                    " rounded-lg px-2 border-solid border w-full my-5"
+                )
                 with ui.grid(columns=20).classes("w-full"):
                     ui.label("App").classes("col-span-2 pl-2")
                     ui.label("Name").classes("col-span-2 pl-2")
@@ -58,4 +53,9 @@ class HomePage:
                 ui.separator()
 
                 for app in self.blitz_ui.apps:
-                    ProjectDetail(app_name=app.name, project_name=app.file.config.name, description=app.file.config.description,version=app.file.config.version).render()
+                    ProjectDetail(
+                        app_name=app.name,
+                        project_name=app.file.config.name,
+                        description=app.file.config.description or "",
+                        version=app.file.config.version,
+                    ).render()

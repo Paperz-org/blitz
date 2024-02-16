@@ -17,6 +17,9 @@ def write_blitz_file(blitz_file: BlitzFile, blitz_file_format: str) -> Path:
     else:
         raise ValueError("Invalid blitz file format")
 
+    if blitz_file.path is None:
+        # TODO: handle error
+        raise Exception
     with open(blitz_file.path, "w") as file:
         file.write(blitz_file_data)
 

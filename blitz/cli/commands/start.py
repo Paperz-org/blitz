@@ -54,7 +54,9 @@ def start_blitz(
             os.environ["BLITZ_VERSION"] = str(version)
         os.environ["BLITZ_ADMIN"] = str(admin).lower()
         os.environ["BLITZ_CONFIG_ROUTE"] = str(config_route).lower()
-
+        if blitz_app.file.path is None:
+            # TODO: handle error
+            raise Exception
         server_config = uvicorn.Config(
             "blitz.api:create_blitz_api",
             factory=True,

@@ -5,6 +5,7 @@ import yaml
 from typing import Any, NoReturn
 
 from blitz.models.blitz import BlitzFile
+from blitz.models.blitz.file import FileType
 
 
 def _get_data_from_json(file: Path) -> dict[str, Any]:
@@ -33,9 +34,7 @@ def _find_blitz_file_path(blitz_app_path: Path) -> Path:
     json_blitz_file = blitz_app_path / "blitz.json"
 
     if yaml_blitz_file.exists() and json_blitz_file.exists():
-        raise ValueError(
-            f"Found both a YAML and a JSON Blitz file in {blitz_app_path}."
-        )
+        raise ValueError(f"Found both a YAML and a JSON Blitz file in {blitz_app_path}.")
     if yaml_blitz_file.exists():
         return yaml_blitz_file
     elif json_blitz_file.exists():
@@ -51,14 +50,14 @@ def parse_file(file_path: Path) -> BlitzFile:
     }.get(file_path.suffix, _no_parser_for_suffix)(file_path)
     return BlitzFile(
         path=file_path.absolute(),
-        file_type=file_path.suffix.removeprefix("."),
+        file_type=FileType(file_path.suffix.removeprefix(".")),
         config=blitz_file_fields["config"],
         resources_configs=blitz_file_fields["resources"],
         raw_file=blitz_file_fields,
     )
 
 
-def create_blitz_file_from_dict(blitz_file_content: dict) -> BlitzFile:
+def create_blitz_file_from_dict(blitz_file_content: dict[str, dict[str, Any]]) -> BlitzFile:
     return BlitzFile(
         config=blitz_file_content.get("config"),
         resources_configs=blitz_file_content.get("resources"),
