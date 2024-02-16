@@ -1,30 +1,23 @@
 import logging
 from typing import TYPE_CHECKING, Annotated
 
-from blitz.app import BlitzApp
-from blitz.core import BlitzCore
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
-from blitz.ui.pages.admin import AdminPage
 from blitz.ui.pages.blitz_file import BlitzFilePage
 from blitz.ui.pages.dashboard import DashboardPage
 from blitz.ui.pages.diagram import MermaidPage
 from blitz.ui.pages.gpt_builder import AskGPTPage
 from blitz.ui.pages.log import LogPage
-from blitz.ui.pages.projects import HomePage
 from blitz.ui.pages.swagger import SwaggerPage
 from pathlib import Path
 from nicegui import ui
 
-from nicegui import ui
-from pydantic import BaseModel
-from nicegui import app, ui
+from nicegui import app
 
-from blitz.ui.components.header import FrameComponent, HeaderComponent
+from blitz.ui.components.header import FrameComponent
 
 
-from fastapi import Depends, FastAPI, Request
+from fastapi import Depends, Request
 
-from nicegui import app, ui
 
 if TYPE_CHECKING:
     from blitz.api.blitz_api import BlitzAPI

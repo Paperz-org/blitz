@@ -24,7 +24,7 @@ def release_blitz(
     try:
         new_version = app.release(level.value, force=force)
     except NoChangesDetectedError:
-        typer.echo(f"No changes detected since the latest version. Use --force to release anyway.")
+        typer.echo("No changes detected since the latest version. Use --force to release anyway.")
         raise typer.Exit(code=1)
     typer.echo(f"Blitz app {blitz_app_name} released at version {new_version}")
     typer.echo("You can now start your versioned blitz app by running:")

@@ -24,6 +24,6 @@ class LogComponent:
         self.blitz_ui = blitz_ui
         self._logger = logging.getLogger("uvicorn.access")
 
-    def render(self):
+    def render(self) -> None:
         log = ui.log(max_lines=None).classes("w-full h-64 text-sm")
         self._logger.addHandler(LogElementHandler(log))

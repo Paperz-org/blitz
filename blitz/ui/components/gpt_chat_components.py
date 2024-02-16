@@ -1,13 +1,14 @@
 import json
 import re
-from typing import Any
+from typing import Any, cast
 from nicegui import ui
+from nicegui.elements.dialog import Dialog
+from nicegui.elements.expansion import Expansion
 from pydantic import ValidationError
 from blitz.parser import create_blitz_file_from_dict
-from blitz.ui.components.json_editor import JsonEditorComponent
+from openai.types.chat import ChatCompletionMessageParam
 
 
-from blitz.ui.components.header import DARK_PINK, MAIN_PINK
 import yaml
 
 
@@ -21,12 +22,12 @@ class ResponseJSON:
         self.blitz_app_title = self._get_expansion_title(self.json)
         self.color = self._get_color(self.is_valid_blitz_file)
 
-        self._expansion = None
+        self._expansion: Expansion | None = None
         self._expansion_is_open = True
-        self._dialog = None
+        self._dialog: Dialog | None = None
 
     @staticmethod
-    def _get_expansion_title(blitz_file: dict[str, str]) -> str:
+    def _get_expansion_title(blitz_file: dict[str, dict[str, Any]]) -> str:
         name_part = blitz_file.get("config", {}).get("name", "Blitz App")
         version = blitz_file.get("config", {}).get("version", "0.0.0")
         return f"{name_part} v{version}"
@@ -46,26 +47,33 @@ class ResponseJSON:
             return True
 
     @staticmethod
-    def extract_json(text):
+    def extract_json(text: str) -> Any:
         json_pattern = r"```json([\s\S]*?)```"
-        return json.loads(re.search(json_pattern, text).group(1))
+        match = re.search(json_pattern, text)
+        if match is None:
+            # TODO: handle error
+            raise Exception
+        return json.loads(match.group(1))
 
-    async def copy_code(self):
+    async def copy_code(self) -> None:
         ui.run_javascript("navigator.clipboard.writeText(`" + str(self.json) + "`)")
         ui.notify("Copied to clipboard", type="info", color="green")
 
-    def action_buttons(self):
+    def action_buttons(self) -> None:
         with ui.row(wrap=False).classes("items-center"):
             ui.button(
                 icon="content_copy",
                 color="transparent",
                 on_click=self.copy_code,
             ).props("dense flat size=xm color=grey")
-            ui.button(
-                icon="file_download", color="transparent", on_click=self._dialog.open
-            ).props("dense flat size=xm color=grey")
+            if self._dialog is None:
+                # TODO: handle error
+                raise Exception
+            ui.button(icon="file_download", color="transparent", on_click=self._dialog.open).props(
+                "dense flat size=xm color=grey"
+            )
 
-    def download_dialog(self):
+    def download_dialog(self) -> None:
         with ui.dialog() as self._dialog, ui.card().classes("w-full px-4"):
             if not self.is_valid_blitz_file:
                 self.invalid_blitz_file()
@@ -78,31 +86,32 @@ class ResponseJSON:
                 ).props("flat")
                 ui.button("Export as YAML", on_click=self._download_yaml).props("flat")
 
-    def _download_json(self):
+    def _download_json(self) -> None:
         ui.download(
             str.encode(json.dumps(self.json, indent=4)),
             filename=self._get_filename("json"),
         )
 
-    def _download_yaml(self):
-        ui.download(
-            str.encode(yaml.dump(self.json)), filename=self._get_filename("yaml")
-        )
+    def _download_yaml(self) -> None:
+        ui.download(str.encode(yaml.dump(self.json)), filename=self._get_filename("yaml"))
 
     def _get_filename(self, extension: str) -> str:
         return f"{self.blitz_app_title.replace(' ', '_').replace('.', '_').lower()}.{extension}"
 
-    def invalid_blitz_file(self):
+    def invalid_blitz_file(self) -> None:
         with ui.row().classes("items-center"):
             ui.icon("error", color="red", size="sm")
             ui.label("This is not a valid Blitz file.").classes("text-red")
 
-    def _toggle_expansion(self):
+    def _toggle_expansion(self) -> None:
         self._expansion_is_open = not self._expansion_is_open
+        if self._expansion is None:
+            # TODO: handle error
+            raise Exception
         self._expansion.value = self._expansion_is_open
 
     @ui.refreshable
-    def render(self):
+    def render(self) -> None:
         self.download_dialog()
         with ui.row(wrap=False).classes("items-center w-full"):
             with ui.expansion(
@@ -124,7 +133,7 @@ class MarkdownResponse:
         self.text = text
 
     @ui.refreshable
-    def render(self):
+    def render(self) -> None:
         ui.markdown(self.text)
 
 
@@ -141,10 +150,10 @@ class GPTChatComponent:
         self.text = text
         self.icon = icon
         self.avatar_color = avatar_color
-        self.text_components = None
+        self.text_components: list[Any] = []
 
     @ui.refreshable
-    def render(self):
+    def render(self) -> None:
         with ui.row(wrap=False).classes("w-full"):
             ui.space().classes("w-1/3")
             with ui.column().classes("justify-start w-2/3"):
@@ -162,10 +171,10 @@ class GPTChatComponent:
                         ui.markdown(self.text)
             ui.space().classes("w-1/3")
 
-    def as_gpt_dict(self) -> dict[str, str]:
+    def as_gpt_dict(self) -> ChatCompletionMessageParam:
         raise NotImplementedError
 
-    def to_dict(self) -> dict[str, str]:
+    def to_dict(self) -> dict[str, Any]:
         raise NotImplementedError
 
 
@@ -173,36 +182,33 @@ class UserQuestion(GPTChatComponent):
     LABEL = "You"
     ICON = "person"
     AVATAR_COLOR = "#a72bff"
-    ROLE = "user"
 
     def __init__(self, text: str = "") -> None:
-        super().__init__(
-            label=self.LABEL, text=text, icon=self.ICON, avatar_color=self.AVATAR_COLOR
-        )
+        super().__init__(label=self.LABEL, text=text, icon=self.ICON, avatar_color=self.AVATAR_COLOR)
 
-    def as_gpt_dict(self) -> dict[str, str]:
-        return {"role": self.ROLE, "content": self.text}
+    def as_gpt_dict(self) -> ChatCompletionMessageParam:
+        return {
+            "content": self.text,
+            "role": "user",
+            "name": "user",
+        }
 
-    def to_dict(self) -> dict[str, str]:
-        return self.as_gpt_dict()
+    def to_dict(self) -> dict[str, Any]:
+        return cast(dict[str, Any], self.as_gpt_dict())
 
     @classmethod
     def from_gpt_dict(cls, gpt_dict: dict[str, str]) -> "UserQuestion":
-        return cls(text=gpt_dict.get("content"))
+        return cls(text=gpt_dict.get("content", ""))
 
 
 class GPTResponse(GPTChatComponent):
     LABEL = "GPT"
     ICON = "self_improvement"
     AVATAR_COLOR = "#74aa9c"
-    ROLE = "assistant"
 
     def __init__(self, text: str = "", text_is_finished: bool = False) -> None:
-        super().__init__(
-            label=self.LABEL, text=text, icon=self.ICON, avatar_color=self.AVATAR_COLOR
-        )
-        self._text_is_finished = None
-        self.text_is_finished = text_is_finished
+        super().__init__(label=self.LABEL, text=text, icon=self.ICON, avatar_color=self.AVATAR_COLOR)
+        self._text_is_finished = text_is_finished
 
     def add(self, text: str) -> None:
         self.text += text
@@ -221,20 +227,24 @@ class GPTResponse(GPTChatComponent):
         else:
             self._text_is_finished = value
 
-    def as_gpt_dict(self) -> dict[str, str]:
-        return {"role": self.ROLE, "content": self.text}
+    def as_gpt_dict(self) -> ChatCompletionMessageParam:
+        return {
+            "content": self.text,
+            "role": "system",
+            "name": "Blitz",
+        }
 
-    def to_dict(self) -> dict[str, str]:
-        dict_ = self.as_gpt_dict()
+    def to_dict(self) -> dict[str, Any]:
+        dict_ = cast(dict[str, Any], self.as_gpt_dict())
         dict_["text_is_finished"] = self.text_is_finished
         return dict_
 
     @staticmethod
-    def split_response(text) -> list:
+    def split_response(text: str) -> list[Any]:
         json_pattern = r"(```json[\s\S]*?```)"
 
         # Search for JSON content in the Markdown text
-        components = []
+        components: list[ResponseJSON | MarkdownResponse] = []
         for match in re.split(json_pattern, text):
             if re.match(json_pattern, match):
                 components.append(ResponseJSON(match))
@@ -243,7 +253,5 @@ class GPTResponse(GPTChatComponent):
         return components
 
     @classmethod
-    def from_gpt_dict(cls, gpt_dict: dict[str, str]) -> "UserQuestion":
-        return cls(
-            text=gpt_dict.get("content"), text_is_finished=gpt_dict["text_is_finished"]
-        )
+    def from_gpt_dict(cls, gpt_dict: dict[str, Any]) -> "GPTChatComponent":
+        return cls(text=gpt_dict.get("content", ""), text_is_finished=gpt_dict["text_is_finished"])

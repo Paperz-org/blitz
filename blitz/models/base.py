@@ -172,7 +172,7 @@ def create_resource_model(
         else:
             extra["nullable"] = True
 
-        if extra["nullable"] is True and not "default" in extra:
+        if extra["nullable"] is True and "default" not in extra:
             extra["default"] = None
 
         if not isinstance(field.unique, _BlitzNullValue):

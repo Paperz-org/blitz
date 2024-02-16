@@ -18,14 +18,13 @@ class SwaggerPrinter:
     def __init__(self, routes: list[BlitzResource]) -> None:
         self.routes = routes
 
-    def _get_create_panel(self, resource_name: str):
+    def _get_create_panel(self, resource_name: str) -> Panel:
         return Panel(
             f"[{self.POST_STYLE}]POST    [white bold]/{resource_name} [white dim frame]Create One",
             border_style=self.POST_STYLE,
         )
 
-    def _get_read_panel(self, resource_name: str):
-
+    def _get_read_panel(self, resource_name: str) -> list[Panel]:
         return [
             Panel(
                 f"[{self.GET_STYLE}]GET     [white bold]/{resource_name} [white dim frame]Get One",
@@ -37,23 +36,23 @@ class SwaggerPrinter:
             ),
         ]
 
-    def _get_can_delete_panel(self, resource_name: str):
+    def _get_can_delete_panel(self, resource_name: str) -> Panel:
         return Panel(
             f"[{self.DELETE_STYLE}]DELETE  [white bold]/{resource_name}/{{item_id}} [white dim frame]Delete One",
             border_style=self.DELETE_STYLE,
         )
 
-    def _get_can_update_panel(self, resource_name: str):
+    def _get_can_update_panel(self, resource_name: str) -> Panel:
         return Panel(
             f"[{self.PATCH_STYLE}]PUT     [white bold]/{resource_name}/{{item_id}} [white dim frame]Update One",
             border_style=self.PATCH_STYLE,
         )
 
-    def _get_name_panel(self, resource_name: str):
+    def _get_name_panel(self, resource_name: str) -> Panel:
         return Panel(f"[white bold]{resource_name.upper()}")
 
-    def get_panels(self):
-        panels = []
+    def get_panels(self) -> list[Panel | str]:
+        panels: list[Panel | str] = []
         for resource in self.routes:
             resource_name = resource.config.name.lower()
             panels.append(self._get_name_panel(resource_name))
@@ -66,7 +65,7 @@ class SwaggerPrinter:
             panels.append("\n")
         return panels
 
-    def print(self):
+    def print(self) -> None:
         panels = self.get_panels()
         for panel in panels:
             print(panel)
@@ -74,10 +73,8 @@ class SwaggerPrinter:
 
 def list_routes(
     blitz_app_name: Annotated[str, typer.Argument(..., help="Blitz app name")],
-    model: Annotated[str, typer.Option()] = None,
-    version: Annotated[
-        Optional[str], typer.Option(help="Define the version of the app.")
-    ] = None,
+    model: Annotated[Optional[str], typer.Option()] = None,
+    version: Annotated[Optional[str], typer.Option(help="Define the version of the app.")] = None,
 ) -> None:
     blitz = BlitzCore()
     try:

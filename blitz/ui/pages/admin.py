@@ -6,7 +6,7 @@ class AdminPage:
     def __init__(self, blitz_ui: BlitzUI = get_blitz_ui()) -> None:
         self.blitz_ui = blitz_ui
 
-    def resize_iframe(self):
+    def resize_iframe(self) -> None:
         ui.run_javascript(
             """
             var iframe = document.querySelector('iframe');
@@ -26,7 +26,7 @@ class AdminPage:
             """
         )
 
-    def render_page(self):
+    def render_page(self) -> None:
         self.resize_iframe()
         ui.element("iframe").props(
             f"src={self.blitz_ui.localhost_url}/admin/ frameborder=0 onload=resizeIframe()"

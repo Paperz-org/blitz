@@ -1,6 +1,5 @@
-
 !!! warning
-    
+
     **Please, keep in mind that the Blitz is still in development and may change in the future. We are open to suggestions and contributions.**
 
 The Blitz file is the configuration file used by Blitz to generate the API. It is a simple YAML or JSON file that contains the general configuration of the API and the database models.
@@ -34,7 +33,7 @@ The config section contains the general configuration of the API. It is built as
     }
     ```
 
-> *Pretty easy right ?*
+> _Pretty easy right ?_
 
 ### Resources
 
@@ -49,7 +48,7 @@ The resources section is built as below:
 === "Yaml"
 
     ```yaml
-    models:
+    resources:
     - name: TodoList
       fields:
     - name: Todo
@@ -73,9 +72,9 @@ The resources section is built as below:
 
 Each model is constructed with a `name` and a `fields` section. The `name` is the name of the model and the `fields` section contains the fields of the model.
 
-> *Still pretty easy right ?*
+> _Still pretty easy right ?_
 
-___
+---
 
 #### Fields
 
@@ -88,7 +87,7 @@ Here is an example of a working Blitz file:
 === "Yaml"
 
     ```yaml
-    models:
+    resources:
     - name: TodoList
       fields:
         owner!: str
@@ -125,7 +124,7 @@ Here is an example of a working Blitz file:
 === "Yaml (explicit)"
 
     ```yaml
-    models:
+    resources:
     - name: TodoList
       fields:
         owner:
@@ -143,7 +142,7 @@ Here is an example of a working Blitz file:
         todo_list:
           type: relationship
           relationship: TodoList
-    ``` 
+    ```
 
 === "Json (explicit)"
 
@@ -180,8 +179,7 @@ Here is an example of a working Blitz file:
     ]
     ```
 
-
-> *You can try it in the [Blitz Playground](#)* !
+> _You can try it in the [Blitz Playground](#)_ !
 
 !!! note
 

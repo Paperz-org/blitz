@@ -17,12 +17,12 @@ class BlitzUI:
         self.blitz_app: BlitzCore = BlitzCore()
         self.apps = self.blitz_app.apps
         self.preprompt = self._get_preprompt()
-        
+
         self.settings = settings
         self.localhost_url = f"http://localhost:{settings.BLITZ_PORT}"
-        self.erd = None
-        self._current_project = None
-        self._current_app = None
+        self.erd: str | None = None
+        self._current_project: str | None = None
+        self._current_app: BlitzApp | None = None
 
     @property
     def current_project(self) -> str | None:
@@ -63,6 +63,9 @@ class BlitzUI:
             },
         ]
         rows = []
+        if self.current_app is None:
+            # TODO handle error
+            raise Exception
         for ressource in self.current_app.resources:
             rows.append(
                 {

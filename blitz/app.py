@@ -15,7 +15,12 @@ from loguru import logger
 
 class BlitzApp:
     def __init__(
-        self, name: str, path: Path, file: BlitzFile, in_memory: bool = False, version: Version | None = None
+        self,
+        name: str,
+        path: Path,
+        file: BlitzFile,
+        in_memory: bool = False,
+        version: Version | None = None,
     ) -> None:
         self.name = name
         self.path = path
@@ -40,12 +45,12 @@ class BlitzApp:
             if directory.is_dir():
                 try:
                     version = Version.parse(directory.name)
-                except:
+                except Exception:
                     continue
 
                 try:
                     _find_blitz_file_path(self.path / str(version))
-                except:
+                except Exception:
                     raise ValueError(
                         f"Blitz app {self.name} has a version dir '{version}' without a blitz file inside."
                     )
@@ -101,7 +106,7 @@ class BlitzApp:
             # We loop through the relationships to create the relationship field in the other table
             for relationship in relationships:
                 config.fields[relationship.lower()] = BlitzField(
-                    type=AllowedBlitzFieldTypes.relationship,  # type: ignore
+                    type=AllowedBlitzFieldTypes.relationship,
                     relationship=relationship,
                 )
             try:
@@ -133,6 +138,9 @@ class BlitzApp:
                 case "patch":
                     new_version = latest_version.bump_patch()
 
+            if self.file.path is None:
+                # TODO: handle error
+                raise Exception
             # We run the migrations to the latest version
             latest_blitz_app = BlitzApp(
                 "", latest_version_path, parse_file(latest_version_path / self.file.path.name), in_memory=True
@@ -152,7 +160,7 @@ class BlitzApp:
             try:
                 # Use the version in the blitz file as initial version
                 new_version = Version.parse(self.file.config.version)
-            except:
+            except Exception:
                 logger.warning(
                     (
                         f"Version in blitz file {self.file.path} is not a valid semver version."
@@ -193,6 +201,9 @@ class BlitzApp:
         if not new_version_path.exists():
             new_version_path.mkdir(parents=True)
 
+        if self.file.path is None:
+            # TODO: handle error
+            raise Exception
         # We copy the current blitz file to the new version directory
         new_version_blitz_file_path = new_version_path / self.file.path.name
         new_version_blitz_file_path.write_text(self.file.path.read_text())

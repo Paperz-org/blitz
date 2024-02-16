@@ -1,8 +1,7 @@
-from contextlib import contextmanager
 from pathlib import Path
 
-from nicegui import Tailwind, ui, app
-
+from nicegui import ui
+from nicegui.page_layout import LeftDrawer
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 
 MAIN_PINK = "#cd87ff"
@@ -13,12 +12,12 @@ class HeaderMenuComponent:
     def __init__(self, blitz_ui: BlitzUI = get_blitz_ui()) -> None:
         pass
 
-    def render(self):
+    def render(self) -> None:
         ui.button(icon="menu").props("flat")
 
 
 class HeaderComponent:
-    def __init__(self, title: str = "", blitz_ui: BlitzUI = get_blitz_ui(), drawer=None) -> None:
+    def __init__(self, title: str = "", blitz_ui: BlitzUI = get_blitz_ui(), drawer: LeftDrawer | None = None) -> None:
         self.title = title
         self.blitz_ui = blitz_ui
 
@@ -39,11 +38,9 @@ class HeaderComponent:
             dark="#3e3e42",
         )
 
-    def render(self):
+    def render(self) -> None:
         with ui.header(bordered=True).classes("pl-1 pr-8 justify-between content-center h-16 backdrop-blur-sm"):
-
             with ui.row().classes("items-center space-x-20 content-center my-auto"):
-
                 with ui.row().classes("items-center space-x-0 content-center "):
                     if self.drawer is not None:
                         ui.button(icon="menu", on_click=self.drawer.toggle).props("flat")
@@ -64,15 +61,15 @@ class HeaderComponent:
                     ui.button(
                         icon="dark_mode",
                         on_click=lambda: self.dark_mode.set_value(True),
-                    ).props(
-                        "flat fab-mini color=black disabled"
-                    ).bind_visibility_from(self.dark_mode, "value", value=False)
+                    ).props("flat fab-mini color=black disabled").bind_visibility_from(
+                        self.dark_mode, "value", value=False
+                    )
                     ui.button(
                         icon="light_mode",
                         on_click=lambda: self.dark_mode.set_value(False),
-                    ).props(
-                        "flat fab-mini color=white disabled"
-                    ).bind_visibility_from(self.dark_mode, "value", value=True)
+                    ).props("flat fab-mini color=white disabled").bind_visibility_from(
+                        self.dark_mode, "value", value=True
+                    )
                     ui.tooltip("White mode is coming soon")
                 with ui.link(target="https://github.com/Paperz-org/blitz", new_tab=True).classes(" w-8"):
                     ui.image(Path(__file__).parent.parent / "./assets/github_white.png").classes("w-8 ")
@@ -84,15 +81,14 @@ class MenuLink:
         self.link = link
         self.icon = icon
 
-    def render(self):
-
+    def render(self) -> None:
         with ui.link(target=self.link).classes("w-full"), ui.button(on_click=self.go_to).props(
             "flat align=left"
         ).classes("px-4 hover:bg-slate-700 rounded-sm w-full") as self.button:
             ui.icon(name=self.icon, size="sm").props("flat").classes("pr-4")
             ui.label(self.label)
 
-    def go_to(self):
+    def go_to(self) -> None:
         ui.open(self.link)
 
 
@@ -109,13 +105,12 @@ class FrameComponent:
         self.drawer_open = drawer_open
 
         # Only for declarative
-        self.drawer = None
+        self.drawer: LeftDrawer | None = None
 
-    def left_drawer(self):
+    def left_drawer(self) -> None:
         with ui.left_drawer(value=self.drawer_open, fixed=True, bottom_corner=True).props("width=200").classes(
             "px-0 bg-[#14151a]"
         ) as self.drawer:
-
             MenuLink("Dashboard", f"/projects/{self.current_project}", "dashboard").render()
             MenuLink(
                 "Admin",
@@ -135,7 +130,7 @@ class FrameComponent:
             ).render()
             MenuLink("Logs", f"/projects/{self.current_project}/logs", "list").render()
 
-    def render(self):
+    def render(self) -> None:
         if self.show_drawer and self.current_project is not None:
             self.left_drawer()
         HeaderComponent(drawer=self.drawer).render()

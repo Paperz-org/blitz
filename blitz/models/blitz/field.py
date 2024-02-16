@@ -144,7 +144,7 @@ class BlitzField(BaseModel):
         return cls(
             _raw_field_name=raw_field_name,
             _raw_field_value=raw_field_value,
-            type=field_type,  # type: ignore
+            type=field_type,
             nullable=cls._nullable_modifier in field_value_modifiers
             or field_type == AllowedBlitzFieldTypes.foreign_key,
             unique=cls._unique_modifier in field_name_modifiers,
