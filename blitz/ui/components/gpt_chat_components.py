@@ -254,4 +254,4 @@ class GPTResponse(GPTChatComponent):
 
     @classmethod
     def from_gpt_dict(cls, gpt_dict: dict[str, Any]) -> "GPTChatComponent":
-        return cls(text=gpt_dict.get("content", ""), text_is_finished=gpt_dict["text_is_finished"])
+        return cls(text=gpt_dict.get("content", ""), text_is_finished=gpt_dict.get("text_is_finished", False))
