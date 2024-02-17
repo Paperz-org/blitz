@@ -79,6 +79,12 @@ class BlitzField(BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
+    class Settings(BaseModel):
+        FIELD_PREFIX: ClassVar[str] = "_"
+        description: str | None = None
+
+    settings: Settings | None = Field(None, exclude=True)
+
     # Modifiers are used to define the properties of a field in the shortcut version of the blitz field
     _unique_modifier: ClassVar[str] = "!"
     _nullable_modifier: ClassVar[str] = "?"
@@ -115,7 +121,7 @@ class BlitzField(BaseModel):
 
     # Need a fix in pydantic maybe use a custom method to serialize the model and not the @model_serializer
     # @model_serializer
-    # def _serialize_model(self) -> dict[str, Any] | str:
+    # def _serialize_model(self) -> dict[str, Any]:
     #     if isinstance(self._raw_field_value, dict):
     #         return self.model_dump()
     #     elif isinstance(self._raw_field_value, str):

@@ -1,7 +1,8 @@
 from pathlib import Path
 
 from blitz.app import BlitzApp
-from blitz.parser import _find_blitz_app_path, _find_blitz_file_path, parse_file
+from blitz.models.blitz.file import BlitzFile
+from blitz.parser import find_blitz_app_path, find_blitz_file_path
 from blitz.settings import DBTypes, get_settings
 
 
@@ -25,9 +26,9 @@ class BlitzCore:
 
         for dotfile in Path(".").glob(f"**/*{self.BLITZ_DOT_FILE}"):
             blitz_app_name = dotfile.parent.name
-            blitz_app_path = _find_blitz_app_path(blitz_app_name)
-            blitz_file_path = _find_blitz_file_path(blitz_app_path)
-            blitz_file = parse_file(blitz_file_path)
+            blitz_app_path = find_blitz_app_path(blitz_app_name)
+            blitz_file_path = find_blitz_file_path(blitz_app_path)
+            blitz_file = BlitzFile.from_file(blitz_file_path)
 
             self.apps.append(
                 BlitzApp(

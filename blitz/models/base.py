@@ -161,6 +161,7 @@ def create_resource_model(
     fields: dict[Any, Any] = {}
     for field_name, field in resource_config.fields.items():
         extra = {}
+
         if not isinstance(field.default, _BlitzNullValue):
             extra["default"] = field.default
 
@@ -177,6 +178,10 @@ def create_resource_model(
 
         if not isinstance(field.unique, _BlitzNullValue):
             extra["unique"] = field.unique
+
+        if field.settings and field.settings.description is not None:
+            extra["description"] = field.settings.description
+            extra["title"] = field.settings.description
 
         if field.type == AllowedBlitzFieldTypes.foreign_key:
             pass
@@ -196,6 +201,7 @@ def create_resource_model(
                 raise ValueError(f"Relationship `{field.relationship}` is missing.")
         else:
             field_info = Field(**extra)
+            print(field_info)
             field_type = field.type.value
 
         if extra.get("nullable", False) is True:

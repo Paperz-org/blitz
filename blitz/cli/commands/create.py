@@ -50,15 +50,16 @@ def create_blitz_app(
     blitz_app_path = Path(blitz_app_name.lower().replace(" ", "-"))
     try:
         # Create the blitz file
-        blitz_file = BlitzFile(
+        blitz_file = BlitzFile.from_dict(
+            blitz_file={
+                BlitzFile.CONFIG_FIELD_NAME: BlitzAppConfig(
+                    name=blitz_app_name,
+                    description=blitz_app_description,
+                    version=DEFAULT_VERSION,
+                ).model_dump()
+            },
             path=blitz_app_path / f"blitz.{blitz_file_format}",
-            config=BlitzAppConfig(
-                name=blitz_app_name,
-                description=blitz_app_description,
-                version=DEFAULT_VERSION,
-            ),
-            resources_configs=[],
-            raw_file={},
+            file_type=BlitzFile.FileType(blitz_file_format),
         )
     except Exception as e:
         print(f"[red bold]Error[/red bold] while creating the blitz file: {e}")

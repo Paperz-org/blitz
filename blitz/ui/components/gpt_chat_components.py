@@ -5,7 +5,7 @@ from nicegui import ui
 from nicegui.elements.dialog import Dialog
 from nicegui.elements.expansion import Expansion
 from pydantic import ValidationError
-from blitz.parser import create_blitz_file_from_dict
+from blitz.models.blitz.file import BlitzFile
 from openai.types.chat import ChatCompletionMessageParam
 
 
@@ -40,7 +40,7 @@ class ResponseJSON:
 
     def validate_blitz_file(self, json: dict[str, Any]) -> bool:
         try:
-            create_blitz_file_from_dict(json)
+            BlitzFile.from_dict(json)
         except ValidationError:
             return False
         else:
