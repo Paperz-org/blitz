@@ -75,7 +75,7 @@ blitz start your-blitz-project
 
 ___
 
-You have now a fully functional API with two models and the corresponding database schema with all the modern feature you can expect from a modern app like:
+You have now a fully functional API with two resources and the corresponding database schema with all the modern feature you can expect from a modern app like:
 
 - Automatic Swagger UI for the API
 - Data validation and error messages (thanks to [Fastapi](https://fastapi.tiangolo.com/) and [SQLModel](https://sqlmodel.tiangolo.com/))
