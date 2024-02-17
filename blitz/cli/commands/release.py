@@ -38,6 +38,6 @@ def release_blitz(
     except MigrationNoChangesDetectedError:
         raise NoChangesDetectedError()
 
-    print(f"Blitz app {blitz_app_name} released at version {new_version}")
+    print(f"Blitz app {blitz_app.name} released at version {new_version}")
     print("You can now start your versioned blitz app by running:")
-    print(f"    [bold medium_purple1]blitz start {blitz_app_name} --version {new_version}[/bold medium_purple1]")
+    print(f"    [bold medium_purple1]blitz start {blitz_app.name} --version {new_version}[/bold medium_purple1]")

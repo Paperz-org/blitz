@@ -2,7 +2,7 @@ import enum
 from blitz.models.utils import ContainsEnum
 from typing import Any, ClassVar
 
-from pydantic import BaseModel, Field, computed_field, field_validator, model_serializer
+from pydantic import BaseModel, computed_field, field_validator, model_serializer, Field
 import uuid
 from datetime import datetime
 import logging
