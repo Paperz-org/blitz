@@ -13,10 +13,11 @@ from blitz.core import BlitzCore
 
 from blitz.settings import get_settings
 from rich import print
+from blitz.cli.errors import BlitzAppNotFoundError, BlitzAppVersionNotFoundError, MissingBlitzAppNameError
 
 
 def start_blitz(
-    blitz_app_name: Annotated[str, typer.Argument(..., help="Blitz app name")],
+    blitz_app_name: Annotated[Optional[str], typer.Argument(help="Blitz app name")] = None,
     admin: Annotated[bool, typer.Option(help="Don't create admin.")] = True,
     port: Annotated[int, typer.Option(help="Define the port of the server")] = get_settings().BLITZ_PORT,
     config_route: Annotated[bool, typer.Option(help="Enable the blitz config route.")] = True,
@@ -25,17 +26,24 @@ def start_blitz(
 ) -> None:
     blitz = BlitzCore()
 
-    try:
-        blitz_app = blitz.get_app(blitz_app_name)
-        if version is not None:
-            blitz_app = blitz_app.get_version(Version.parse(version))
-    except Exception as exc:
-        print(f"[red bold]There is no blitz app named {blitz_app_name}[/red bold]")
-        print("To list the available blitz apps run:")
-        print("[bold]    blitz list[bold]")
-        print(f"Error: {exc}")
-        raise typer.Exit()
+    if blitz_app_name is None:
+        if len(blitz.apps) == 1:
+            blitz_app = blitz.apps[0]
+        else:
+            raise MissingBlitzAppNameError()
+    else:
+        try:
+            blitz_app = blitz.get_app(blitz_app_name)
+        except Exception:
+            raise BlitzAppNotFoundError(blitz_app_name)
 
+    if version is not None:
+        try:
+            blitz_app = blitz_app.get_version(Version.parse(version))
+        except Exception:
+            raise BlitzAppVersionNotFoundError(blitz_app, version)
+
+    # https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=BLITZ%200.1.0
     print(
         """[bold medium_purple1]
 ██████╗ ██╗     ██╗████████╗███████╗     ██████╗    ██╗    ██████╗ 
@@ -46,7 +54,8 @@ def start_blitz(
 ╚═════╝ ╚══════╝╚═╝   ╚═╝   ╚══════╝     ╚═════╝ ╚═╝╚═╝╚═╝ ╚═════╝ 
         [/bold medium_purple1]"""
     )
-    time.sleep(1)
+    time.sleep(0.5)
+
     if hot_reload:
         # Need to be refacto
         os.environ["BLITZ_APP"] = str(blitz_app.name)
@@ -54,9 +63,11 @@ def start_blitz(
             os.environ["BLITZ_VERSION"] = str(version)
         os.environ["BLITZ_ADMIN"] = str(admin).lower()
         os.environ["BLITZ_CONFIG_ROUTE"] = str(config_route).lower()
+
         if blitz_app.file.path is None:
             # TODO: handle error
             raise Exception
+
         server_config = uvicorn.Config(
             "blitz.api:create_blitz_api",
             factory=True,

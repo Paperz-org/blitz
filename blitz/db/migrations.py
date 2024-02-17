@@ -42,7 +42,7 @@ def get_alembic_config(
     if is_release:
         file_name_template = RELEASE_MIGRATION_FILE_NAME_TEMPLATE
         migrations_paths = set(
-            [str(blitz_app.path / str(version)) for version in blitz_app._available_version]
+            [str(blitz_app.path / str(version)) for version in blitz_app.versions]
             + [str(blitz_app.path / str(blitz_app.file.config.version))]
         )
     else:

@@ -6,6 +6,7 @@ from rich import print
 from blitz.models import BlitzResource
 from rich.style import Style
 from rich.panel import Panel
+from blitz.cli.errors import BlitzAppNotFoundError, MissingBlitzAppNameError, BlitzAppVersionNotFoundError
 
 
 class SwaggerPrinter:
@@ -72,26 +73,35 @@ class SwaggerPrinter:
 
 
 def list_routes(
-    blitz_app_name: Annotated[str, typer.Argument(..., help="Blitz app name")],
-    model: Annotated[Optional[str], typer.Option()] = None,
+    blitz_app_name: Annotated[Optional[str], typer.Argument(..., help="Blitz app name")] = None,
+    resource_name: Annotated[Optional[str], typer.Option(help="The resource name")] = None,
     version: Annotated[Optional[str], typer.Option(help="Define the version of the app.")] = None,
 ) -> None:
     blitz = BlitzCore()
-    try:
-        blitz_app = blitz.get_app(blitz_app_name)
-        if version is not None:
+    if blitz_app_name is None:
+        if len(blitz.apps) == 1:
+            blitz_app = blitz.apps[0]
+        else:
+            raise MissingBlitzAppNameError()
+    else:
+        try:
+            blitz_app = blitz.get_app(blitz_app_name)
+        except Exception:
+            raise BlitzAppNotFoundError(blitz_app_name)
+
+    if version is not None:
+        try:
             blitz_app = blitz_app.get_version(Version.parse(version))
-        blitz_app.load()
-    except Exception as exc:
-        print(f"[red bold]There is no blitz app named {blitz_app_name}[/red bold]")
-        print("To list the available blitz apps run:")
-        print("[bold]    blitz list[bold]")
-        print(f"Error: {exc}")
-        raise typer.Exit()
-    if model:
+        except Exception:
+            raise BlitzAppVersionNotFoundError(blitz_app=blitz_app, version=version)
+
+    blitz_app.load()
+
+    if resource_name:
         for resource in blitz_app.resources:
-            if resource.config.name.lower() == model.lower():
+            if resource.config.name == resource_name:
                 resources = [resource]
     else:
         resources = blitz_app.resources
+
     SwaggerPrinter(resources).print()
