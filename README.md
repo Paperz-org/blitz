@@ -14,7 +14,7 @@
 Full [Documentation](https://paperz-org.github.io/blitz/) here.
 
 # **What is Blitz ?**
-Blitz is a tool that build restfull API on the fly based on a simple and easy to maintain configuration file.
+Blitz is a tool that builds restfull APIs on the fly based on a simple and easy to maintain configuration file.
 
 Here is an example of how simple a Blitz file is:
   ```yaml
@@ -60,7 +60,7 @@ blitz start your-blitz-app
 
 *And yeah, that's it.*
 
-Just add some resources in the blitz file, and you have now a fully functional API with models and the corresponding database schema with all the modern feature you can expect from a modern app like:
+Just add some resources in the blitz file, and you now have a fully functional API with models and the corresponding database schema, along with all the modern features you can expect from a modern app like:
 
 - Automatic Swagger UI for the API
 - Admin
