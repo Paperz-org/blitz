@@ -201,7 +201,6 @@ def create_resource_model(
                 raise ValueError(f"Relationship `{field.relationship}` is missing.")
         else:
             field_info = Field(**extra)
-            print(field_info)
             field_type = field.type.value
 
         if extra.get("nullable", False) is True:
