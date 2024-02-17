@@ -60,7 +60,7 @@ blitz start your-blitz-app
 
 *And yeah, that's it.*
 
-Just add some resources in the blitz file, and you now have a fully functional API with models and the corresponding database schema, along with all the modern features you can expect from a modern app like:
+Just add some resources in the blitz file, and you now have a fully functional API and the corresponding database schema, along with all the modern features you can expect from a modern app like:
 
 - Automatic Swagger UI for the API
 - Admin
