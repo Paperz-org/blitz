@@ -99,7 +99,7 @@ class BlitzField(BaseModel):
     _raw_field_value: str | dict[str, Any] | None = None
 
     type: BlitzType
-    default: Any | None = None
+    default: Any | _BlitzNullValue = _BlitzNullValue()
     foreign_key: str | _BlitzNullValue = _BlitzNullValue()
     relationship: str | _BlitzNullValue = _BlitzNullValue()
     relationship_list: bool | _BlitzNullValue = _BlitzNullValue()
