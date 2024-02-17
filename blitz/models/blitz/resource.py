@@ -54,7 +54,7 @@ class BlitzResourceConfig(BaseModel):
     def _serialize_model(self) -> dict[str, Any]:
         serialized_model = {}
         for field_name, field in self.fields.items():
-            serialized_model[field_name] = field.model_dump()
+            serialized_model[field_name] = field.model_dump(exclude_unset=True)
         for setting_name, setting_value in self.settings.model_dump(exclude_unset=True).items():
             serialized_model[f"{self.Settings.FIELD_PREFIX}{setting_name}"] = setting_value
         return serialized_model

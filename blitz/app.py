@@ -13,6 +13,7 @@ from sqlalchemy import exc as sa_exc
 from semver import Version
 from loguru import logger
 
+
 class ReleaseLevel(enum.Enum):
     PATCH = "PATCH"
     MINOR = "MINOR"
