@@ -54,7 +54,7 @@ def start_blitz(
 ╚═════╝ ╚══════╝╚═╝   ╚═╝   ╚══════╝     ╚═════╝ ╚═╝╚═╝╚═╝ ╚═════╝ 
         [/bold medium_purple1]"""
     )
-    time.sleep(0.5)
+    time.sleep(0.3)
 
     if hot_reload:
         # Need to be refacto
