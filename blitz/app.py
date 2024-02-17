@@ -1,3 +1,4 @@
+import enum
 from pathlib import Path
 
 from blitz.db.errors import NoChangesDetectedError
@@ -11,6 +12,11 @@ import warnings
 from sqlalchemy import exc as sa_exc
 from semver import Version
 from loguru import logger
+
+class ReleaseLevel(enum.Enum):
+    PATCH = "PATCH"
+    MINOR = "MINOR"
+    MAJOR = "MAJOR"
 
 
 class BlitzApp:
@@ -33,7 +39,7 @@ class BlitzApp:
         self.resources: list[BlitzResource] = []
         self._is_loaded = False
         self._base_resource_model: type[BaseResourceModel] = BaseResourceModel
-        self._available_version: list[Version] = []
+        self.versions: list[Version] = []
 
         self._load_versions()
 
@@ -54,12 +60,12 @@ class BlitzApp:
                     raise ValueError(
                         f"Blitz app {self.name} has a version dir '{version}' without a blitz file inside."
                     )
-                self._available_version.append(version)
+                self.versions.append(version)
 
-        self._available_version = sorted(self._available_version)
+        self.versions = sorted(self.versions)
 
     def get_version(self, version: Version) -> "BlitzApp":
-        if version not in self._available_version:
+        if version not in self.versions:
             raise ValueError(f"Version {version} not found for Blitz app {self.name}")
         return BlitzApp(
             name=self.name,
@@ -118,10 +124,10 @@ class BlitzApp:
 
         self._is_loaded = True
 
-    def release(self, level: str, force: bool = False) -> Version:
+    def release(self, level: ReleaseLevel, force: bool = False) -> Version:
         clear_metadata()
 
-        latest_version = self._available_version[-1] if self._available_version else None
+        latest_version = self.versions[-1] if self.versions else None
 
         # If there is already a released version
         if latest_version is not None:
@@ -131,11 +137,11 @@ class BlitzApp:
 
             # We bump the version regarding the release level
             match level:
-                case "major":
+                case ReleaseLevel.MAJOR:
                     new_version = latest_version.bump_major()
-                case "minor":
+                case ReleaseLevel.MINOR:
                     new_version = latest_version.bump_minor()
-                case "patch":
+                case ReleaseLevel.PATCH:
                     new_version = latest_version.bump_patch()
 
             if self.file.path is None:
