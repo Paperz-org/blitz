@@ -70,7 +70,7 @@ class BlitzUI:
             rows.append(
                 {
                     "name": ressource.config.name,
-                    "allowed_methods": ressource.config.allowed_methods,
+                    "allowed_methods": ressource.config.settings.allowed_methods,
                 }
             )
 

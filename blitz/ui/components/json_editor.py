@@ -3,8 +3,7 @@ from typing import Any
 from nicegui import ui, app
 from pydantic import ValidationError
 import yaml
-from blitz.models.blitz.file import FileType
-from blitz.parser import create_blitz_file_from_dict
+from blitz.models.blitz.file import BlitzFile
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 from blitz.ui.components.header import DARK_PINK, MAIN_PINK
 
@@ -65,7 +64,7 @@ class BlitzFileEditorComponent:
 
     def validate(self) -> None:
         try:
-            create_blitz_file_from_dict(self.content)
+            BlitzFile.from_dict(self.content)
         except ValidationError:
             ui.notify("Invalid Blitz File", type="negative")
         else:
@@ -73,7 +72,7 @@ class BlitzFileEditorComponent:
 
     def save(self) -> None:
         try:
-            create_blitz_file_from_dict(self.content)
+            BlitzFile.from_dict(self.content)
         except ValidationError:
             ui.notify("Invalid Blitz File", type="negative")
             return
@@ -85,9 +84,9 @@ class BlitzFileEditorComponent:
                 # TODO: handle error
                 raise Exception
             with open(self.blitz_ui.current_app.file.path, "w") as f:
-                if self.blitz_ui.current_app.file.file_type == FileType.JSON:
+                if self.blitz_ui.current_app.file.file_type == BlitzFile.FileType.JSON:
                     f.write(json.dumps(self.content, indent=4))
-                elif self.blitz_ui.current_app.file.file_type == FileType.YAML:
+                elif self.blitz_ui.current_app.file.file_type == BlitzFile.FileType.YAML:
                     f.write(yaml.dump(self.content, indent=4))
         except Exception:
             ui.notify("Error While Saving File", type="negative")

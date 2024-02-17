@@ -6,12 +6,13 @@ from blitz.models.base import BaseResourceModel, clear_metadata, create_resource
 from blitz.models.blitz.field import _BlitzNullValue, AllowedBlitzFieldTypes, BlitzField, BlitzType
 from blitz.models.blitz.file import BlitzFile
 from blitz.models.blitz.resource import BlitzResource, BlitzResourceConfig
-from blitz.parser import _find_blitz_file_path, parse_file
+from blitz.parser import find_blitz_file_path
 from blitz.db.migrations import generate_migration, run_migrations
 import warnings
 from sqlalchemy import exc as sa_exc
 from semver import Version
 from loguru import logger
+
 
 class ReleaseLevel(enum.Enum):
     PATCH = "PATCH"
@@ -55,7 +56,7 @@ class BlitzApp:
                     continue
 
                 try:
-                    _find_blitz_file_path(self.path / str(version))
+                    find_blitz_file_path(self.path / str(version))
                 except Exception:
                     raise ValueError(
                         f"Blitz app {self.name} has a version dir '{version}' without a blitz file inside."
@@ -70,7 +71,7 @@ class BlitzApp:
         return BlitzApp(
             name=self.name,
             path=self.path,
-            file=parse_file(_find_blitz_file_path(self.path / str(version))),
+            file=BlitzFile.from_file(find_blitz_file_path(self.path / str(version))),
             in_memory=self._in_memory,
             version=version,
         )
@@ -149,7 +150,7 @@ class BlitzApp:
                 raise Exception
             # We run the migrations to the latest version
             latest_blitz_app = BlitzApp(
-                "", latest_version_path, parse_file(latest_version_path / self.file.path.name), in_memory=True
+                "", latest_version_path, BlitzFile.from_file(latest_version_path / self.file.path.name), in_memory=True
             )
 
             with warnings.catch_warnings():
