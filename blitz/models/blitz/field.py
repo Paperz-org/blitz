@@ -52,7 +52,9 @@ class BlitzType(BaseModel):
     def __init_subclass__(cls, **kwargs: Any) -> None:
         for allowed_type in AllowedBlitzFieldTypes:
             if allowed_type not in cls.TYPE_MAPPING:
-                logger.warning(f"Type {allowed_type} is not mapped with a factory in {cls.__name__}.TYPE_MAPPING.")
+                logger.warning(
+                    f"Type {allowed_type} is not mapped with a factory in {cls.__name__}.TYPE_MAPPING."
+                )
 
     @computed_field  # type: ignore
     @property
@@ -124,15 +126,22 @@ class BlitzField(BaseModel):
     #         raise ValueError(f"Type `{type(self._raw_field_value)}` not allowed")
 
     @classmethod
-    def from_shortcut_version(cls, raw_field_name: str, raw_field_value: str) -> "BlitzField":
+    def from_shortcut_version(
+        cls, raw_field_name: str, raw_field_value: str
+    ) -> "BlitzField":
         field_name = raw_field_name.strip(cls._field_name_shortcut_modifiers)
         field_name_modifiers = raw_field_name[len(field_name) :]
 
         field_value = raw_field_value.strip(cls._field_value_shortcut_modifiers)
         field_value_modifiers = raw_field_value[len(field_value) :]
 
-        if cls._required_modifier in field_value_modifiers and cls._nullable_modifier in field_value_modifiers:
-            raise ValueError(f"Field `{field_name}` cannot be both required and nullable.")
+        if (
+            cls._required_modifier in field_value_modifiers
+            and cls._nullable_modifier in field_value_modifiers
+        ):
+            raise ValueError(
+                f"Field `{field_name}` cannot be both required and nullable."
+            )
 
         if field_value in AllowedBlitzFieldTypes:
             field_type = AllowedBlitzFieldTypes(field_value)
@@ -141,9 +150,10 @@ class BlitzField(BaseModel):
         else:
             field_type = AllowedBlitzFieldTypes.relationship
 
-        params = {}
+        params: dict[str, Any] = {}
         params["nullable"] = (
-            cls._nullable_modifier in field_value_modifiers or field_type == AllowedBlitzFieldTypes.foreign_key
+            cls._nullable_modifier in field_value_modifiers
+            or field_type == AllowedBlitzFieldTypes.foreign_key
         )
         params["unique"] = cls._unique_modifier in field_name_modifiers
         if cls._nullable_modifier in field_value_modifiers:
@@ -154,7 +164,9 @@ class BlitzField(BaseModel):
 
         if field_type == AllowedBlitzFieldTypes.relationship:
             params["relationship"] = field_value
-            params["relationship_list"] = cls._relationship_list_modifier in field_value_modifiers
+            params["relationship_list"] = (
+                cls._relationship_list_modifier in field_value_modifiers
+            )
 
         return cls(
             _raw_field_name=raw_field_name,
