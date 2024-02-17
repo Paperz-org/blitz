@@ -34,7 +34,7 @@ class DashboardPage:
             with ui.column().classes("w-2/3 h-full border rounded-lg border-gray-300"):
                 with ui.expansion("Project", value=True, icon="info").classes("w-full text-bold text-2xl "):
                     ProjectDetailComponent().render()
-                with ui.expansion("Models", value=True, icon="help_outline").classes("w-full text-bold text-2xl"):
+                with ui.expansion("Resources", value=True, icon="help_outline").classes("w-full text-bold text-2xl"):
                     ui.table(columns=self.columns, rows=self.rows, row_key="name").classes("w-full no-shadow")
                 with ui.expansion("Status", value=True, icon="health_and_safety").classes("w-full text-bold text-2xl"):
                     # See https://github.com/zauberzeug/nicegui/issues/2174

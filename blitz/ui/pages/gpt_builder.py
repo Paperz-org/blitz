@@ -23,7 +23,7 @@ DEV_TEXT = """Sure! Here is a sample blitz_file with randomly generated models a
     "description": "A randomly generated Blitz app",
     "version": "1.0.0"
   },
-  "models": [
+  "resources": [
     {
       "name": "User",
       "fields": {

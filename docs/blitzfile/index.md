@@ -58,7 +58,7 @@ The resources section is built as below:
 === "Json"
 
     ```json
-    "models": [
+    "resources": [
         {
             "name": "TodoList",
             "fields": {}
@@ -102,7 +102,7 @@ Here is an example of a working Blitz file:
 === "Json"
 
     ```json
-    "models": [
+    "resources": [
         {
             "name": "TodoList",
             "fields": {
@@ -147,7 +147,7 @@ Here is an example of a working Blitz file:
 === "Json (explicit)"
 
     ```json
-    "models": [
+    "resources": [
         {
             "name": "TodoList",
             "fields": {
