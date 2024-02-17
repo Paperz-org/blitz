@@ -23,6 +23,7 @@ class BlitzResourceConfig(BaseModel):
             # If the field values is a string, it can be an blitz type or a relationship related field
             if isinstance(raw_field_value, str):
                 fields[field_name] = BlitzField.from_shortcut_version(raw_field_name, raw_field_value)
+
             # Else if the field value is a dict, it must be a BlitzField object
             elif isinstance(raw_field_value, dict):
                 fields[field_name] = BlitzField(

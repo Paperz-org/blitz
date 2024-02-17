@@ -188,12 +188,13 @@ def create_resource_model(
                         field_type = eval(field.relationship)
                     except NameError:
                         field_type = f"{field.relationship}"
-                    if field.relationship_list is True:
-                        field_type = list[field_type]  # type: ignore
                 else:
                     field_type = already_created_models[field.relationship]
+                if field.relationship_list is True:
+                    field_type = list[field_type]  # type: ignore
             else:
                 raise ValueError(f"Relationship `{field.relationship}` is missing.")
+
         else:
             field_info = Field(**extra)
             field_type = field.type.value
