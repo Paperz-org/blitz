@@ -166,3 +166,5 @@ database.db
 .python-version
 .DS_Store
 .nicegui/
+
+.idea/
