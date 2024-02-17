@@ -18,7 +18,7 @@ class BlitzResourceConfig(BaseModel):
 
     name: str
     fields: dict[str, BlitzField]
-    settings: Settings
+    settings: Settings = Settings()
 
     @field_validator("fields", mode="before")
     def _string_to_fields(cls, v: dict[str, Any | dict[str, Any]]) -> dict[str, BlitzField]:
@@ -28,6 +28,7 @@ class BlitzResourceConfig(BaseModel):
             # If the field values is a string, it can be an blitz type or a relationship related field
             if isinstance(raw_field_value, str):
                 fields[field_name] = BlitzField.from_shortcut_version(raw_field_name, raw_field_value)
+
             # Else if the field value is a dict, it must be a BlitzField object
             elif isinstance(raw_field_value, dict):
                 settings_fields_config = {}

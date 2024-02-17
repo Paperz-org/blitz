@@ -52,7 +52,9 @@ class BlitzType(BaseModel):
     def __init_subclass__(cls, **kwargs: Any) -> None:
         for allowed_type in AllowedBlitzFieldTypes:
             if allowed_type not in cls.TYPE_MAPPING:
-                logger.warning(f"Type {allowed_type} is not mapped with a factory in {cls.__name__}.TYPE_MAPPING.")
+                logger.warning(
+                    f"Type {allowed_type} is not mapped with a factory in {cls.__name__}.TYPE_MAPPING."
+                )
 
     @computed_field  # type: ignore
     @property
@@ -83,7 +85,7 @@ class BlitzField(BaseModel):
         FIELD_PREFIX: ClassVar[str] = "_"
         description: str | None = None
 
-    settings: Settings | None = Field(None, exclude=True)
+    settings: Settings = Field(Settings(), exclude=True)
 
     # Modifiers are used to define the properties of a field in the shortcut version of the blitz field
     _unique_modifier: ClassVar[str] = "!"
@@ -105,13 +107,13 @@ class BlitzField(BaseModel):
     _raw_field_value: str | dict[str, Any] | None = None
 
     type: BlitzType
-    default: Any = Field(_BlitzNullValue(), exclude=True)
-    foreign_key: str | _BlitzNullValue = Field(_BlitzNullValue(), exclude=True)
-    relationship: str | _BlitzNullValue = Field(_BlitzNullValue(), exclude=True)
-    relationship_list: bool | _BlitzNullValue = Field(_BlitzNullValue(), exclude=True)
-    back_populates: str | _BlitzNullValue = Field(_BlitzNullValue(), exclude=True)
-    nullable: bool | _BlitzNullValue = Field(_BlitzNullValue(), exclude=True)
-    unique: bool | _BlitzNullValue = Field(_BlitzNullValue(), exclude=True)
+    default: Any | _BlitzNullValue = _BlitzNullValue()
+    foreign_key: str | _BlitzNullValue = _BlitzNullValue()
+    relationship: str | _BlitzNullValue = _BlitzNullValue()
+    relationship_list: bool | _BlitzNullValue = _BlitzNullValue()
+    back_populates: str | _BlitzNullValue = _BlitzNullValue()
+    nullable: bool | _BlitzNullValue = _BlitzNullValue()
+    unique: bool | _BlitzNullValue = _BlitzNullValue()
 
     @field_validator("type", mode="before")
     def _string_to_customtype(cls, v: str | BlitzType) -> BlitzType:
@@ -130,15 +132,22 @@ class BlitzField(BaseModel):
     #         raise ValueError(f"Type `{type(self._raw_field_value)}` not allowed")
 
     @classmethod
-    def from_shortcut_version(cls, raw_field_name: str, raw_field_value: str) -> "BlitzField":
+    def from_shortcut_version(
+        cls, raw_field_name: str, raw_field_value: str
+    ) -> "BlitzField":
         field_name = raw_field_name.strip(cls._field_name_shortcut_modifiers)
         field_name_modifiers = raw_field_name[len(field_name) :]
 
         field_value = raw_field_value.strip(cls._field_value_shortcut_modifiers)
         field_value_modifiers = raw_field_value[len(field_value) :]
 
-        if cls._required_modifier in field_value_modifiers and cls._nullable_modifier in field_value_modifiers:
-            raise ValueError(f"Field `{field_name}` cannot be both required and nullable.")
+        if (
+            cls._required_modifier in field_value_modifiers
+            and cls._nullable_modifier in field_value_modifiers
+        ):
+            raise ValueError(
+                f"Field `{field_name}` cannot be both required and nullable."
+            )
 
         if field_value in AllowedBlitzFieldTypes:
             field_type = AllowedBlitzFieldTypes(field_value)
@@ -147,21 +156,29 @@ class BlitzField(BaseModel):
         else:
             field_type = AllowedBlitzFieldTypes.relationship
 
+        params: dict[str, Any] = {}
+        params["nullable"] = (
+            cls._nullable_modifier in field_value_modifiers
+            or field_type == AllowedBlitzFieldTypes.foreign_key
+        )
+        params["unique"] = cls._unique_modifier in field_name_modifiers
+        if cls._nullable_modifier in field_value_modifiers:
+            params["default"] = None
+
+        if field_type == AllowedBlitzFieldTypes.foreign_key:
+            params["foreign_key"] = field_value
+
+        if field_type == AllowedBlitzFieldTypes.relationship:
+            params["relationship"] = field_value
+            params["relationship_list"] = (
+                cls._relationship_list_modifier in field_value_modifiers
+            )
+
         return cls(
             _raw_field_name=raw_field_name,
             _raw_field_value=raw_field_value,
             type=field_type,
-            nullable=cls._nullable_modifier in field_value_modifiers
-            or field_type == AllowedBlitzFieldTypes.foreign_key,
-            unique=cls._unique_modifier in field_name_modifiers,
-            default=None if cls._nullable_modifier in field_value_modifiers else _BlitzNullValue(),
-            foreign_key=field_value if field_type == AllowedBlitzFieldTypes.foreign_key else _BlitzNullValue(),
-            relationship=field_value if field_type == AllowedBlitzFieldTypes.relationship else _BlitzNullValue(),
-            relationship_list=(
-                cls._relationship_list_modifier in field_value_modifiers
-                if field_type == AllowedBlitzFieldTypes.relationship
-                else _BlitzNullValue()
-            ),
+            **params,
         )
 
     def model_shortcut_dump(self) -> str:
