@@ -1,3 +1,4 @@
+import contextlib
 import time
 from semver import Version
 import typer
@@ -9,20 +10,34 @@ from typing import Annotated, Optional
 from uvicorn.supervisors import ChangeReload
 
 from blitz.api import create_blitz_api
+from blitz.cli.utils import print_version
 from blitz.core import BlitzCore
 
 from blitz.settings import get_settings
-from rich import print
-from blitz.cli.errors import BlitzAppNotFoundError, BlitzAppVersionNotFoundError, MissingBlitzAppNameError
+from blitz.cli.errors import (
+    BlitzAppNotFoundError,
+    BlitzAppVersionNotFoundError,
+    MissingBlitzAppNameError,
+)
+
+from blitz import __version__
 
 
 def start_blitz(
-    blitz_app_name: Annotated[Optional[str], typer.Argument(help="Blitz app name")] = None,
+    blitz_app_name: Annotated[
+        Optional[str], typer.Argument(help="Blitz app name")
+    ] = None,
     admin: Annotated[bool, typer.Option(help="Don't create admin.")] = True,
-    port: Annotated[int, typer.Option(help="Define the port of the server")] = get_settings().BLITZ_PORT,
-    config_route: Annotated[bool, typer.Option(help="Enable the blitz config route.")] = True,
+    port: Annotated[
+        int, typer.Option(help="Define the port of the server")
+    ] = get_settings().BLITZ_PORT,
+    config_route: Annotated[
+        bool, typer.Option(help="Enable the blitz config route.")
+    ] = True,
     hot_reload: Annotated[bool, typer.Option(help="Enable the hot reload.")] = True,
-    version: Annotated[Optional[str], typer.Option(help="Define the version of the app.")] = None,
+    version: Annotated[
+        Optional[str], typer.Option(help="Define the version of the app.")
+    ] = None,
 ) -> None:
     blitz = BlitzCore()
 
@@ -43,18 +58,10 @@ def start_blitz(
         except Exception:
             raise BlitzAppVersionNotFoundError(blitz_app, version)
 
-    # https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=BLITZ%200.1.0
-    print(
-        """[bold medium_purple1]
-██████╗ ██╗     ██╗████████╗███████╗     ██████╗    ██╗    ██████╗ 
-██╔══██╗██║     ██║╚══██╔══╝╚══███╔╝    ██╔═████╗  ███║   ██╔═████╗
-██████╔╝██║     ██║   ██║     ███╔╝     ██║██╔██║  ╚██║   ██║██╔██║
-██╔══██╗██║     ██║   ██║    ███╔╝      ████╔╝██║   ██║   ████╔╝██║
-██████╔╝███████╗██║   ██║   ███████╗    ╚██████╔╝██╗██║██╗╚██████╔╝
-╚═════╝ ╚══════╝╚═╝   ╚═╝   ╚══════╝     ╚═════╝ ╚═╝╚═╝╚═╝ ╚═════╝ 
-        [/bold medium_purple1]"""
-    )
-    time.sleep(0.3)
+    # In case of error we don't want to stop the startup for ascii art.
+    with contextlib.suppress(Exception):
+        print_version(__version__)
+        time.sleep(0.3)
 
     if hot_reload:
         # Need to be refacto
@@ -80,7 +87,14 @@ def start_blitz(
             log_level="info",
         )
         server = uvicorn.Server(server_config)
-        ChangeReload(server_config, target=server.run, sockets=[server_config.bind_socket()]).run()
+        ChangeReload(
+            server_config, target=server.run, sockets=[server_config.bind_socket()]
+        ).run()
     else:
-        blitz_api = create_blitz_api(blitz_app, enable_config_route=config_route, admin=admin)
-        uvicorn.run(blitz_api, host="localhost", port=port, log_config=None, log_level="warning")
+        
+        blitz_api = create_blitz_api(
+            blitz_app, enable_config_route=config_route, admin=admin
+        )
+        uvicorn.run(
+            blitz_api, host="localhost", port=port, log_config=None, log_level="warning"
+        )

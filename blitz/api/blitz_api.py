@@ -91,7 +91,10 @@ class BlitzAPI(FastAPI):
         # Rebuild the model to include forward ref types that was not available at the time of the model creation
         # We need to use the model AFTER the rebuild because if not, all the relationship and cie will not be set
         # correctly.
-        types_namespace = {resource.model.__name__: resource.model for resource in self.blitz_app.resources}
+        types_namespace = {
+            resource.model.__name__: resource.model
+            for resource in self.blitz_app.resources
+        }
         read_model.model_rebuild(_types_namespace=types_namespace)
         create_model.model_rebuild(_types_namespace=types_namespace)
         update_model.model_rebuild(_types_namespace=types_namespace)
@@ -128,6 +131,7 @@ def create_blitz_api(
 ) -> BlitzAPI:
     from blitz.ui.main import init_ui
 
+    blitz_app_version = None
     if blitz_app is None:
         blitz = BlitzCore()
         blitz_app_name = os.getenv("BLITZ_APP")
@@ -185,8 +189,12 @@ def create_blitz_api(
             warnings.simplefilter("ignore", category=SAWarning)
             BlitzAdmin(blitz_app).mount_to(blitz_api)
 
-    print("\n[bold yellow]This is still an alpha. Please do not use in production.[/bold yellow]")
-    print("[bold yellow]Please report any issues on https://github.com/Paperz-org/blitz[/bold yellow]")
+    print(
+        "\n[bold yellow]This is still an alpha. Please do not use in production.[/bold yellow]"
+    )
+    print(
+        "[bold yellow]Please report any issues on https://github.com/Paperz-org/blitz[/bold yellow]"
+    )
     print(
         "\n".join(
             (
