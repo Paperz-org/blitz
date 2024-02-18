@@ -4,7 +4,7 @@ import os
 
 from pydantic_settings import BaseSettings
 
-DOTENV = os.path.join(os.path.dirname(__file__), ".env")
+DOTENV = os.path.join(os.getcwd(), ".env")
 
 
 class DBTypes(enum.StrEnum):
