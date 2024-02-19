@@ -33,8 +33,6 @@ class BlitzUI:
         print(project)
         self._current_project = project
 
-        
-
     @property
     def current_app(self) -> BlitzApp | None:
         return self._current_app

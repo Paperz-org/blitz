@@ -1,5 +1,4 @@
 from nicegui import ui
-from blitz.ui.components.header import FrameComponent
 from blitz.ui.pages.base import BasePage
 
 
@@ -46,9 +45,5 @@ class MermaidPage(BasePage):
                 raise Exception
             ui.mermaid(self.blitz_ui.erd)
         with ui.footer().classes("w-full justify-start "):
-            ui.button(icon="zoom_in", on_click=self.zoom_svg).classes(
-                "borderrounded-sm"
-            ).props("flat")
-            ui.button(icon="zoom_out", on_click=self.unzoom_svg).classes(
-                "border rounded-sm"
-            ).props("flat")
+            ui.button(icon="zoom_in", on_click=self.zoom_svg).classes("borderrounded-sm").props("flat")
+            ui.button(icon="zoom_out", on_click=self.unzoom_svg).classes("border rounded-sm").props("flat")

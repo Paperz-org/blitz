@@ -1,6 +1,5 @@
 from functools import lru_cache
-from typing import Annotated, Any, AsyncGenerator, Callable, cast
-from fastapi import Depends
+from typing import Any, AsyncGenerator, Callable, cast
 from openai.types.chat import ChatCompletion, ChatCompletionMessageParam
 
 from nicegui import ui, app
@@ -62,9 +61,7 @@ Please note that this blitz_file is randomly generated and may not have any spec
 
 
 class GPTClient:
-    def __init__(
-        self, api_key: str, model: str = "gpt-3.5-turbo", pre_prompt: str | None = None
-    ) -> None:
+    def __init__(self, api_key: str, model: str = "gpt-3.5-turbo", pre_prompt: str | None = None) -> None:
         self.model = model
         self._api_key = api_key
         self.pre_prompt = pre_prompt
@@ -74,9 +71,7 @@ class GPTClient:
     def _get_client(api_key: str) -> AsyncOpenAI:
         return AsyncOpenAI(api_key=api_key)
 
-    def _add_preprompt(
-        self, messages: list[ChatCompletionMessageParam]
-    ) -> list[ChatCompletionMessageParam]:
+    def _add_preprompt(self, messages: list[ChatCompletionMessageParam]) -> list[ChatCompletionMessageParam]:
         messages.insert(
             0,
             {
@@ -91,9 +86,7 @@ class GPTClient:
         self._api_key = api_key
         self.client = self._get_client(api_key=api_key)
 
-    async def stream(
-        self, messages: list[ChatCompletionMessageParam]
-    ) -> AsyncStream[ChatCompletion]:
+    async def stream(self, messages: list[ChatCompletionMessageParam]) -> AsyncStream[ChatCompletion]:
         if self.pre_prompt:
             messages = self._add_preprompt(messages)
         if self.client is None:
@@ -188,15 +181,11 @@ class AskGPTPage(BasePage):
     def footer(self) -> None:
         with ui.footer().classes("items-center space-y-0 pt-0 justify-center px-5"):
             with ui.grid(columns=10).classes("w-full items-center gap-5"):
-                with ui.button(on_click=self.delete_conversation_dialog.open).props(
-                    "flat size=sm"
-                ).classes("justify-self-start"):
-                    ui.icon("delete_outline", color="grey-8", size="md").props(
-                        "fab-mini"
-                    )
-                with ui.button(on_click=self.open_settings).props("flat").classes(
-                    "justify-self-end"
+                with ui.button(on_click=self.delete_conversation_dialog.open).props("flat size=sm").classes(
+                    "justify-self-start"
                 ):
+                    ui.icon("delete_outline", color="grey-8", size="md").props("fab-mini")
+                with ui.button(on_click=self.open_settings).props("flat").classes("justify-self-end"):
                     ui.icon("settings", color="grey-6", size="md").props("fab-mini")
 
                 with ui.row(wrap=False).classes(
@@ -209,22 +198,16 @@ class AskGPTPage(BasePage):
                     self.ask_button()  # type: ignore
                 ui.space().classes("col-span-2")
 
-            ui.label(
-                "ChatGPT can make mistakes. Consider checking important information."
-            ).classes("text-xs text-gray-500 w-full text-center")
+            ui.label("ChatGPT can make mistakes. Consider checking important information.").classes(
+                "text-xs text-gray-500 w-full text-center"
+            )
 
     def delete_conversation(self) -> None:
-        with ui.dialog() as self.delete_conversation_dialog, ui.card().classes(
-            "no-shadow"
-        ):
+        with ui.dialog() as self.delete_conversation_dialog, ui.card().classes("no-shadow"):
             ui.label("Are you sure you want to delete this conversation?")
             with ui.row().classes("w-full items-center"):
-                ui.button(
-                    "Cancel", on_click=self.delete_conversation_dialog.close
-                ).props("flat")
-                ui.button("Delete", on_click=self._handle_delete_conversation).props(
-                    "flat"
-                )
+                ui.button("Cancel", on_click=self.delete_conversation_dialog.close).props("flat")
+                ui.button("Delete", on_click=self._handle_delete_conversation).props("flat")
 
     def _handle_delete_conversation(self) -> None:
         self.remove_conversation()
@@ -258,9 +241,7 @@ class AskGPTPage(BasePage):
     @ui.refreshable
     def ask_button(self) -> None:
         ask_button = (
-            ui.button(on_click=self.ask_button_trigger)
-            .props("flat")
-            .bind_enabled_from(self, "can_send_request")
+            ui.button(on_click=self.ask_button_trigger).props("flat").bind_enabled_from(self, "can_send_request")
         )
 
         with ask_button:
@@ -287,9 +268,7 @@ class AskGPTPage(BasePage):
         else:
             self.gpt_request = ""
 
-        app.storage.user["gpt_messages"] = [
-            message.to_dict() for message in self.gpt_messages
-        ]
+        app.storage.user["gpt_messages"] = [message.to_dict() for message in self.gpt_messages]
         self.ask_button.refresh()
 
     async def _handle_ask_event(self) -> None:
@@ -331,9 +310,7 @@ class ChatSettings:
         blitz_ui: BlitzUI = get_blitz_ui(),
     ) -> None:
         self.gpt_client = gpt_client
-        self.dialog = ui.dialog().props(
-            "maximized transition-show=slide-up transition-hide=slide-down"
-        )
+        self.dialog = ui.dialog().props("maximized transition-show=slide-up transition-hide=slide-down")
         self.blitz_ui = blitz_ui
         self.quit_dialog = ui.dialog(value=False)
 
@@ -369,9 +346,9 @@ class ChatSettings:
         with ui.row().classes("w-full items-center justify-center"):
             ui.button(icon="close", on_click=self.close).props("flat")
             ui.label("Chat Settings").classes("text-2xl font-bold grow text-center")
-            ui.button("Save", icon="save", on_click=self.save).classes(
-                "text-color-black"
-            ).props("flat").bind_enabled_from(self, "settings_has_changed")
+            ui.button("Save", icon="save", on_click=self.save).classes("text-color-black").props(
+                "flat"
+            ).bind_enabled_from(self, "settings_has_changed")
 
     @ui.refreshable
     def openai_settings(self) -> None:
@@ -393,9 +370,7 @@ class ChatSettings:
     @ui.refreshable
     def pre_prompt_editor(self) -> None:
         with ui.row().classes("w-full items-center"):
-            ui.button("Reset Pre-Prompt", on_click=self.reset_preprompt).props(
-                "outline"
-            )
+            ui.button("Reset Pre-Prompt", on_click=self.reset_preprompt).props("outline")
             switch = ui.switch("Edit Pre-Prompt", value=False)
         self.preprompt = (
             ui.textarea(label="Pre-Prompt", value=self.blitz_ui.preprompt)

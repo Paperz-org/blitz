@@ -71,9 +71,9 @@ class ResponseJSON:
             if self._dialog is None:
                 # TODO: handle error
                 raise Exception
-            ui.button(
-                icon="file_download", color="transparent", on_click=self._dialog.open
-            ).props("dense flat size=xm color=grey")
+            ui.button(icon="file_download", color="transparent", on_click=self._dialog.open).props(
+                "dense flat size=xm color=grey"
+            )
 
     def download_dialog(self) -> None:
         with ui.dialog() as self._dialog, ui.card().classes("w-full px-4"):
@@ -95,9 +95,7 @@ class ResponseJSON:
         )
 
     def _download_yaml(self) -> None:
-        ui.download(
-            str.encode(yaml.dump(self.json)), filename=self._get_filename("yaml")
-        )
+        ui.download(str.encode(yaml.dump(self.json)), filename=self._get_filename("yaml"))
 
     def _get_filename(self, extension: str) -> str:
         return f"{self.blitz_app_title.replace(' ', '_').replace('.', '_').lower()}.{extension}"
@@ -188,9 +186,7 @@ class UserQuestion(GPTChatComponent):
     AVATAR_COLOR = "#a72bff"
 
     def __init__(self, text: str = "") -> None:
-        super().__init__(
-            label=self.LABEL, text=text, icon=self.ICON, avatar_color=self.AVATAR_COLOR
-        )
+        super().__init__(label=self.LABEL, text=text, icon=self.ICON, avatar_color=self.AVATAR_COLOR)
 
     def as_gpt_dict(self) -> ChatCompletionMessageParam:
         return {
@@ -213,9 +209,7 @@ class GPTResponse(GPTChatComponent):
     AVATAR_COLOR = "#74aa9c"
 
     def __init__(self, text: str = "", text_is_finished: bool = False) -> None:
-        super().__init__(
-            label=self.LABEL, text=text, icon=self.ICON, avatar_color=self.AVATAR_COLOR
-        )
+        super().__init__(label=self.LABEL, text=text, icon=self.ICON, avatar_color=self.AVATAR_COLOR)
         self._text_is_finished = text_is_finished
         self.text_is_finished = text_is_finished
 
