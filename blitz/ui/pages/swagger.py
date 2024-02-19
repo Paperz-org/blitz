@@ -1,10 +1,10 @@
-from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 from nicegui import ui
 
+from blitz.ui.pages.base import BasePage
 
-class SwaggerPage:
-    def __init__(self, blitz_ui: BlitzUI = get_blitz_ui(), project: str | None = None) -> None:
-        self.blitz_ui = blitz_ui
+
+class SwaggerPage(BasePage):
+    PAGE_NAME = "Swagger"
 
     def resize_iframe(self) -> None:
         ui.run_javascript(
@@ -17,7 +17,7 @@ class SwaggerPage:
             """
         )
 
-    def render_page(self) -> None:
+    def render(self) -> None:
         self.resize_iframe()
 
         ui.element("iframe").props(

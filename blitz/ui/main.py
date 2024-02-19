@@ -1,76 +1,32 @@
 import logging
-from typing import TYPE_CHECKING, Annotated
-
-from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
-from blitz.ui.pages.blitz_file import BlitzFilePage
-from blitz.ui.pages.dashboard import DashboardPage
-from blitz.ui.pages.diagram import MermaidPage
-from blitz.ui.pages.gpt_builder import AskGPTPage
-from blitz.ui.pages.log import LogPage
-from blitz.ui.pages.swagger import SwaggerPage
+from typing import TYPE_CHECKING
+from blitz.ui.blitz_ui import get_blitz_ui
+from blitz.ui.pages import (
+    BlitzFilePage,
+    DashboardPage,
+    MermaidPage,
+    AskGPTPage,
+    LogPage,
+    SwaggerPage,
+)
 from pathlib import Path
+from blitz.ui.router import BlitzRouter
 from nicegui import ui
-
-from nicegui import app
-
-from blitz.ui.components.header import FrameComponent
-
-
-from fastapi import Depends, Request
-
 
 if TYPE_CHECKING:
     from blitz.api.blitz_api import BlitzAPI
 
 
-async def _post_dark_mode(request: Request) -> None:
-    print("dark mode")
-    app.storage.browser["dark_mode"] = (await request.json()).get("value")
+def init_routers() -> None:
+    router = BlitzRouter("/")
+    router.add_page("gpt", AskGPTPage)
 
-
-@ui.page("/projects/{uuid}", title="Dashboard")
-def dashboard_page(uuid: str, blitz_ui: Annotated[BlitzUI, Depends(get_blitz_ui)]) -> None:
-    DashboardPage().render_page()
-    FrameComponent().render()
-
-
-@ui.page("/projects/{uuid}/diagram", title="Diagram")
-def diagram_page(uuid: str, blitz_ui: Annotated[BlitzUI, Depends(get_blitz_ui)]) -> None:
-    MermaidPage().render_page()
-    FrameComponent().render()
-
-
-@ui.page("/projects/{uuid}/blitz-file", title="Blitz File")
-def blitz_file_page(uuid: str, blitz_ui: Annotated[BlitzUI, Depends(get_blitz_ui)]) -> None:
-    BlitzFilePage().render_page()
-    FrameComponent().render()
-
-
-@ui.page("/projects/{uuid}/swagger", title="Swagger")
-def swagger_page(uuid: str, blitz_ui: Annotated[BlitzUI, Depends(get_blitz_ui)]) -> None:
-    SwaggerPage().render_page()
-    FrameComponent().render()
-
-
-@ui.page("/projects/{uuid}/logs")
-def log_page(uuid: str, blitz_ui: Annotated[BlitzUI, Depends(get_blitz_ui)]) -> None:
-    ui.page_title("Logs")
-    LogPage().render_page()
-    FrameComponent().render()
-
-
-# @ui.page("/projects/{uuid}/admin")
-# def log_page(uuid: str, blitz_ui: Annotated[BlitzUI, Depends(get_blitz_ui)]) -> None:
-#     ui.page_title("Admin")
-#     AdminPage().render_page()
-#     FrameComponent(drawer_open=False).render()
-
-
-@ui.page("/gpt")
-def ask_gpt_page(blitz_ui: Annotated[BlitzUI, Depends(get_blitz_ui)]) -> None:
-    ui.page_title("GPT Builder")
-    AskGPTPage().render_page()
-    FrameComponent(show_drawer=False).render()
+    project_router = BlitzRouter("/projects/{uuid}/")
+    project_router.add_page("logs", LogPage)
+    project_router.add_page("swagger", SwaggerPage)
+    project_router.add_page("blitz-file", BlitzFilePage)
+    project_router.add_page("diagram", MermaidPage)
+    project_router.add_page("", DashboardPage)
 
 
 # @ui.page("/projects")
@@ -89,6 +45,8 @@ def init_ui(
     logging.getLogger("niceGUI").setLevel(logging.WARNING)
     blitz_ui = get_blitz_ui()
     blitz_ui.current_app = blitz_api.blitz_app
+    print("________", blitz_ui)
+    init_routers()
     ui.run_with(
         app=blitz_api,
         title=title,

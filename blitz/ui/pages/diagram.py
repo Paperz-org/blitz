@@ -1,11 +1,12 @@
 from nicegui import ui
-from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
+from blitz.ui.components.header import FrameComponent
+from blitz.ui.pages.base import BasePage
 
 
-class MermaidPage:
-    def __init__(self, blitz_ui: BlitzUI = get_blitz_ui(), project: str | None = None) -> None:
-        self.project = project
-        self.blitz_ui = blitz_ui
+class MermaidPage(BasePage):
+    PAGE_NAME = "ERD"
+
+    def setup(self) -> None:
         self._width = 100
 
     def remove_style(self) -> None:
@@ -38,12 +39,16 @@ class MermaidPage:
             """
         )
 
-    def render_page(self) -> None:
+    def render(self) -> None:
         with ui.scroll_area().classes("w-full h-screen justify-center content-center"):
             if self.blitz_ui.erd is None:
                 # TODO handle error
                 raise Exception
             ui.mermaid(self.blitz_ui.erd)
         with ui.footer().classes("w-full justify-start "):
-            ui.button(icon="zoom_in", on_click=self.zoom_svg).classes("borderrounded-sm").props("flat")
-            ui.button(icon="zoom_out", on_click=self.unzoom_svg).classes("border rounded-sm").props("flat")
+            ui.button(icon="zoom_in", on_click=self.zoom_svg).classes(
+                "borderrounded-sm"
+            ).props("flat")
+            ui.button(icon="zoom_out", on_click=self.unzoom_svg).classes(
+                "border rounded-sm"
+            ).props("flat")

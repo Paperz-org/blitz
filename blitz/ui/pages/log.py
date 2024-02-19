@@ -1,10 +1,10 @@
-from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
+from blitz.ui.components.header import FrameComponent
 from blitz.ui.components.logger import LogComponent
+from blitz.ui.pages.base import BasePage
 
 
-class LogPage:
-    def __init__(self, blitz_ui: BlitzUI = get_blitz_ui()) -> None:
-        self.blitz_ui = blitz_ui
+class LogPage(BasePage):
+    PAGE_NAME = "Log"
 
-    def render_page(self) -> None:
+    def render(self) -> None:
         LogComponent().render()
