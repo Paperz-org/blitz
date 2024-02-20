@@ -1,4 +1,3 @@
-
 from typing import Any, Self, TypeVar
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 

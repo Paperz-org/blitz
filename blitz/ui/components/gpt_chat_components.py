@@ -7,11 +7,9 @@ from nicegui.elements.expansion import Expansion
 from pydantic import ValidationError
 from blitz.models.blitz.file import BlitzFile
 from openai.types.chat import ChatCompletionMessageParam
-from blitz.ui.components import buttons
 from blitz.ui.components.buttons import FlatButton
 
 import yaml
-from blitz.ui.components.buttons.base import BaseButton
 
 from blitz.ui.components.buttons.icon import IconButton
 
@@ -205,6 +203,7 @@ class GPTResponse(GPTChatComponent):
 
     def __init__(self, text: str = "", text_is_finished: bool = False) -> None:
         super().__init__(label=self.LABEL, text=text, icon=self.ICON, avatar_color=self.AVATAR_COLOR)
+        self._text_is_finished: bool
         self.text_is_finished = text_is_finished
 
     def add(self, text: str) -> None:
