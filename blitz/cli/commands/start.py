@@ -24,20 +24,12 @@ from blitz import __version__
 
 
 def start_blitz(
-    blitz_app_name: Annotated[
-        Optional[str], typer.Argument(help="Blitz app name")
-    ] = None,
+    blitz_app_name: Annotated[Optional[str], typer.Argument(help="Blitz app name")] = None,
     admin: Annotated[bool, typer.Option(help="Don't create admin.")] = True,
-    port: Annotated[
-        int, typer.Option(help="Define the port of the server")
-    ] = get_settings().BLITZ_PORT,
-    config_route: Annotated[
-        bool, typer.Option(help="Enable the blitz config route.")
-    ] = True,
+    port: Annotated[int, typer.Option(help="Define the port of the server")] = get_settings().BLITZ_PORT,
+    config_route: Annotated[bool, typer.Option(help="Enable the blitz config route.")] = True,
     hot_reload: Annotated[bool, typer.Option(help="Enable the hot reload.")] = True,
-    version: Annotated[
-        Optional[str], typer.Option(help="Define the version of the app.")
-    ] = None,
+    version: Annotated[Optional[str], typer.Option(help="Define the version of the app.")] = None,
 ) -> None:
     blitz = BlitzCore()
 
@@ -87,14 +79,7 @@ def start_blitz(
             log_level="info",
         )
         server = uvicorn.Server(server_config)
-        ChangeReload(
-            server_config, target=server.run, sockets=[server_config.bind_socket()]
-        ).run()
+        ChangeReload(server_config, target=server.run, sockets=[server_config.bind_socket()]).run()
     else:
-        
-        blitz_api = create_blitz_api(
-            blitz_app, enable_config_route=config_route, admin=admin
-        )
-        uvicorn.run(
-            blitz_api, host="localhost", port=port, log_config=None, log_level="warning"
-        )
+        blitz_api = create_blitz_api(blitz_app, enable_config_route=config_route, admin=admin)
+        uvicorn.run(blitz_api, host="localhost", port=port, log_config=None, log_level="warning")

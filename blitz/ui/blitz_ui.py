@@ -28,6 +28,11 @@ class BlitzUI:
     def current_project(self) -> str | None:
         return self._current_project
 
+    @current_project.setter
+    def current_project(self, project: str) -> None:
+        print(project)
+        self._current_project = project
+
     @property
     def current_app(self) -> BlitzApp | None:
         return self._current_app

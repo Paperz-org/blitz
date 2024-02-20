@@ -43,6 +43,8 @@ class ResponseJSON:
             BlitzFile.from_dict(json)
         except ValidationError:
             return False
+        except Exception:
+            return False
         else:
             return True
 
@@ -75,7 +77,7 @@ class ResponseJSON:
 
     def download_dialog(self) -> None:
         with ui.dialog() as self._dialog, ui.card().classes("w-full px-4"):
-            if not self.is_valid_blitz_file:
+            if self.is_valid_blitz_file is False:
                 self.invalid_blitz_file()
             # with ui.expansion("Edit File", icon="edit").classes("w-full h-auto rounded-lg border-solid border overflow-hidden grow overflow-hidden"):
             #    JsonEditorComponent(self.json).render()
@@ -209,6 +211,7 @@ class GPTResponse(GPTChatComponent):
     def __init__(self, text: str = "", text_is_finished: bool = False) -> None:
         super().__init__(label=self.LABEL, text=text, icon=self.ICON, avatar_color=self.AVATAR_COLOR)
         self._text_is_finished = text_is_finished
+        self.text_is_finished = text_is_finished
 
     def add(self, text: str) -> None:
         self.text += text
@@ -254,4 +257,7 @@ class GPTResponse(GPTChatComponent):
 
     @classmethod
     def from_gpt_dict(cls, gpt_dict: dict[str, Any]) -> "GPTChatComponent":
-        return cls(text=gpt_dict.get("content", ""), text_is_finished=gpt_dict.get("text_is_finished", False))
+        return cls(
+            text=gpt_dict.get("content", ""),
+            text_is_finished=gpt_dict.get("text_is_finished", False),
+        )
