@@ -75,6 +75,7 @@ class BlitzFile(BaseModel):
         resources_configs: list[BlitzResourceConfig] = []
         resource_name: str
         resource_config: dict[str, Any]
+
         for resource_name, resource_config in blitz_file.get(cls.RESOURCES_FIELD_NAME, {}).items():
             settings_fields = {}
             fields = {}

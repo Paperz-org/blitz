@@ -205,8 +205,7 @@ class GPTResponse(GPTChatComponent):
 
     def __init__(self, text: str = "", text_is_finished: bool = False) -> None:
         super().__init__(label=self.LABEL, text=text, icon=self.ICON, avatar_color=self.AVATAR_COLOR)
-        self._text_is_finished = False
-        self.text_is_finished = text_is_finished
+        self._text_is_finished = text_is_finished
 
     def add(self, text: str) -> None:
         self.text += text
@@ -252,4 +251,7 @@ class GPTResponse(GPTChatComponent):
 
     @classmethod
     def from_gpt_dict(cls, gpt_dict: dict[str, Any]) -> "GPTChatComponent":
-        return cls(text=gpt_dict.get("content", ""), text_is_finished=gpt_dict.get("text_is_finished", True))
+        return cls(
+            text=gpt_dict.get("content", ""),
+            text_is_finished=gpt_dict.get("text_is_finished", False),
+        )

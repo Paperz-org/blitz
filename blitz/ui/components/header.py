@@ -4,6 +4,7 @@ from nicegui import ui
 from nicegui.page_layout import LeftDrawer
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 from blitz.ui.components.buttons import FlatButton
+from blitz.ui.components.base import BaseComponent
 
 MAIN_PINK = "#cd87ff"
 DARK_PINK = "#a72bff"
@@ -18,7 +19,12 @@ class HeaderMenuComponent:
 
 
 class HeaderComponent:
-    def __init__(self, title: str = "", blitz_ui: BlitzUI = get_blitz_ui(), drawer: LeftDrawer | None = None) -> None:
+    def __init__(
+        self,
+        title: str = "",
+        blitz_ui: BlitzUI = get_blitz_ui(),
+        drawer: LeftDrawer | None = None,
+    ) -> None:
         self.title = title
         self.blitz_ui = blitz_ui
 
@@ -93,20 +99,18 @@ class MenuLink:
         ui.open(self.link)
 
 
-class FrameComponent:
+class FrameComponent(BaseComponent):
     def __init__(
         self,
-        blitz_ui: BlitzUI = get_blitz_ui(),
         show_drawer: bool = True,
         drawer_open: bool = True,
     ) -> None:
-        self.blitz_ui = blitz_ui
-        self.current_project = blitz_ui.current_project
         self.show_drawer = show_drawer
         self.drawer_open = drawer_open
 
         # Only for declarative
         self.drawer: LeftDrawer | None = None
+        super().__init__()
 
     def left_drawer(self) -> None:
         with ui.left_drawer(value=self.drawer_open, fixed=True, bottom_corner=True).props("width=200").classes(
@@ -132,6 +136,6 @@ class FrameComponent:
             MenuLink("Logs", f"/projects/{self.current_project}/logs", "list").render()
 
     def render(self) -> None:
-        if self.show_drawer and self.current_project is not None:
+        if self.show_drawer and self.blitz_ui.current_project is not None:
             self.left_drawer()
         HeaderComponent(drawer=self.drawer).render()

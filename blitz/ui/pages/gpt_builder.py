@@ -13,6 +13,8 @@ from blitz.ui.components.gpt_chat_components import (
     GPTResponse,
     UserQuestion,
 )
+from blitz.ui.components.header import FrameComponent
+from blitz.ui.pages.base import BasePage
 
 DEV_TEXT = """Sure! Here is a sample blitz_file with randomly generated models and fields:
 
@@ -111,16 +113,13 @@ def get_gpt_client() -> GPTClient:
     return GPTClient(api_key=get_settings().BLITZ_OPENAI_API_KEY)
 
 
-class AskGPTPage:
-    def __init__(
-        self,
-        gpt_client: GPTClient = get_gpt_client(),
-        blitz_ui: BlitzUI = get_blitz_ui(),
-    ) -> None:
-        self.gpt_client = gpt_client
-        self.gpt_client.pre_prompt = blitz_ui.preprompt
+class AskGPTPage(BasePage):
+    PAGE_NAME = "GPT Builder"
+    FRAME = FrameComponent(show_drawer=False)
 
-        self.blitz_ui = blitz_ui
+    def setup(self, gpt_client: GPTClient = get_gpt_client()) -> None:
+        self.gpt_client = gpt_client
+        self.gpt_client.pre_prompt = self.blitz_ui.preprompt
         self._gpt_client_error = False
         self.gpt_request: str = ""
         self.gpt_messages: list[GPTChatComponent] = []
@@ -158,7 +157,7 @@ class AskGPTPage:
     def gpt_client_error(self) -> bool:
         return self._gpt_client_error
 
-    def render_page(self) -> None:
+    def render(self) -> None:
         # Allow the full size of the scrollable zone
         ui.query(".q-page").classes("flex")
         ui.query(".nicegui-content").classes("w-full")
@@ -177,6 +176,7 @@ class AskGPTPage:
 
         # The footer with the input and the send button
         self.footer()
+        FrameComponent(show_drawer=False).render()
 
     def footer(self) -> None:
         with ui.footer().classes("items-center space-y-0 pt-0 justify-center px-5"):

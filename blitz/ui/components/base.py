@@ -1,13 +1,17 @@
-from typing import Any, Self, Tuple, TypeVar
-from blitz.ui.blitz_ui import get_blitz_ui
+
+from typing import Any, Self, TypeVar
+from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 
 T = TypeVar("T", bound="BaseComponent")
 
 
 class BaseComponent:
-    def __init__(self, *args: Any, props: str = "", classes: str = "", **kwargs: Any) -> None:
+    def __init__(self, *args: Any, props: str = "", classes: str = "", blitz_ui: BlitzUI = get_blitz_ui(), **kwargs: Any) -> None:
         self.props: str
         self.classes: str
+        self.blitz_ui = blitz_ui
+        self.current_project = blitz_ui.current_project
+        self.current_app = blitz_ui.current_app
 
         if hasattr(self, "props"):
             self.props = f"{self.props} {props}"
@@ -19,7 +23,6 @@ class BaseComponent:
             self.classes = classes
 
         self.blitz_ui = get_blitz_ui()
-        self.render()
 
     def render(self) -> None:
         raise NotImplementedError
