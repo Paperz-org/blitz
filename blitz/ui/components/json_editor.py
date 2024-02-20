@@ -5,6 +5,7 @@ from pydantic import ValidationError
 import yaml
 from blitz.models.blitz.file import BlitzFile
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
+from blitz.ui.components.buttons import FlatButton
 from blitz.ui.components.header import DARK_PINK, MAIN_PINK
 
 
@@ -97,10 +98,10 @@ class BlitzFileEditorComponent:
         with ui.row().classes("w-full justify-between align-center p-4 rounded-lg border"):
             with ui.row().classes("justify-between"):
                 ui.switch("Edit BlitzFile", on_change=self.enable_editor)
-                ui.button("Reset", on_click=self.reset_content, icon="restart_alt").props("flat")
+                FlatButton("Reset", on_click=self.reset_content, icon="restart_alt")
             with ui.row().classes("justify-between"):
-                ui.button("Validate", on_click=self.validate, icon="verified").props("flat")
-                ui.button("Save", on_click=self.save, icon="save").props("flat")
+                FlatButton("Validate", on_click=self.validate, icon="verified")
+                FlatButton("Save", on_click=self.save, icon="save")
         self.editor = (
             ui.json_editor(
                 {

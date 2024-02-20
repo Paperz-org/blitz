@@ -7,9 +7,13 @@ from nicegui.elements.expansion import Expansion
 from pydantic import ValidationError
 from blitz.models.blitz.file import BlitzFile
 from openai.types.chat import ChatCompletionMessageParam
-
+from blitz.ui.components import buttons
+from blitz.ui.components.buttons import FlatButton
 
 import yaml
+from blitz.ui.components.buttons.base import BaseButton
+
+from blitz.ui.components.buttons.icon import IconButton
 
 
 class ResponseJSON:
@@ -23,7 +27,7 @@ class ResponseJSON:
         self.color = self._get_color(self.is_valid_blitz_file)
 
         self._expansion: Expansion | None = None
-        self._expansion_is_open = True
+        self._expansion_is_open = self.is_valid_blitz_file
         self._dialog: Dialog | None = None
 
     @staticmethod
@@ -43,6 +47,8 @@ class ResponseJSON:
             BlitzFile.from_dict(json)
         except ValidationError:
             return False
+        except Exception:
+            return False
         else:
             return True
 
@@ -56,35 +62,26 @@ class ResponseJSON:
         return json.loads(match.group(1))
 
     async def copy_code(self) -> None:
-        ui.run_javascript("navigator.clipboard.writeText(`" + str(self.json) + "`)")
+        ui.run_javascript(f"navigator.clipboard.writeText(`{json.dumps(self.json, indent=4)}`)")
         ui.notify("Copied to clipboard", type="info", color="green")
 
     def action_buttons(self) -> None:
         with ui.row(wrap=False).classes("items-center"):
-            ui.button(
-                icon="content_copy",
-                color="transparent",
-                on_click=self.copy_code,
-            ).props("dense flat size=xm color=grey")
             if self._dialog is None:
                 # TODO: handle error
                 raise Exception
-            ui.button(icon="file_download", color="transparent", on_click=self._dialog.open).props(
-                "dense flat size=xm color=grey"
-            )
+            IconButton(icon="content_copy", icon_color="grey", on_click=self.copy_code)
+            IconButton(icon="file_download", icon_color="grey", on_click=self._dialog.open)
 
     def download_dialog(self) -> None:
         with ui.dialog() as self._dialog, ui.card().classes("w-full px-4"):
-            if not self.is_valid_blitz_file:
+            if self.is_valid_blitz_file is False:
                 self.invalid_blitz_file()
             # with ui.expansion("Edit File", icon="edit").classes("w-full h-auto rounded-lg border-solid border overflow-hidden grow overflow-hidden"):
             #    JsonEditorComponent(self.json).render()
             with ui.row().classes("w-full justify-end"):
-                ui.button(
-                    "Export as JSON",
-                    on_click=self._download_json,
-                ).props("flat")
-                ui.button("Export as YAML", on_click=self._download_yaml).props("flat")
+                FlatButton("Export as JSON", on_click=self._download_json)
+                FlatButton("Export as YAML", on_click=self._download_yaml)
 
     def _download_json(self) -> None:
         ui.download(
@@ -208,7 +205,8 @@ class GPTResponse(GPTChatComponent):
 
     def __init__(self, text: str = "", text_is_finished: bool = False) -> None:
         super().__init__(label=self.LABEL, text=text, icon=self.ICON, avatar_color=self.AVATAR_COLOR)
-        self._text_is_finished = text_is_finished
+        self._text_is_finished = False
+        self.text_is_finished = text_is_finished
 
     def add(self, text: str) -> None:
         self.text += text
@@ -254,4 +252,4 @@ class GPTResponse(GPTChatComponent):
 
     @classmethod
     def from_gpt_dict(cls, gpt_dict: dict[str, Any]) -> "GPTChatComponent":
-        return cls(text=gpt_dict.get("content", ""), text_is_finished=gpt_dict.get("text_is_finished", False))
+        return cls(text=gpt_dict.get("content", ""), text_is_finished=gpt_dict.get("text_is_finished", True))

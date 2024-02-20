@@ -3,6 +3,7 @@ from pathlib import Path
 from nicegui import ui
 from nicegui.page_layout import LeftDrawer
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
+from blitz.ui.components.buttons import FlatButton
 
 MAIN_PINK = "#cd87ff"
 DARK_PINK = "#a72bff"
@@ -13,7 +14,7 @@ class HeaderMenuComponent:
         pass
 
     def render(self) -> None:
-        ui.button(icon="menu").props("flat")
+        FlatButton(icon="menu")
 
 
 class HeaderComponent:
@@ -43,7 +44,7 @@ class HeaderComponent:
             with ui.row().classes("items-center space-x-20 content-center my-auto"):
                 with ui.row().classes("items-center space-x-0 content-center "):
                     if self.drawer is not None:
-                        ui.button(icon="menu", on_click=self.drawer.toggle).props("flat")
+                        FlatButton(icon="menu", on_click=self.drawer.toggle)
                     ui.icon(name="bolt", color=DARK_PINK, size="32px")
                     with ui.link(target=f"/projects/{self.blitz_ui.current_project}"):
                         ui.label("Blitz Dashboard")
