@@ -11,9 +11,8 @@ class BasePage(BaseComponent):
     FRAME: FrameComponent
 
     def __init__(self) -> None:
-        super().__init__()
         self.setup()
-        self.render()
+        super().__init__()
         self.frame()
 
     def __new__(cls, *args: Any, **kwargs: Any) -> Self:
