@@ -105,7 +105,6 @@ class FrameComponent(BaseComponent):
         drawer_open: bool = True,
     ) -> None:
         super().__init__()
-        print("+++________")
         self.show_drawer = show_drawer
         self.drawer_open = drawer_open
 
