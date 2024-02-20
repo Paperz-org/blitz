@@ -205,7 +205,7 @@ class GPTResponse(GPTChatComponent):
 
     def __init__(self, text: str = "", text_is_finished: bool = False) -> None:
         super().__init__(label=self.LABEL, text=text, icon=self.ICON, avatar_color=self.AVATAR_COLOR)
-        self._text_is_finished = text_is_finished
+        self.text_is_finished = text_is_finished
 
     def add(self, text: str) -> None:
         self.text += text
