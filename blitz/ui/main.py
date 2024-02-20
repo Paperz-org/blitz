@@ -45,7 +45,6 @@ def init_ui(
     logging.getLogger("niceGUI").setLevel(logging.WARNING)
     blitz_ui = get_blitz_ui()
     blitz_ui.current_app = blitz_api.blitz_app
-    print("________", blitz_ui)
     init_routers()
     ui.run_with(
         app=blitz_api,
