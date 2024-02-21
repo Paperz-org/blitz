@@ -15,7 +15,9 @@ class HeaderMenuComponent:
         pass
 
     def render(self) -> None:
-        FlatButton(icon="menu")
+        FlatButton(
+            icon="menu",
+        )
 
 
 class HeaderComponent:

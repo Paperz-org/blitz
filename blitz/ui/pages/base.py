@@ -6,6 +6,7 @@ from starlette.requests import Request
 from blitz.ui.components.header import FrameComponent
 
 
+# TODO base page don't inherit
 class BasePage(BaseComponent):
     PAGE_NAME = "Blitz Dashboard"
     FRAME: FrameComponent

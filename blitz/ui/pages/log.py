@@ -6,4 +6,4 @@ class LogPage(BasePage):
     PAGE_NAME = "Log"
 
     def render(self) -> None:
-        LogComponent().render()
+        LogComponent()

@@ -35,6 +35,6 @@ class DashboardPage(BasePage):
                     ui.table(columns=self.columns, rows=self.rows, row_key="name").classes("w-full no-shadow")
                 with ui.expansion("Status", value=True, icon="health_and_safety").classes("w-full text-bold text-2xl"):
                     # See https://github.com/zauberzeug/nicegui/issues/2174
-                    StatusComponent().render()  # type: ignore
+                    StatusComponent()
                 with ui.expansion("Logs", value=False, icon="list").classes("w-full text-bold text-2xl"):
-                    LogComponent().render()
+                    LogComponent()
