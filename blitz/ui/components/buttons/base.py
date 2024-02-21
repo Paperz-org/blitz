@@ -3,7 +3,7 @@ from nicegui import ui
 from blitz.ui.components.base import BaseComponent
 
 
-class BaseButton(BaseComponent):
+class BaseButton(BaseComponent[ui.button]):
     def __init__(
         self,
         text: str = "",
@@ -21,9 +21,13 @@ class BaseButton(BaseComponent):
         super().__init__(props=props, classes=classes)
 
     def render(self) -> None:
-        ui.button(
-            self.text,
-            on_click=self.on_click,
-            color=self.color,
-            icon=self.icon,
-        ).props(self.props).classes(self.classes)
+        self.ng = (
+            ui.button(
+                self.text,
+                on_click=self.on_click,
+                color=self.color,
+                icon=self.icon,
+            )
+            .props(self.props)
+            .classes(self.classes)
+        )

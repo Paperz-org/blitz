@@ -1,7 +1,16 @@
-from typing import Any, Self, TypeVar
+from typing import Any, Generic, Self, TypeVar, Protocol
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 
-T = TypeVar("T", bound="BaseComponent")
+
+class NiceGUIComponent(Protocol):
+    def __enter__(self) -> Any:
+        ...
+
+    def __exit__(self, exc_type: Any, exc_value: Any, traceback: Any) -> None:
+        ...
+
+
+V = TypeVar("V", bound=NiceGUIComponent)
 
 
 # Get the blitz_ui through a metaclass
@@ -12,8 +21,9 @@ class BaseComponentMeta(type):
         return super().__new__(cls, name, bases, namespace)
 
 
-class BaseComponent(metaclass=BaseComponentMeta):
+class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
     def __init__(self, *args: Any, props: str = "", classes: str = "", **kwargs: Any) -> None:
+        self._ng: V
         self.props: str
         self.classes: str
         self.blitz_ui: BlitzUI
@@ -34,6 +44,14 @@ class BaseComponent(metaclass=BaseComponentMeta):
 
     def render(self) -> None:
         raise NotImplementedError
+
+    @property
+    def ng(self) -> V:
+        return self._ng
+
+    @ng.setter
+    def ng(self, value: V) -> None:
+        self._ng = value
 
     @classmethod
     def variant(cls, name: str, *, props: str = "", classes: str = "", **kwargs: Any) -> type[Self]:
@@ -58,3 +76,10 @@ class BaseComponent(metaclass=BaseComponentMeta):
                 "classes": classes,
             },
         )
+
+    def __enter__(self) -> V:
+        return self.ng
+
+    def __exit__(self, exc_type: Any, exc_value: Any, traceback: Any) -> None:
+        if hasattr(self.ng, "__exit__"):
+            self.ng.__exit__(exc_type, exc_value, traceback)
