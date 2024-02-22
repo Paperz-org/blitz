@@ -12,6 +12,7 @@ from blitz.ui.components.buttons import FlatButton
 import yaml
 
 from blitz.ui.components.buttons.icon import IconButton
+from blitz.ui.components.rows import WFullItemsCenter
 
 
 class ResponseJSON:
@@ -108,7 +109,8 @@ class ResponseJSON:
     @ui.refreshable
     def render(self) -> None:
         self.download_dialog()
-        with ui.row(wrap=False).classes("items-center w-full"):
+        with WFullItemsCenter(wrap=False):
+        #with ui.row(wrap=False).classes("items-center w-full"):
             with ui.expansion(
                 self.blitz_app_title,
                 icon="settings_suggest",

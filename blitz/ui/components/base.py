@@ -1,4 +1,5 @@
-from typing import Any, Generic, Self, TypeVar, Protocol, cast
+import time
+from typing import Annotated, Any, Generic, Self, TypeVar, Protocol, cast
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 from typing import overload
 from nicegui import ui
@@ -34,6 +35,7 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
         self.current_project = self.blitz_ui.current_project
         self.current_app = self.blitz_ui.current_app
 
+        print("in base component", classes)
         if hasattr(self, "props"):
             self.props = f"{self.props} {props}"
         else:
@@ -64,7 +66,7 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
         self._ng = value
 
     @classmethod
-    def variant(cls, name: str, *, props: str = "", classes: str = "", **kwargs: Any) -> type[Self]:
+    def variant(cls, name: str = "", *, props: str = "", classes: str = "",docstring:str="", **kwargs: Any) -> type[Self]:
         """
         Create a new type (class) based on the current component class with specified props and classes.
 
@@ -72,6 +74,10 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
         :param classes: The CSS classes to be predefined in the new class.
         :return: A new type (class) that is a variant of the current class with predefined props and classes.
         """
+        if not name:
+            new_type_name = f"{cls.__name__}_{str(time.time()).replace(".","")}"
+        else:
+            new_type_name = f"{name}{cls.__name__}"
 
         if hasattr(cls, "props"):
             props = f"{getattr(cls, 'props')} {props}"
@@ -79,16 +85,18 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
             classes = f"{getattr(cls, 'classes')} {classes}"
 
         return type(
-            f"{name}{cls.__name__}",
+            new_type_name,
             (cls,),
             {
                 "props": props,
                 "classes": classes,
             },
         )
-
-    def __enter__(self) -> V:
-        return self.ng
+    
+    def __enter__(self) -> Any | None:
+        if hasattr(self.ng, "__enter__"):
+            return self.ng.__enter__()
+        return None
 
     def __exit__(self, exc_type: Any, exc_value: Any, traceback: Any) -> None:
         if hasattr(self.ng, "__exit__"):

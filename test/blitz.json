@@ -1,0 +1,8 @@
+{
+    "config": {
+        "name": "test",
+        "description": "",
+        "version": "0.1.0"
+    },
+    "resources": {}
+}

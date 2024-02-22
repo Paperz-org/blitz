@@ -5,6 +5,7 @@ from nicegui.page_layout import LeftDrawer
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 from blitz.ui.components.buttons import FlatButton
 from blitz.ui.components.base import BaseComponent
+from blitz.ui.components.rows import ItemsCenterContentCenterRow
 
 MAIN_PINK = "#cd87ff"
 DARK_PINK = "#a72bff"
@@ -56,8 +57,8 @@ class HeaderComponent:
                     ui.icon(name="bolt", color=DARK_PINK, size="32px")
                     with ui.link(target=f"/projects/{self.blitz_ui.current_project}"):
                         ui.label("Blitz Dashboard")
-
-                with ui.row().classes("items-center justify-between content-center"):
+                with ItemsCenterContentCenterRow(classes="justify-between"):
+                #with ui.row().classes("items-center justify-between content-center"):
                     with ui.link(target=f"{self.blitz_ui.localhost_url}/projects").classes("disabled"):
                         ui.tooltip("Multiple App management is coming soon")
                         ui.label("Projects")
