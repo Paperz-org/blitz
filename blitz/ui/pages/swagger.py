@@ -20,7 +20,7 @@ class SwaggerPage(BasePage):
 
     def render(self) -> None:
         self.resize_iframe()
-        IFrame(
+        self.ng = IFrame(
             src=f"{self.blitz_ui.localhost_url}/api/docs",
             frameborder=0,
             classes="w-full rounded-sm bg-white h-screen overflow-hidden",
