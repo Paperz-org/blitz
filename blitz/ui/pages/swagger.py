@@ -1,4 +1,5 @@
 from nicegui import ui
+from blitz.ui.components.element.base import IFrame
 
 from blitz.ui.pages.base import BasePage
 
@@ -19,7 +20,9 @@ class SwaggerPage(BasePage):
 
     def render(self) -> None:
         self.resize_iframe()
-
-        ui.element("iframe").props(
-            f"src={self.blitz_ui.localhost_url}/api/docs frameborder=0 onload=resizeIframe()"
-        ).classes("w-full rounded-sm bg-white h-screen overflow-hidden")
+        IFrame(
+            src=f"{self.blitz_ui.localhost_url}/api/docs",
+            frameborder=0,
+            classes="w-full rounded-sm bg-white h-screen overflow-hidden",
+            props="onload=resizeIframe()",
+        )

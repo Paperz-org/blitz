@@ -4,19 +4,21 @@ from nicegui import ui
 from httpx import AsyncClient
 
 from blitz.ui.components.base import BaseComponent
-from blitz.ui.components.icon.base import BaseIcon
+from blitz.ui.components.grids.base import BaseGrid as Grid
+from blitz.ui.components.icon.base import BaseIcon as Icon
 from blitz.ui.components.labels.base import LGFontBoldLabel
+from blitz.ui.components.timer.base import BaseTimer as Timer
 
 
 class StatusComponent(BaseComponent[ui.grid], reactive=True):
-    _GreenIcon = BaseIcon.variant(classes="text-green-500", render=False)("check_circle")
-    _RedIcon = BaseIcon.variant(classes="text-red-500", render=False)("error")
+    _GreenIcon = Icon.variant(classes="text-green-500", render=False)("check_circle")
+    _RedIcon = Icon.variant(classes="text-red-500", render=False)("error")
 
     api_up: bool = False
     admin_up: bool = False
 
     def __init__(self, *args: Any, props: str = "", classes: str = "", **kwargs: Any) -> None:
-        ui.timer(10.0, self._set_status)
+        Timer(10.0, self._set_status)
         super().__init__(*args, props=props, classes=classes, **kwargs)
 
     async def _is_api_up(self) -> bool:
@@ -35,7 +37,7 @@ class StatusComponent(BaseComponent[ui.grid], reactive=True):
         self.refresh()
 
     def render(self) -> None:  # type: ignore
-        with ui.grid(rows=2, columns=2).classes("gap-4") as self.ng:
+        with Grid(rows=2, columns=2, classes="gap-4") as self.ng:
             LGFontBoldLabel("API:")
             self._GreenIcon() if self.api_up else self._RedIcon()
             LGFontBoldLabel("Admin:")

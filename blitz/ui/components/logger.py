@@ -1,5 +1,4 @@
 import logging
-from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 from nicegui import ui
 from blitz.api.logs import InterceptHandler
 from blitz.ui.components.base import BaseComponent
