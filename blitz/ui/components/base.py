@@ -1,7 +1,6 @@
 import time
-from typing import Annotated, Any, Generic, Self, TypeVar, Protocol, cast
+from typing import Any, Generic, Self, TypeVar, Protocol
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
-from typing import overload
 from nicegui import ui
 
 
@@ -18,40 +17,44 @@ V = TypeVar("V", bound=NiceGUIComponent)
 
 # Get the blitz_ui through a metaclass
 class BaseComponentMeta(type):
-    def __new__(cls, name: str, bases: tuple[type, ...], namespace: dict[str, Any], *, reactive: bool = False) -> type:
+    def __new__(
+        cls,
+        name: str,
+        bases: tuple[type, ...],
+        namespace: dict[str, Any],
+        *,
+        reactive: bool = False,
+        render: bool = True,
+    ) -> type:
         blitz_ui = get_blitz_ui()
         namespace["blitz_ui"] = blitz_ui
         namespace["reactive"] = reactive
+        namespace["_render"] = render
         return super().__new__(cls, name, bases, namespace)
 
 
 class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
     def __init__(self, *args: Any, props: str = "", classes: str = "", **kwargs: Any) -> None:
         self._ng: V
-        self.props: str
-        self.classes: str
+        self.props = props
+        self.classes = classes
         self.blitz_ui: BlitzUI
         self.reactive: bool
+        self._render: bool
         self.current_project = self.blitz_ui.current_project
         self.current_app = self.blitz_ui.current_app
-
-        print("in base component", classes)
-        if hasattr(self, "props"):
-            self.props = f"{self.props} {props}"
-        else:
-            self.props = props
-        if hasattr(self, "classes"):
-            classes = f"{self.classes} {classes}"
-        else:
-            self.classes = classes
 
         self.blitz_ui = get_blitz_ui()
         if self.reactive:
             self.render = ui.refreshable(self.render)  # type: ignore
-        self.render()
+        if self._render:
+            self.render()
 
     def render(self) -> None:
         raise NotImplementedError
+
+    def __call__(self, *args: Any, **kwds: Any) -> Any:
+        self.render()
 
     def refresh(self, *args: Any, **kwargs: Any) -> None:
         if hasattr(self.render, "refresh"):
@@ -66,7 +69,9 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
         self._ng = value
 
     @classmethod
-    def variant(cls, name: str = "", *, props: str = "", classes: str = "",docstring:str="", **kwargs: Any) -> type[Self]:
+    def variant(
+        cls, name: str = "", *, props: str = "", classes: str = "", render: bool = True, **kwargs: Any
+    ) -> type[Self]:
         """
         Create a new type (class) based on the current component class with specified props and classes.
 
@@ -83,7 +88,6 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
             props = f"{getattr(cls, 'props')} {props}"
         if hasattr(cls, "classes"):
             classes = f"{getattr(cls, 'classes')} {classes}"
-
         return type(
             new_type_name,
             (cls,),
@@ -91,8 +95,9 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
                 "props": props,
                 "classes": classes,
             },
+            render=render,
         )
-    
+
     def __enter__(self) -> Any | None:
         if hasattr(self.ng, "__enter__"):
             return self.ng.__enter__()
@@ -101,3 +106,21 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
     def __exit__(self, exc_type: Any, exc_value: Any, traceback: Any) -> None:
         if hasattr(self.ng, "__exit__"):
             self.ng.__exit__(exc_type, exc_value, traceback)
+
+    def __new__(cls, *args: Any, **kwargs: Any) -> Self:
+        instance = super().__new__(cls)
+        for parent in cls.mro():
+            if hasattr(parent, "classes"):
+                setattr(instance, "classes", getattr(parent, "classes"))
+            if hasattr(parent, "props"):
+                setattr(instance, "props", getattr(parent, "props"))
+        return instance
+
+    def __setattr__(self, __name: str, __value: Any) -> None:
+        """If the attribute is classes or props, then append the new value to the existing value."""
+        if __name in ["props", "classes"] and hasattr(self, __name):
+            if __value in getattr(self, __name):
+                return
+            __value = f"{getattr(self, __name)} {__value}"
+
+        return super().__setattr__(__name, __value)

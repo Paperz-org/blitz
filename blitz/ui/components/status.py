@@ -1,13 +1,17 @@
 from typing import Any
 from nicegui import ui
 
-from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 from httpx import AsyncClient
 
 from blitz.ui.components.base import BaseComponent
+from blitz.ui.components.icon.base import BaseIcon
+from blitz.ui.components.labels.base import LGFontBoldLabel
 
 
 class StatusComponent(BaseComponent[ui.grid], reactive=True):
+    _GreenIcon = BaseIcon.variant(classes="text-green-500", render=False)("check_circle")
+    _RedIcon = BaseIcon.variant(classes="text-red-500", render=False)("error")
+
     api_up: bool = False
     admin_up: bool = False
 
@@ -28,17 +32,11 @@ class StatusComponent(BaseComponent[ui.grid], reactive=True):
     async def _set_status(self) -> None:
         self.api_up = await self._is_api_up()
         self.admin_up = await self._is_admin_up()
+        self.refresh()
 
     def render(self) -> None:  # type: ignore
         with ui.grid(rows=2, columns=2).classes("gap-4") as self.ng:
-            ui.label("API:").classes("text-lg font-bold")
-            if self.api_up:
-                ui.icon(name="check_circle").classes("text-green-500")
-            else:
-                ui.icon(name="error").classes("text-red-500")
-            ui.label("Admin:").classes("text-lg font-bold")
-            if self.admin_up:
-                ui.icon(name="check_circle").classes("text-green-500")
-            else:
-                ui.icon(name="error").classes("text-red-500")
-
+            LGFontBoldLabel("API:")
+            self._GreenIcon() if self.api_up else self._RedIcon()
+            LGFontBoldLabel("Admin:")
+            self._GreenIcon() if self.admin_up else self._RedIcon()

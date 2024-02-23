@@ -12,7 +12,10 @@ from blitz.ui.components.buttons import FlatButton
 import yaml
 
 from blitz.ui.components.buttons.icon import IconButton
+from blitz.ui.components.labels import RedLabel
+from blitz.ui.components.markdown.base import BaseMarkdown, MarkdownResponse
 from blitz.ui.components.rows import WFullItemsCenter
+from blitz.ui.components.rows.base import ItemsCenterRow, WFullRow
 
 
 class ResponseJSON:
@@ -95,9 +98,9 @@ class ResponseJSON:
         return f"{self.blitz_app_title.replace(' ', '_').replace('.', '_').lower()}.{extension}"
 
     def invalid_blitz_file(self) -> None:
-        with ui.row().classes("items-center"):
+        with ItemsCenterRow():
             ui.icon("error", color="red", size="sm")
-            ui.label("This is not a valid Blitz file.").classes("text-red")
+            RedLabel("This is not a valid Blitz file.")
 
     def _toggle_expansion(self) -> None:
         self._expansion_is_open = not self._expansion_is_open
@@ -110,7 +113,7 @@ class ResponseJSON:
     def render(self) -> None:
         self.download_dialog()
         with WFullItemsCenter(wrap=False):
-        #with ui.row(wrap=False).classes("items-center w-full"):
+            # with ui.row(wrap=False).classes("items-center w-full"):
             with ui.expansion(
                 self.blitz_app_title,
                 icon="settings_suggest",
@@ -123,15 +126,6 @@ class ResponseJSON:
                     self.invalid_blitz_file()
                 ui.markdown(self.text)
             self.action_buttons()
-
-
-class MarkdownResponse:
-    def __init__(self, text: str) -> None:
-        self.text = text
-
-    @ui.refreshable
-    def render(self) -> None:
-        ui.markdown(self.text)
 
 
 class GPTChatComponent:
@@ -151,7 +145,7 @@ class GPTChatComponent:
 
     @ui.refreshable
     def render(self) -> None:
-        with ui.row(wrap=False).classes("w-full"):
+        with WFullRow(wrap=False):
             ui.space().classes("w-1/3")
             with ui.column().classes("justify-start w-2/3"):
                 with ui.row(wrap=False).classes("items-center w-full"):
@@ -165,7 +159,7 @@ class GPTChatComponent:
                             component.render()
                 else:
                     with ui.element().classes("px-10"):
-                        ui.markdown(self.text)
+                        BaseMarkdown(self.text)
             ui.space().classes("w-1/3")
 
     def as_gpt_dict(self) -> ChatCompletionMessageParam:

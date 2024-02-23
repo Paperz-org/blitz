@@ -2,10 +2,7 @@ from typing import Any
 from .flat import FlatButton
 
 
-BaseIconButton = FlatButton.variant("Icon", props="dense")
-
-
-class IconButton(BaseIconButton):  # type: ignore
+class IconButton(FlatButton.variant(props="dense")):  # type: ignore
     def __init__(
         self,
         icon: str,

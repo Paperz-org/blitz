@@ -1,0 +1,16 @@
+// Folder-specific settings
+//
+// For a full list of overridable settings, and general information on folder-specific settings,
+// see the documentation: https://zed.dev/docs/configuring-zed#folder-specific-settings
+{
+  "detect_venv": {
+    "on": {
+      // Default directories to search for virtual environments, relative
+      // to the current working directory. We recommend overriding this
+      // in your project's settings, rather than globally.
+      "directories": [".env", "env", ".venv", "venv"],
+      // Can also be 'csh', 'fish', and `nushell`
+      "activate_script": "source `poetry env info --path`/bin/activate"
+    }
+  }
+}

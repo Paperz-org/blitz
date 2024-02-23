@@ -1,4 +1,5 @@
 from typing import Any, Self
+from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 from blitz.ui.components.base import BaseComponent
 from nicegui import ui
 from starlette.requests import Request
@@ -6,15 +7,19 @@ from starlette.requests import Request
 from blitz.ui.components.header import FrameComponent
 
 
-# TODO base page don't inherit
-class BasePage(BaseComponent):
+class BasePage:
     PAGE_NAME = "Blitz Dashboard"
     FRAME: FrameComponent
 
-    def __init__(self) -> None:
+    def __init__(self, blitz_ui: BlitzUI = get_blitz_ui()) -> None:
+        self.blitz_ui = blitz_ui
+        self.current_project = self.blitz_ui.current_project
+        self.current_app = self.blitz_ui.current_app
+
         self.setup()
         super().__init__()
-        self.frame()
+        # self.frame()
+        self.render()
 
     def __new__(cls, *args: Any, **kwargs: Any) -> Self:
         instance = super().__new__(cls, *args, **kwargs)
@@ -22,10 +27,10 @@ class BasePage(BaseComponent):
             instance.FRAME = FrameComponent()
         return instance
 
-    def frame(self) -> None:
-        """The frame method HAVE to render a frame."""
-        if self.FRAME is not None:
-            self.FRAME.render()
+    # def frame(self) -> None:
+    #     """The frame method HAVE to render a frame."""
+    #     if self.FRAME is not None:
+    #         self.FRAME
 
     def setup(self) -> None:
         """The setup method is called before the render method."""
