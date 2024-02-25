@@ -1,11 +1,11 @@
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
+
 from blitz.app import BlitzApp
 from blitz.core import BlitzCore
 from blitz.settings import Settings, get_settings
 from blitz.tools.erd import generate_mermaid_erd
-
 
 # @lru_cache
 # def get_erd(app: BlitzApp) -> str:
@@ -30,7 +30,6 @@ class BlitzUI:
 
     @current_project.setter
     def current_project(self, project: str) -> None:
-        print(project)
         self._current_project = project
 
     @property
@@ -95,7 +94,6 @@ class BlitzUI:
 
     def reset_preprompt(self) -> None:
         self.preprompt = self._get_preprompt()
-        print(self.preprompt)
 
 
 @lru_cache

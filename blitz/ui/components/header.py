@@ -2,20 +2,23 @@ from pathlib import Path
 from typing import Self
 
 from nicegui import ui
-from blitz.ui.components.base import BaseComponent
+
+from blitz.ui.components import Component
 from blitz.ui.components.buttons.icon import IconButton
 from blitz.ui.components.drawers.dashboard import DashboardDrawer
+from blitz.ui.components.element import Element
+from blitz.ui.components.icon import Icon
+from blitz.ui.components.image import Image
 from blitz.ui.components.labels import Label
 from blitz.ui.components.links import Link
 from blitz.ui.components.rows import ItemsCenterContentCenterRow
-from blitz.ui.components.icon import Icon
 from blitz.ui.components.tooltip import Tooltip
 
 MAIN_PINK = "#cd87ff"
 DARK_PINK = "#a72bff"
 
 
-class HeaderElement(BaseComponent[ui.link]):
+class HeaderElement(Component[ui.link]):
     def __init__(self, label: str, link: str, new_tab: bool = False) -> None:
         self.label = label
         self.link = link
@@ -33,7 +36,7 @@ class HeaderElement(BaseComponent[ui.link]):
         return self
 
 
-class HeaderComponent(BaseComponent[ui.header], reactive=True):
+class HeaderComponent(Component[ui.header], reactive=True):
     ThemeButton = IconButton.variant(props="fab-mini disabled")
 
     def __init__(
@@ -78,22 +81,23 @@ class HeaderComponent(BaseComponent[ui.header], reactive=True):
                     HeaderElement("Documentation", "https://paperz-org.github.io/blitz/", new_tab=True)
             with ItemsCenterContentCenterRow(classes="my-auto"):
                 # Can be factorised for sure
-                self.ThemeButton(
-                    icon="dark_mode",
-                    icon_color="black",
-                    on_click=lambda: self.dark_mode.set_value(not self.dark_mode.value),
-                ).ng.bind_visibility_from(self.dark_mode, "value", value=False)
-                self.ThemeButton(
-                    icon="light_mode",
-                    icon_color="white",
-                    on_click=lambda: self.dark_mode.set_value(not self.dark_mode.value),
-                ).ng.bind_visibility_from(self.dark_mode, "value", value=True)
-                Tooltip("White mode is coming soon")
+                with Element():
+                    Tooltip("White mode is coming soon")
+                    self.ThemeButton(
+                        icon="dark_mode",
+                        icon_color="black",
+                        on_click=lambda: self.dark_mode.set_value(not self.dark_mode.value),
+                    ).ng.bind_visibility_from(self.dark_mode, "value", value=False)
+                    self.ThemeButton(
+                        icon="light_mode",
+                        icon_color="white",
+                        on_click=lambda: self.dark_mode.set_value(not self.dark_mode.value),
+                    ).ng.bind_visibility_from(self.dark_mode, "value", value=True)
                 with HeaderElement("", "https://paperz-org.github.io/blitz/", new_tab=True):
-                    Tooltip(str(Path(__file__).parent.parent / "./assets/github_white.png"), classes="w-8")
+                    Image(Path(__file__).parent.parent / "./assets/github_white.png", classes="w-8")
 
 
-class FrameComponent(BaseComponent[None]):
+class FrameComponent(Component[None]):
     def __init__(self, show_drawer: bool = True, drawer_open: bool = True) -> None:
         self.show_drawer = show_drawer
         self.drawer_open = drawer_open

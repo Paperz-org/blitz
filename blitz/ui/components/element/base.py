@@ -1,5 +1,6 @@
-from blitz.ui.components.base import BaseComponent
 from nicegui import Client, ui
+
+from blitz.ui.components.base import BaseComponent
 
 
 class BaseElement(BaseComponent[ui.element]):

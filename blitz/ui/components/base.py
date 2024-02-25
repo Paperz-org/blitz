@@ -1,7 +1,9 @@
 import time
-from typing import Any, Generic, Self, TypeVar, Protocol, cast, overload
-from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
+from typing import Any, Generic, Protocol, Self, TypeVar, cast, overload
+
 from nicegui import ui
+
+from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 
 
 class NiceGUIComponent(Protocol):
@@ -72,7 +74,6 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
         raise NotImplementedError
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
-        print(*args, **kwargs)
         self.render(*args, **kwargs)
 
     def refresh(self, *args: Any, **kwargs: Any) -> None:
