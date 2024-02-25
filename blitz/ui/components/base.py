@@ -1,5 +1,5 @@
 import time
-from typing import Any, Generic, Self, TypeVar, Protocol, cast
+from typing import Any, Generic, Self, TypeVar, Protocol, cast, overload
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 from nicegui import ui
 
@@ -58,17 +58,26 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
         if self.reactive:
             self.render = ui.refreshable(self.render)  # type: ignore
         if self._render:
-            self.render()
+            self.render(*args, **kwargs)
 
+    @overload
     def render(self) -> None:
+        ...
+
+    @overload
+    def render(self, *args: Any, **kwargs: Any) -> None:
+        ...
+
+    def render(self, *args: Any, **kwargs: Any) -> None:
         raise NotImplementedError
 
-    def __call__(self, *args: Any, **kwds: Any) -> Any:
-        self.render()
+    def __call__(self, *args: Any, **kwargs: Any) -> Any:
+        print(*args, **kwargs)
+        self.render(*args, **kwargs)
 
     def refresh(self, *args: Any, **kwargs: Any) -> None:
         if hasattr(self.render, "refresh"):
-            self.render.refresh(*args, **kwargs)
+            self.render.refresh(*args, **kwargs)  # type: ignore
 
     @property
     def ng(self) -> V:
@@ -98,7 +107,7 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
             props = f"{getattr(cls, 'props')} {props}"
         if hasattr(cls, "classes"):
             classes = f"{getattr(cls, 'classes')} {classes}"
-        print(classes)
+
         return type(
             new_type_name,
             (cls,),

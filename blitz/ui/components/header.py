@@ -6,7 +6,7 @@ from blitz.ui.components.base import BaseComponent
 from blitz.ui.components.buttons.icon import IconButton
 from blitz.ui.components.drawers.dashboard import DashboardDrawer
 from blitz.ui.components.labels import Label
-from blitz.ui.components.links.base import BaseLink as Link
+from blitz.ui.components.links import Link
 from blitz.ui.components.rows import ItemsCenterContentCenterRow
 from blitz.ui.components.icon import Icon
 from blitz.ui.components.tooltip import Tooltip
