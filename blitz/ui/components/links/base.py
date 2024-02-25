@@ -1,3 +1,4 @@
+from typing import Any
 from blitz.ui.components.base import BaseComponent
 from nicegui import ui
 from nicegui.element import Element
@@ -10,7 +11,7 @@ class BaseLink(BaseComponent[ui.link]):
         self.text = text
         self.target = target
         self.new_tab = new_tab
-        super().__init__(text=self.text, target=self.target, new_tab=self.new_tab, props=props, classes=classes)
+        super().__init__(props=props, classes=classes)
 
     def render(self) -> None:
         self.ng = (
