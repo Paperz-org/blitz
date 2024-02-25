@@ -1,3 +1,3 @@
-from .base import BaseIcon
+from .base import BaseIcon as Icon
 
-__all__ = ["BaseIcon"]
+__all__ = ["Icon"]

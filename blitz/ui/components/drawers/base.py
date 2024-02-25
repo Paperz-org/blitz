@@ -11,7 +11,7 @@ class BaseLeftDrawer(BaseComponent[ui.left_drawer]):
         bordered: bool = False,
         elevated: bool = False,
         top_corner: bool = False,
-        bottom_corner: bool = False,
+        bottom_corner: bool = True,
         props: str = "",
         classes: str = "",
     ) -> None:

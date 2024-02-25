@@ -1,3 +1,3 @@
-from .base import BaseLabel, RedLabel
+from .base import BaseLabel as Label, RedLabel
 
-__all__ = ["BaseLabel", "RedLabel"]
+__all__ = ["Label", "RedLabel"]

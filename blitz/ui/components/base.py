@@ -1,5 +1,5 @@
 import time
-from typing import Any, Generic, Self, TypeVar, Protocol
+from typing import Any, Generic, Self, TypeVar, Protocol, cast
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 from nicegui import ui
 
@@ -11,8 +11,7 @@ class NiceGUIComponent(Protocol):
     def __exit__(self, exc_type: Any, exc_value: Any, traceback: Any) -> None:
         ...
 
-
-V = TypeVar("V", bound=NiceGUIComponent)
+V = TypeVar("V", bound=Any)
 
 
 # Get the blitz_ui through a metaclass
@@ -34,15 +33,25 @@ class BaseComponentMeta(type):
 
 
 class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
-    def __init__(self, *args: Any, props: str = "", classes: str = "", **kwargs: Any) -> None:
+    def __init__(
+        self,
+        *args: Any,
+        props: str = "",
+        classes: str = "",
+        render: bool | None = None,
+        **kwargs: Any,
+    ) -> None:
         self._ng: V
         self.props = props
         self.classes = classes
         self.blitz_ui: BlitzUI
         self.reactive: bool
         self._render: bool
+        if render is not None:
+            self._render = render
         self.current_project = self.blitz_ui.current_project
         self.current_app = self.blitz_ui.current_app
+        self.kwargs = kwargs
 
         self.blitz_ui = get_blitz_ui()
         if self.reactive:
@@ -80,7 +89,7 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
         :return: A new type (class) that is a variant of the current class with predefined props and classes.
         """
         if not name:
-            new_type_name = f"{cls.__name__}_{str(time.time()).replace(".","")}"
+            new_type_name = f'{cls.__name__}_{str(time.time()).replace(".","")}'
         else:
             new_type_name = f"{name}{cls.__name__}"
 
@@ -88,24 +97,28 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
             props = f"{getattr(cls, 'props')} {props}"
         if hasattr(cls, "classes"):
             classes = f"{getattr(cls, 'classes')} {classes}"
+        print(classes)
         return type(
             new_type_name,
             (cls,),
             {
                 "props": props,
                 "classes": classes,
+                "kwargs": kwargs,
             },
             render=render,
         )
 
-    def __enter__(self) -> Any | None:
+    def __enter__(self) -> V:
         if hasattr(self.ng, "__enter__"):
-            return self.ng.__enter__()
-        return None
+            return cast(V, self.ng.__enter__())
+        raise NotImplementedError
 
-    def __exit__(self, exc_type: Any, exc_value: Any, traceback: Any) -> None:
+    def __exit__(self, exc_type: Any, exc_value: Any, traceback: Any) -> Any:
         if hasattr(self.ng, "__exit__"):
             self.ng.__exit__(exc_type, exc_value, traceback)
+        else:
+            raise NotImplementedError
 
     def __new__(cls, *args: Any, **kwargs: Any) -> Self:
         instance = super().__new__(cls)
