@@ -1,5 +1,4 @@
 from typing import Any
-from nicegui import ui
 
 from httpx import AsyncClient
 

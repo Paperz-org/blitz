@@ -1,4 +1,3 @@
-
 from nicegui import ui
 from blitz.ui.components.base import BaseComponent
 

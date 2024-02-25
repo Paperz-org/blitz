@@ -21,6 +21,3 @@ class BaseIcon(BaseComponent[ui.icon]):
 
     def render(self) -> None:
         self.ng = ui.icon(name=self.name, size=self.size, color=self.color).props(self.props).classes(self.classes)
-
-
-
