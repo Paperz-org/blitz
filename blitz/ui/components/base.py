@@ -11,6 +11,7 @@ class NiceGUIComponent(Protocol):
     def __exit__(self, exc_type: Any, exc_value: Any, traceback: Any) -> None:
         ...
 
+
 V = TypeVar("V", bound=Any)
 
 

@@ -1,5 +1,5 @@
 from .base import BaseButton
 
 
-class FlatButton(BaseButton.variant(props="flat")): # type: ignore
+class FlatButton(BaseButton.variant(props="flat")):  # type: ignore
     """Flat button."""

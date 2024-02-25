@@ -11,5 +11,3 @@ class BaseGrid(BaseComponent[ui.grid]):
 
     def render(self) -> None:  # type: ignore
         self.ng = ui.grid(rows=self.rows, columns=self.columns).props(self.props).classes(self.classes)
-
-

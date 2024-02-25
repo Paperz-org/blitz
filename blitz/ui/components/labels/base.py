@@ -1,4 +1,3 @@
-from typing import Any
 from blitz.ui.components.base import BaseComponent
 from nicegui import ui
 
@@ -46,6 +45,7 @@ class TextMdBoldLabel(BoldLabel, TextMdLabel):
 
 class TextLgBoldLabel(BoldLabel, TextLgLabel):
     """Label with text-lg font-bold classes."""
+
 
 class TextXlBoldLabel(BoldLabel, TextXlLabel):
     """Label with text-xl font-bold classes."""
