@@ -7,12 +7,14 @@ from nicegui.elements.expansion import Expansion
 from pydantic import ValidationError
 from blitz.models.blitz.file import BlitzFile
 from openai.types.chat import ChatCompletionMessageParam
+from blitz.ui.components import notify
 from blitz.ui.components.buttons import FlatButton
 
 import yaml
 
 from blitz.ui.components.buttons.icon import IconButton
-from blitz.ui.components.labels import RedLabel
+from blitz.ui.components.labels.error import ErrorLabel
+from blitz.ui.components.labels.base import BoldLabel
 from blitz.ui.components.markdown.base import BaseMarkdown, MarkdownResponse
 from blitz.ui.components.rows import WFullItemsCenter
 from blitz.ui.components.rows.base import ItemsCenterRow, WFullRow
@@ -64,11 +66,12 @@ class ResponseJSON:
         return json.loads(match.group(1))
 
     async def copy_code(self) -> None:
+        # Can't put it in a file without a better integration like a bridge to js function or something like this
         ui.run_javascript(f"navigator.clipboard.writeText(`{json.dumps(self.json, indent=4)}`)")
-        ui.notify("Copied to clipboard", type="info", color="green")
+        notify.info("Copied to clipboard")
 
     def action_buttons(self) -> None:
-        with ui.row(wrap=False).classes("items-center"):
+        with ItemsCenterRow(wrap=False):
             if self._dialog is None:
                 # TODO: handle error
                 raise Exception
@@ -81,7 +84,7 @@ class ResponseJSON:
                 self.invalid_blitz_file()
             # with ui.expansion("Edit File", icon="edit").classes("w-full h-auto rounded-lg border-solid border overflow-hidden grow overflow-hidden"):
             #    JsonEditorComponent(self.json).render()
-            with ui.row().classes("w-full justify-end"):
+            with WFullRow(classes="justify-end"):
                 FlatButton("Export as JSON", on_click=self._download_json)
                 FlatButton("Export as YAML", on_click=self._download_yaml)
 
@@ -100,7 +103,7 @@ class ResponseJSON:
     def invalid_blitz_file(self) -> None:
         with ItemsCenterRow():
             ui.icon("error", color="red", size="sm")
-            RedLabel("This is not a valid Blitz file.")
+            ErrorLabel("This is not a valid Blitz file.")
 
     def _toggle_expansion(self) -> None:
         self._expansion_is_open = not self._expansion_is_open
@@ -113,7 +116,6 @@ class ResponseJSON:
     def render(self) -> None:
         self.download_dialog()
         with WFullItemsCenter(wrap=False):
-            # with ui.row(wrap=False).classes("items-center w-full"):
             with ui.expansion(
                 self.blitz_app_title,
                 icon="settings_suggest",
@@ -124,7 +126,7 @@ class ResponseJSON:
             ) as self._expansion:
                 if not self.is_valid_blitz_file:
                     self.invalid_blitz_file()
-                ui.markdown(self.text)
+                BaseMarkdown(self.text)
             self.action_buttons()
 
 
@@ -148,10 +150,10 @@ class GPTChatComponent:
         with WFullRow(wrap=False):
             ui.space().classes("w-1/3")
             with ui.column().classes("justify-start w-2/3"):
-                with ui.row(wrap=False).classes("items-center w-full"):
+                with ItemsCenterRow(wrap=False):
                     with ui.avatar(color=self.avatar_color).props("size=sm"):
                         ui.icon(self.icon, size="xs", color="white")
-                    ui.label(self.label).classes("font-bold")
+                    BoldLabel(self.label)
 
                 if self.text_components:
                     for component in self.text_components:
@@ -159,7 +161,7 @@ class GPTChatComponent:
                             component.render()
                 else:
                     with ui.element().classes("px-10"):
-                        BaseMarkdown(self.text)
+                        ui.markdown(self.text)
             ui.space().classes("w-1/3")
 
     def as_gpt_dict(self) -> ChatCompletionMessageParam:
