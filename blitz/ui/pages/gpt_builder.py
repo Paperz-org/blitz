@@ -8,13 +8,19 @@ from openai import APIConnectionError, AsyncOpenAI, AsyncStream, AuthenticationE
 
 from blitz.settings import get_settings
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
+from blitz.ui.components import notify
+from blitz.ui.components.buttons.flat import FlatButton
+from blitz.ui.components.buttons.icon import IconButton
+from blitz.ui.components.buttons.outline import OutlineButton
 from blitz.ui.components.gpt_chat_components import (
     GPTChatComponent,
     GPTResponse,
     UserQuestion,
 )
 from blitz.ui.components.header import FrameComponent
+from blitz.ui.components.labels.base import BoldLabel, TextXlBoldLabel
 from blitz.ui.pages.base import BasePage
+from blitz.ui.components.labels import Label
 
 DEV_TEXT = """Sure! Here is a sample blitz_file with randomly generated models and fields:
 
@@ -61,6 +67,8 @@ Please note that this blitz_file is randomly generated and may not have any spec
 
 
 class GPTClient:
+    CloseButton = IconButton.variant(icon="close")
+
     def __init__(self, api_key: str, model: str = "gpt-3.5-turbo", pre_prompt: str | None = None) -> None:
         self.model = model
         self._api_key = api_key
@@ -181,13 +189,20 @@ class AskGPTPage(BasePage):
     def footer(self) -> None:
         with ui.footer().classes("items-center space-y-0 pt-0 justify-center px-5"):
             with ui.grid(columns=10).classes("w-full items-center gap-5"):
-                with ui.button(on_click=self.delete_conversation_dialog.open).props("flat size=sm").classes(
-                    "justify-self-start"
-                ):
-                    ui.icon("delete_outline", color="grey-8", size="md").props("fab-mini")
-                with ui.button(on_click=self.open_settings).props("flat").classes("justify-self-end"):
-                    ui.icon("settings", color="grey-6", size="md").props("fab-mini")
-
+                IconButton(
+                    icon="delete_outline",
+                    icon_color="grey-8",
+                    icon_size="lg",
+                    on_click=self.delete_conversation_dialog.open,
+                    classes="justify-self-start",
+                )
+                IconButton(
+                    icon="settings",
+                    icon_color="grey-6",
+                    icon_size="lg",
+                    on_click=self.open_settings,
+                    classes="justify-self-end",
+                )
                 with ui.row(wrap=False).classes(
                     "w-full items-center rounded-lg pl-2 border-solid border col-start-3 col-span-6"
                 ):
@@ -198,16 +213,16 @@ class AskGPTPage(BasePage):
                     self.ask_button()  # type: ignore
                 ui.space().classes("col-span-2")
 
-            ui.label("ChatGPT can make mistakes. Consider checking important information.").classes(
+            Label("ChatGPT can make mistakes. Consider checking important information.").ng.classes(
                 "text-xs text-gray-500 w-full text-center"
             )
 
     def delete_conversation(self) -> None:
         with ui.dialog() as self.delete_conversation_dialog, ui.card().classes("no-shadow"):
-            ui.label("Are you sure you want to delete this conversation?")
+            Label("Are you sure you want to delete this conversation?")
             with ui.row().classes("w-full items-center"):
-                ui.button("Cancel", on_click=self.delete_conversation_dialog.close).props("flat")
-                ui.button("Delete", on_click=self._handle_delete_conversation).props("flat")
+                FlatButton("Cancel", on_click=self.delete_conversation_dialog.close)
+                FlatButton("Delete", on_click=self._handle_delete_conversation)
 
     def _handle_delete_conversation(self) -> None:
         self.remove_conversation()
@@ -240,15 +255,12 @@ class AskGPTPage(BasePage):
 
     @ui.refreshable
     def ask_button(self) -> None:
-        ask_button = (
-            ui.button(on_click=self.ask_button_trigger).props("flat").bind_enabled_from(self, "can_send_request")
-        )
-
-        with ask_button:
-            if not self.thinking:
-                ui.icon("send", color="#a72bff").props("fab-mini")
-            else:
-                ui.icon("stop_circle", color="#a72bff").props("fab-mini")
+        IconButton(
+            icon="send" if not self.thinking else "stop_circle",
+            icon_color="purple-4",
+            on_click=self.ask_button_trigger,
+            props="fab-mini",
+        ).ng.bind_enabled_from(self, "can_send_request")
 
     async def handle_key(self, e: KeyEventArguments) -> None:
         if e.modifiers.meta and e.key.enter and self.can_send_request:
@@ -320,10 +332,10 @@ class ChatSettings:
         with self.dialog, ui.card().classes("w-full px-4"):
             self.quit_modal()
             self.header()
-            ui.label("OpenAI").classes("text-xl font-bold")
+            TextXlBoldLabel("OpenAI")
             # See https://github.com/zauberzeug/nicegui/issues/2174
             self.openai_settings()  # type: ignore
-            ui.label("Pre Prompt").classes("text-xl font-bold")
+            TextXlBoldLabel("Pre Prompt")
             # See https://github.com/zauberzeug/nicegui/issues/2174
             self.pre_prompt_editor()  # type: ignore
 
@@ -344,11 +356,11 @@ class ChatSettings:
     def header(self) -> None:
         """Render the header of the settings dialog"""
         with ui.row().classes("w-full items-center justify-center"):
-            ui.button(icon="close", on_click=self.close).props("flat")
-            ui.label("Chat Settings").classes("text-2xl font-bold grow text-center")
-            ui.button("Save", icon="save", on_click=self.save).classes("text-color-black").props(
-                "flat"
-            ).bind_enabled_from(self, "settings_has_changed")
+            IconButton(icon="close", icon_color="white", on_click=self.close)
+            Label("Chat Settings").ng.classes("text-2xl font-bold grow text-center")
+            FlatButton("Save", icon="save", on_click=self.save, classes="text-color-black").ng.bind_enabled_from(
+                self, "settings_has_changed"
+            )
 
     @ui.refreshable
     def openai_settings(self) -> None:
@@ -364,13 +376,13 @@ class ChatSettings:
                 .classes("w-32 rounded-lg px-2 border-solid border")
             )
             self.api_key_input_component()
-            ui.button("Check API KEY", on_click=self.validate_api_key).props("outline")
+            OutlineButton("Check API KEY", on_click=self.validate_api_key)
             ui.space()
 
     @ui.refreshable
     def pre_prompt_editor(self) -> None:
         with ui.row().classes("w-full items-center"):
-            ui.button("Reset Pre-Prompt", on_click=self.reset_preprompt).props("outline")
+            OutlineButton("Reset Pre-Prompt", on_click=self.reset_preprompt)
             switch = ui.switch("Edit Pre-Prompt", value=False)
         self.preprompt = (
             ui.textarea(label="Pre-Prompt", value=self.blitz_ui.preprompt)
@@ -403,11 +415,11 @@ class ChatSettings:
     def quit_modal(self) -> None:
         with self.quit_dialog, ui.card():
             with ui.row().classes("w-full items-center"):
-                ui.button(icon="close", on_click=self.quit_dialog.close).props("flat")
-                ui.label("Some changes wasn't saved.").classes("font-bold")
+                IconButton(icon="close", on_click=self.quit_dialog.close)
+                BoldLabel("Some changes wasn't saved.")
             with ui.row().classes("w-full items-center"):
-                ui.button("Discard changes", on_click=self.quit).props("flat")
-                ui.button("Save", on_click=self.save).props("flat")
+                FlatButton("Discard changes", on_click=self.quit)
+                FlatButton("Save", on_click=self.save)
 
     def close(self) -> None:
         if self.settings_has_changed:
@@ -427,13 +439,13 @@ class ChatSettings:
         self.gpt_client.model = self.model_select.value
         self.blitz_ui.preprompt = self.preprompt.value
         self.gpt_client.refresh_client(api_key=self.api_key_input.value)
-        ui.notify("Settings saved", type="positive")
+        notify.success("Settings saved")
         self.dialog.close()
 
     async def validate_api_key(self) -> None:
         try:
             gpt_client = GPTClient(api_key=self.api_key_input.value)
             await gpt_client.list_models()
-            ui.notify("Valid API Key", type="positive")
+            notify.success("Valid API Key")
         except (AuthenticationError, APIConnectionError):
-            ui.notify("Invalid API Key", type="warning")
+            notify.warning("Invalid API Key")

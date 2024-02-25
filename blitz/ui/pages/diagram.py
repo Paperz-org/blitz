@@ -1,9 +1,11 @@
 from nicegui import ui
 from blitz.ui.pages.base import BasePage
+from blitz.ui.components.buttons.icon import IconButton
 
 
 class MermaidPage(BasePage):
     PAGE_NAME = "ERD"
+    ZoomButton = IconButton.variant(classes="border rounded-sm")
 
     def setup(self) -> None:
         self._width = 100
@@ -45,5 +47,5 @@ class MermaidPage(BasePage):
                 raise Exception
             ui.mermaid(self.blitz_ui.erd)
         with ui.footer().classes("w-full justify-start "):
-            ui.button(icon="zoom_in", on_click=self.zoom_svg).classes("border rounded-sm").props("flat")
-            ui.button(icon="zoom_out", on_click=self.unzoom_svg).classes("border rounded-sm").props("flat")
+            self.ZoomButton(icon="zoom_in", on_click=self.zoom_svg)
+            self.ZoomButton(icon="zoom_out", on_click=self.unzoom_svg)

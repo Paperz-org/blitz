@@ -1,10 +1,10 @@
 from typing import Any, Self
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
-from blitz.ui.components.base import BaseComponent
 from nicegui import ui
 from starlette.requests import Request
 
 from blitz.ui.components.header import FrameComponent
+from blitz.ui.components.labels import Label
 
 
 class BasePage:
@@ -37,7 +37,7 @@ class BasePage:
         pass
 
     def render(self) -> None:
-        ui.label("Base Page")
+        Label("Base Page")
 
     @classmethod
     def entrypoint(cls, request: Request) -> None:

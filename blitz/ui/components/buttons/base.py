@@ -13,12 +13,13 @@ class BaseButton(BaseComponent[ui.button]):
         icon: str | None = None,
         props: str = "",
         classes: str = "",
+        **kwargs: Any,
     ) -> None:
         self.text = text
         self.on_click = on_click
         self.color = color
         self.icon = icon
-        super().__init__(props=props, classes=classes)
+        super().__init__(props=props, classes=classes, **kwargs)
 
     def render(self) -> None:
         self.ng = (
