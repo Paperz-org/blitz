@@ -1,8 +1,9 @@
-from loguru import logger
-import logging
 import inspect
+import logging
 import sys
 from typing import TYPE_CHECKING
+
+from loguru import logger
 
 from blitz.app import BlitzApp
 
@@ -22,26 +23,15 @@ class InterceptHandler(logging.Handler):
         except ValueError:
             level = record.levelno
 
-        if record.name in ("uvicorn.access",):
-            if record.args[2].startswith("/projects"):  # type: ignore
-                record.name += ".ui"
-            elif record.args[2].startswith("/api"):  # type: ignore
-                record.name += ".api"
-            elif record.args[2].startswith("/admin"):  # type: ignore
-                record.name += ".admin"
-
         # Find caller from where originated the logged message.
         frame, depth = inspect.currentframe(), 0
         while frame and (depth == 0 or frame.f_code.co_filename == logging.__file__):
             frame = frame.f_back
             depth += 1
-        if record.name in ["uvicorn.access.ui", "uvicorn.access.admin"]:
-            pass
-        else:
-            logger.opt(
-                depth=depth,
-                exception=record.exc_info,
-            ).log(level, record.getMessage())
+        logger.opt(
+            depth=depth,
+            exception=record.exc_info,
+        ).log(level, record.getMessage())
 
 
 def filter_logs(record: logging.LogRecord, blitz_app: BlitzApp) -> bool:
