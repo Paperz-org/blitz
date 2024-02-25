@@ -1,4 +1,3 @@
-from typing import Any
 from blitz.ui.components.base import BaseComponent
 from nicegui import ui
 from nicegui.element import Element
