@@ -2,7 +2,9 @@ from nicegui import ui
 
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 from blitz.ui.components.buttons.flat import FlatButton
+from blitz.ui.components.grids.base import WFullGrid
 from blitz.ui.components.labels import Label
+from blitz.ui.components.links.base import WFullLink
 from blitz.ui.components.tooltip import Tooltip
 
 
@@ -22,9 +24,7 @@ class ProjectDetail:
         self.version = version
 
     def render(self) -> None:
-        with ui.link(target=f"/projects/{self.app_name}").classes("w-full hover:bg-slate-700 rounded-sm"), ui.grid(
-            columns=20
-        ).classes("w-full my-2"):
+        with WFullLink(target=f"/projects/{self.app_name}", classes="hover:bg-slate-700 rounded-sm"), WFullGrid(columns=20, classes="my-2"):
             Label(self.app_name).ng.classes("col-span-2 pl-2")
             Label(self.project_name).ng.classes("col-span-2 pl-2")
             Label(self.date).ng.classes("col-span-4")

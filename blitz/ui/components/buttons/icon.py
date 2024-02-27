@@ -12,6 +12,7 @@ class IconButton(FlatButton.variant(props="dense")):  # type: ignore
         icon_size: str = "xm",
         props: str = "",
         classes: str = "",
+        **kwargs: Any,
     ):
         super().__init__(
             on_click=on_click,
@@ -19,4 +20,5 @@ class IconButton(FlatButton.variant(props="dense")):  # type: ignore
             icon=icon,
             props=f"{props} color={icon_color} size={icon_size}",
             classes=classes,
+            **kwargs,
         )

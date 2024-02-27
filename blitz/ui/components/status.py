@@ -47,3 +47,4 @@ class StatusComponent(BaseComponent[Grid], reactive=True):
             self._GreenIcon() if self.api_up else self._RedIcon()
             TextLgBoldLabel("Admin:")
             self._GreenIcon() if self.admin_up else self._RedIcon()
+

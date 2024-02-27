@@ -24,7 +24,11 @@ class ItemsCenterRow(BaseRow.variant(classes="items-center")):  # type: ignore
     """Row with items-center class."""
 
 
-class WFullItemsCenter(WFullRow, ItemsCenterRow):
+class JustifyBetweenRow(BaseRow.variant(classes="justify-between")):  # type: ignore
+    """Row with justify-between class."""
+
+
+class WFullItemsCenterRow(WFullRow, ItemsCenterRow):
     """Row with w-full and items-center classes."""
 
 

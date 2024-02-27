@@ -3,7 +3,7 @@ from .base import (
     WFullRow,
     ContentCenterRow,
     ItemsCenterRow,
-    WFullItemsCenter,
+    WFullItemsCenterRow,
     WFullContentCenterRow,
     ItemsCenterContentCenterRow,
 )
@@ -13,7 +13,7 @@ __all__ = [
     "WFullRow",
     "ContentCenterRow",
     "ItemsCenterRow",
-    "WFullItemsCenter",
+    "WFullItemsCenterRow",
     "WFullContentCenterRow",
     "ItemsCenterContentCenterRow",
 ]

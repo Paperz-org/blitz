@@ -7,16 +7,16 @@ from nicegui.elements.expansion import Expansion
 from pydantic import ValidationError
 from blitz.models.blitz.file import BlitzFile
 from openai.types.chat import ChatCompletionMessageParam
-from blitz.ui.components import notify
+from blitz.ui.components import markdown, notify
 from blitz.ui.components.buttons import FlatButton
-
+from blitz.ui.components.icon import Icon
 import yaml
 
 from blitz.ui.components.buttons.icon import IconButton
 from blitz.ui.components.labels.error import ErrorLabel
 from blitz.ui.components.labels.base import BoldLabel
 from blitz.ui.components.markdown.base import BaseMarkdown, MarkdownResponse
-from blitz.ui.components.rows import WFullItemsCenter
+from blitz.ui.components.rows import WFullItemsCenterRow
 from blitz.ui.components.rows.base import ItemsCenterRow, WFullRow
 
 
@@ -115,7 +115,7 @@ class ResponseJSON:
     @ui.refreshable
     def render(self) -> None:
         self.download_dialog()
-        with WFullItemsCenter(wrap=False):
+        with WFullItemsCenterRow(wrap=False):
             with ui.expansion(
                 self.blitz_app_title,
                 icon="settings_suggest",
@@ -152,7 +152,7 @@ class GPTChatComponent:
             with ui.column().classes("justify-start w-2/3"):
                 with ItemsCenterRow(wrap=False):
                     with ui.avatar(color=self.avatar_color).props("size=sm"):
-                        ui.icon(self.icon, size="xs", color="white")
+                        Icon(self.icon, size="xs", color="white")
                     BoldLabel(self.label)
 
                 if self.text_components:
@@ -161,7 +161,7 @@ class GPTChatComponent:
                             component.render()
                 else:
                     with ui.element().classes("px-10"):
-                        ui.markdown(self.text)
+                        BaseMarkdown(self.text)
             ui.space().classes("w-1/3")
 
     def as_gpt_dict(self) -> ChatCompletionMessageParam:

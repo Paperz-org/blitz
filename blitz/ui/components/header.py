@@ -66,6 +66,21 @@ class HeaderComponent(Component[ui.header], reactive=True):
         )
         super().__init__()
 
+    def dark_mode_button(self) -> None:
+        # Can be factorised for sure
+        with Element():
+            Tooltip("White mode is coming soon")
+            self.ThemeButton(
+                icon="dark_mode",
+                icon_color="black",
+                on_click=lambda: self.dark_mode.set_value(not self.dark_mode.value),
+            ).ng.bind_visibility_from(self.dark_mode, "value", value=False)
+            self.ThemeButton(
+                icon="light_mode",
+                icon_color="white",
+                on_click=lambda: self.dark_mode.set_value(not self.dark_mode.value),
+            ).ng.bind_visibility_from(self.dark_mode, "value", value=True)
+
     def render(self) -> None:
         with ui.header(bordered=True).classes("pl-1 pr-8 justify-between content-center h-16 backdrop-blur-sm"):
             with ItemsCenterContentCenterRow(classes="space-x-20 my-auto"):
@@ -74,25 +89,14 @@ class HeaderComponent(Component[ui.header], reactive=True):
                         IconButton(icon="menu", on_click=self.drawer.toggle)
                     Icon(name="bolt", color=DARK_PINK, size="32px")
                     HeaderElement(label="Blitz Dashboard", link=f"/projects/{self.blitz_ui.current_project}")
+
                 with ItemsCenterContentCenterRow(classes="justify-between"):
                     with HeaderElement(label="Projects", link=f"{self.blitz_ui.localhost_url}/projects").disabled():
                         Tooltip("Multiple App management is coming soon")
                     HeaderElement(label="GPT Builder", link="/gpt")
                     HeaderElement("Documentation", "https://paperz-org.github.io/blitz/", new_tab=True)
             with ItemsCenterContentCenterRow(classes="my-auto"):
-                # Can be factorised for sure
-                with Element():
-                    Tooltip("White mode is coming soon")
-                    self.ThemeButton(
-                        icon="dark_mode",
-                        icon_color="black",
-                        on_click=lambda: self.dark_mode.set_value(not self.dark_mode.value),
-                    ).ng.bind_visibility_from(self.dark_mode, "value", value=False)
-                    self.ThemeButton(
-                        icon="light_mode",
-                        icon_color="white",
-                        on_click=lambda: self.dark_mode.set_value(not self.dark_mode.value),
-                    ).ng.bind_visibility_from(self.dark_mode, "value", value=True)
+                self.dark_mode_button()
                 with HeaderElement("", "https://paperz-org.github.io/blitz/", new_tab=True):
                     Image(Path(__file__).parent.parent / "./assets/github_white.png", classes="w-8")
 

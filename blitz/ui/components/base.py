@@ -2,7 +2,7 @@ import time
 from typing import Any, Generic, Protocol, Self, TypeVar, cast, overload
 
 from nicegui import ui
-
+from nicegui.element import Element
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 
 
@@ -44,7 +44,7 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
         render: bool | None = None,
         **kwargs: Any,
     ) -> None:
-        self._ng: V
+        self._ng: Element
         self.props = props
         self.classes = classes
         self.blitz_ui: BlitzUI
@@ -81,11 +81,11 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
             self.render.refresh(*args, **kwargs)  # type: ignore
 
     @property
-    def ng(self) -> V:
+    def ng(self) -> Element:
         return self._ng
 
     @ng.setter
-    def ng(self, value: V) -> None:
+    def ng(self, value: Element) -> None:
         self._ng = value
 
     @classmethod
@@ -130,6 +130,8 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
             self.ng.__exit__(exc_type, exc_value, traceback)
         else:
             raise NotImplementedError
+    
+
 
     def __new__(cls, *args: Any, **kwargs: Any) -> Self:
         instance = super().__new__(cls)
@@ -148,3 +150,5 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
             __value = f"{getattr(self, __name)} {__value}"
 
         return super().__setattr__(__name, __value)
+
+

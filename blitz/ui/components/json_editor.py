@@ -8,6 +8,7 @@ from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 from blitz.ui.components.buttons import FlatButton
 from blitz.ui.components.header import DARK_PINK, MAIN_PINK
 from blitz.ui.components import notify
+from blitz.ui.components.rows.base import JustifyBetweenRow
 
 
 class JsonEditorComponent:
@@ -98,10 +99,10 @@ class BlitzFileEditorComponent:
 
     def render(self) -> None:
         with ui.row().classes("w-full justify-between align-center p-4 rounded-lg border"):
-            with ui.row().classes("justify-between"):
+            with JustifyBetweenRow():
                 ui.switch("Edit BlitzFile", on_change=self.enable_editor)
                 FlatButton("Reset", on_click=self.reset_content, icon="restart_alt")
-            with ui.row().classes("justify-between"):
+            with JustifyBetweenRow():
                 FlatButton("Validate", on_click=self.validate, icon="verified")
                 FlatButton("Save", on_click=self.save, icon="save")
         self.editor = (

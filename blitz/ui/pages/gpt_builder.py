@@ -18,7 +18,8 @@ from blitz.ui.components.gpt_chat_components import (
     UserQuestion,
 )
 from blitz.ui.components.header import FrameComponent
-from blitz.ui.components.labels.base import BoldLabel, TextXlBoldLabel
+from blitz.ui.components.labels.base import BoldLabel, Text2XlBoldLabel, TextXlBoldLabel, TextXsLabel
+from blitz.ui.components.rows.base import WFullItemsCenterRow
 from blitz.ui.pages.base import BasePage
 from blitz.ui.components.labels import Label
 
@@ -213,8 +214,9 @@ class AskGPTPage(BasePage):
                     self.ask_button()  # type: ignore
                 ui.space().classes("col-span-2")
 
-            Label("ChatGPT can make mistakes. Consider checking important information.").ng.classes(
-                "text-xs text-gray-500 w-full text-center"
+            TextXsLabel(
+                "ChatGPT can make mistakes. Consider checking important information.",
+                classes="text-gray-500 w-full text-center",
             )
 
     def delete_conversation(self) -> None:
@@ -355,9 +357,9 @@ class ChatSettings:
 
     def header(self) -> None:
         """Render the header of the settings dialog"""
-        with ui.row().classes("w-full items-center justify-center"):
+        with WFullItemsCenterRow(classes="justify-center"):
             IconButton(icon="close", icon_color="white", on_click=self.close)
-            Label("Chat Settings").ng.classes("text-2xl font-bold grow text-center")
+            Text2XlBoldLabel("Chat Settings", classes="grow text-center")
             FlatButton("Save", icon="save", on_click=self.save, classes="text-color-black").ng.bind_enabled_from(
                 self, "settings_has_changed"
             )
@@ -365,7 +367,7 @@ class ChatSettings:
     @ui.refreshable
     def openai_settings(self) -> None:
         """Render the openai settings"""
-        with ui.row().classes("w-full items-center"):
+        with WFullItemsCenterRow():
             self.model_select = (
                 ui.select(
                     {"gpt-3.5-turbo": "3.5 Turbo", "gpt-4": "4"},
@@ -381,7 +383,7 @@ class ChatSettings:
 
     @ui.refreshable
     def pre_prompt_editor(self) -> None:
-        with ui.row().classes("w-full items-center"):
+        with WFullItemsCenterRow():
             OutlineButton("Reset Pre-Prompt", on_click=self.reset_preprompt)
             switch = ui.switch("Edit Pre-Prompt", value=False)
         self.preprompt = (
@@ -414,10 +416,10 @@ class ChatSettings:
 
     def quit_modal(self) -> None:
         with self.quit_dialog, ui.card():
-            with ui.row().classes("w-full items-center"):
+            with WFullItemsCenterRow():
                 IconButton(icon="close", on_click=self.quit_dialog.close)
                 BoldLabel("Some changes wasn't saved.")
-            with ui.row().classes("w-full items-center"):
+            with WFullItemsCenterRow():
                 FlatButton("Discard changes", on_click=self.quit)
                 FlatButton("Save", on_click=self.save)
 
