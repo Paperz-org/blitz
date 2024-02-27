@@ -24,7 +24,9 @@ class ProjectDetail:
         self.version = version
 
     def render(self) -> None:
-        with WFullLink(target=f"/projects/{self.app_name}", classes="hover:bg-slate-700 rounded-sm"), WFullGrid(columns=20, classes="my-2"):
+        with WFullLink(target=f"/projects/{self.app_name}", classes="hover:bg-slate-700 rounded-sm"), WFullGrid(
+            columns=20, classes="my-2"
+        ):
             Label(self.app_name).ng.classes("col-span-2 pl-2")
             Label(self.project_name).ng.classes("col-span-2 pl-2")
             Label(self.date).ng.classes("col-span-4")

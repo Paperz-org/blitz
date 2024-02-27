@@ -7,7 +7,7 @@ from nicegui.elements.expansion import Expansion
 from pydantic import ValidationError
 from blitz.models.blitz.file import BlitzFile
 from openai.types.chat import ChatCompletionMessageParam
-from blitz.ui.components import markdown, notify
+from blitz.ui.components import notify
 from blitz.ui.components.buttons import FlatButton
 from blitz.ui.components.icon import Icon
 import yaml

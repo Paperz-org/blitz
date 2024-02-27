@@ -38,8 +38,10 @@ class TextLgLabel(BaseLabel.variant(classes="text-lg")):  # type: ignore
 class TextXlLabel(BaseLabel.variant(classes="text-xl")):  # type: ignore
     """Label with text-xl class."""
 
+
 class Text2XlLabel(BaseLabel.variant(classes="text-2xl")):  # type: ignore
     """Label with text-2xl class."""
+
 
 class TextMdBoldLabel(BoldLabel, TextMdLabel):
     """Label with text-xs font-bold classes."""
@@ -51,6 +53,7 @@ class TextLgBoldLabel(BoldLabel, TextLgLabel):
 
 class TextXlBoldLabel(BoldLabel, TextXlLabel):
     """Label with text-xl font-bold classes."""
+
 
 class Text2XlBoldLabel(BoldLabel, Text2XlLabel):
     """Label with text-2xl font-bold classes."""

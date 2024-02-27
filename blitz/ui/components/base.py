@@ -130,8 +130,6 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
             self.ng.__exit__(exc_type, exc_value, traceback)
         else:
             raise NotImplementedError
-    
-
 
     def __new__(cls, *args: Any, **kwargs: Any) -> Self:
         instance = super().__new__(cls)
@@ -150,5 +148,3 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
             __value = f"{getattr(self, __name)} {__value}"
 
         return super().__setattr__(__name, __value)
-
-

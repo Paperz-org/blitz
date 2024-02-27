@@ -1,4 +1,4 @@
-from typing import Any, Callable, Self
+from typing import Any
 from nicegui import ui
 from nicegui.ui import button as NGButton
 from blitz.ui.components.base import BaseComponent
@@ -21,7 +21,7 @@ class BaseButton(BaseComponent[ui.button]):
         self.color = color
         self.icon = icon
         super().__init__(props=props, classes=classes, **kwargs)
-    
+
     # def bind_enabled_from(
     #     self,
     #     target_object: Any,
@@ -29,7 +29,6 @@ class BaseButton(BaseComponent[ui.button]):
     #     backward: Callable[..., Any] = lambda x: x
     # ) -> NGButton:
     #     return self.ng.bind_enabled_from(target_object, target_name, backward)
-    
 
     def render(self) -> None:
         self.ng: NGButton = (

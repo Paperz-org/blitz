@@ -12,5 +12,6 @@ class BaseGrid(BaseComponent[ui.grid]):
     def render(self) -> None:  # type: ignore
         self.ng = ui.grid(rows=self.rows, columns=self.columns).props(self.props).classes(self.classes)
 
+
 class WFullGrid(BaseGrid.variant(classes="w-full")):  # type: ignore
     """Grid with w-full class."""
