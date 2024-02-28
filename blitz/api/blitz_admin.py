@@ -1,13 +1,21 @@
 from fastapi import FastAPI
+from starlette_admin import CustomView
 from blitz.db.db import get_sqlite_engine
 from starlette_admin.contrib.sqla import Admin, ModelView
 from typing import TYPE_CHECKING
 from starlette_admin.views import Link
-
+from starlette.responses import Response
+from starlette.requests import Request
 from blitz.settings import Settings, get_settings
+from starlette.templating import Jinja2Templates
 
 if TYPE_CHECKING:
     from blitz.app import BlitzApp
+
+
+class HomeView(CustomView):
+    async def render(self, request: Request, templates: Jinja2Templates) -> Response:
+        return templates.TemplateResponse("index.html", {"request": request})
 
 
 class BlitzAdmin:
@@ -18,6 +26,8 @@ class BlitzAdmin:
             # FIXME find a better way to get the engine
             engine=get_sqlite_engine(blitz_app, in_memory=blitz_app._in_memory, file_name="app.db"),
             base_url="/admin/",
+            templates_dir="blitz/api/templates",
+            index_view=HomeView("Home"),
         )
         for resource in blitz_app.resources:
             self.admin.add_view(ModelView(resource.model))

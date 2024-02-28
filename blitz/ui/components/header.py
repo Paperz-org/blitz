@@ -112,7 +112,7 @@ class FrameComponent(BaseComponent):
         self.drawer: LeftDrawer | None = None
 
     def left_drawer(self) -> None:
-        with ui.left_drawer(value=self.drawer_open, fixed=True, bottom_corner=True).props("width=200").classes(
+        with ui.left_drawer(value=self.drawer_open, fixed=True, bottom_corner=True).props("width=240").classes(
             "px-0 bg-[#14151a]"
         ) as self.drawer:
             MenuLink("Dashboard", f"/projects/{self.current_project}", "dashboard").render()
