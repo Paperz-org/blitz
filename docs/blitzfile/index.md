@@ -49,28 +49,26 @@ The resources section is built as below:
 
     ```yaml
     resources:
-    - name: TodoList
-      fields:
-    - name: Todo
-      fields:
+      TodoList:
+        ...
+      Todo:
+        ...
     ```
 
 === "Json"
 
     ```json
-    "resources": [
-        {
-            "name": "TodoList",
-            "fields": {}
+    "resources": {
+        "TodoList": {
+            ...
         },
-        {
-            "name": "Todo",
-            "fields": {}
+        "Todo": {
+            ...
         }
-    ]
+    }
     ```
 
-Each model is constructed with a `name` and a `fields` section. The `name` is the name of the model and the `fields` section contains the fields of the model.
+A `name` which is the name of the resource and a `fields` section which contains the fields of the resource.
 
 > _Still pretty easy right ?_
 
@@ -88,12 +86,10 @@ Here is an example of a working Blitz file:
 
     ```yaml
     resources:
-    - name: TodoList
-      fields:
+      TodoList:
         owner!: str
         description: str
-    - name: Todo
-      fields:
+      Todo:
         due_date: str
         todo_list_id: TodoList.id
         todo_list: TodoList
@@ -102,38 +98,30 @@ Here is an example of a working Blitz file:
 === "Json"
 
     ```json
-    "resources": [
-        {
-            "name": "TodoList",
-            "fields": {
-                "owner!": "str",
-                "description": "str"
-            }
+    "resources": {
+        "TodoList": {
+            "owner!": "str",
+            "description": "str"
         },
-        {
-            "name": "Todo",
-            "fields": {
-                "due_date": "str",
-                "todo_list_id": "TodoList.id",
-                "todo_list": "TodoList"
-            }
+        "Todo": {
+            "due_date": "str",
+            "todo_list_id": "TodoList.id",
+            "todo_list": "TodoList"
         }
-    ]
+    }
     ```
 
 === "Yaml (explicit)"
 
     ```yaml
     resources:
-    - name: TodoList
-      fields:
+      TodoList:
         owner:
           type: str
           unique: true
         description:
           type: str
-    - name: Todo
-      fields:
+      Todo:
         due_date:
           type: str
         todo_list_id:
@@ -147,39 +135,31 @@ Here is an example of a working Blitz file:
 === "Json (explicit)"
 
     ```json
-    "resources": [
-        {
-            "name": "TodoList",
-            "fields": {
-                "owner": {
-                    "type": "str",
-                    "unique": true
-                },
-                "description": {
-                    "type": "str"
-                }
+    "resources": {
+        "TodoList": {
+            "owner": {
+                "type": "str",
+                "unique": true
+            },
+            "description": {
+                "type": "str"
             }
         },
-        {
-            "name": "Todo",
-            "fields": {
-                "due_date": {
-                    "type": "str"
-                },
-                "todo_list_id": {
-                    "type": "foreign_key",
-                    "foreign_key": "TodoList.id"
-                },
-                "todo_list": {
-                    "type": "relationship",
-                    "relationship": "TodoList"
-                }
+        "Todo": {
+            "due_date": {
+                "type": "str"
+            },
+            "todo_list_id": {
+                "type": "foreign_key",
+                "foreign_key": "TodoList.id"
+            },
+            "todo_list": {
+                "type": "relationship",
+                "relationship": "TodoList"
             }
         }
-    ]
+    }
     ```
-
-> _You can try it in the [Blitz Playground](#)_ !
 
 !!! note
 

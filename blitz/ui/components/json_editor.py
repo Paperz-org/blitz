@@ -5,7 +5,10 @@ from pydantic import ValidationError
 import yaml
 from blitz.models.blitz.file import BlitzFile
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
+from blitz.ui.components.buttons import FlatButton
 from blitz.ui.components.header import DARK_PINK, MAIN_PINK
+from blitz.ui.components import notify
+from blitz.ui.components.rows.base import JustifyBetweenRow
 
 
 class JsonEditorComponent:
@@ -60,21 +63,22 @@ class BlitzFileEditorComponent:
         self.content = self._original_content
         self.editor.run_editor_method("update", {"json": self.content})
         app.storage.user["blitz_file_content"] = self.content
-        ui.notify("Content Reset", type="positive")
+
+        notify.success("Content Reset")
 
     def validate(self) -> None:
         try:
             BlitzFile.from_dict(self.content)
         except ValidationError:
-            ui.notify("Invalid Blitz File", type="negative")
+            notify.error("Invalid Blitz File")
         else:
-            ui.notify("Valid Blitz File", type="positive")
+            notify.success("Valid Blitz File")
 
     def save(self) -> None:
         try:
             BlitzFile.from_dict(self.content)
         except ValidationError:
-            ui.notify("Invalid Blitz File", type="negative")
+            notify.error("Invalid Blitz File")
             return
         try:
             if self.blitz_ui.current_app is None:
@@ -89,18 +93,18 @@ class BlitzFileEditorComponent:
                 elif self.blitz_ui.current_app.file.file_type == BlitzFile.FileType.YAML:
                     f.write(yaml.dump(self.content, indent=4))
         except Exception:
-            ui.notify("Error While Saving File", type="negative")
+            notify.error("Error While Saving File")
         else:
-            ui.notify("Content Saved", type="positive")
+            notify.success("Content Saved")
 
     def render(self) -> None:
         with ui.row().classes("w-full justify-between align-center p-4 rounded-lg border"):
-            with ui.row().classes("justify-between"):
+            with JustifyBetweenRow():
                 ui.switch("Edit BlitzFile", on_change=self.enable_editor)
-                ui.button("Reset", on_click=self.reset_content, icon="restart_alt").props("flat")
-            with ui.row().classes("justify-between"):
-                ui.button("Validate", on_click=self.validate, icon="verified").props("flat")
-                ui.button("Save", on_click=self.save, icon="save").props("flat")
+                FlatButton("Reset", on_click=self.reset_content, icon="restart_alt")
+            with JustifyBetweenRow():
+                FlatButton("Validate", on_click=self.validate, icon="verified")
+                FlatButton("Save", on_click=self.save, icon="save")
         self.editor = (
             ui.json_editor(
                 {
