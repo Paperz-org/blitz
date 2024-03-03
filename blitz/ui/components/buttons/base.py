@@ -22,13 +22,6 @@ class BaseButton(BaseComponent[ui.button]):
         self.icon = icon
         super().__init__(props=props, classes=classes, **kwargs)
 
-    # def bind_enabled_from(
-    #     self,
-    #     target_object: Any,
-    #     target_name: str = 'enabled',
-    #     backward: Callable[..., Any] = lambda x: x
-    # ) -> NGButton:
-    #     return self.ng.bind_enabled_from(target_object, target_name, backward)
 
     def render(self) -> None:
         self.ng: NGButton = (
