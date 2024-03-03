@@ -3,9 +3,8 @@
 <div class="d-flex justify-content-between align-items-center">
     <div class="row g-2 align-items-center">
         <div class="col">
-            <h2 class="page-title">
-                Toto
-            </h2>
+            <h1>Welcome in your Blitz Admin panel</h1>
+
         </div>
     </div>
     <ol class="breadcrumb">
@@ -17,5 +16,8 @@
 </div>
 {% endblock %}
 {% block content %}
-<div>Toto</div>
+<h2 class="page-title">
+    {{ blitz_app.name}} Admin - v{{ blitz_app.file.config.version}}
+</h2>
+<div>{{ blitz_app.file.config.description }}</div>
 {% endblock %}
