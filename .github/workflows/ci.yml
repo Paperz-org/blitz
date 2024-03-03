@@ -41,11 +41,9 @@ jobs:
       - name: Install dev dependencies
         run: poetry install --with=dev --no-root
       - name: Ruff
-        run: poetry run ruff check blitz/
-        run: poetry run ruff check tests/
+        run: poetry run ruff check blitz/ tests/
       - name: Mypy
-        run: poetry run mypy blitz/
-        run: poetry run mypy tests/
+        run: poetry run mypy blitz/ tests/
   test:
     needs: lint
     strategy:
@@ -88,7 +86,6 @@ jobs:
       #----------------------------------------------
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-      - name: Install dev dependencies
         run: poetry install --with=dev --no-root --no-interaction
       #----------------------------------------------
       #    add matrix specifics and run test suite
