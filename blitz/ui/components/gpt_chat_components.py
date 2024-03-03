@@ -7,9 +7,17 @@ from nicegui.elements.expansion import Expansion
 from pydantic import ValidationError
 from blitz.models.blitz.file import BlitzFile
 from openai.types.chat import ChatCompletionMessageParam
-
-
+from blitz.ui.components import notify
+from blitz.ui.components.buttons import FlatButton
+from blitz.ui.components.icon import Icon
 import yaml
+
+from blitz.ui.components.buttons.icon import IconButton
+from blitz.ui.components.labels.error import ErrorLabel
+from blitz.ui.components.labels.base import BoldLabel
+from blitz.ui.components.markdown.base import BaseMarkdown, MarkdownResponse
+from blitz.ui.components.rows import WFullItemsCenterRow
+from blitz.ui.components.rows.base import ItemsCenterRow, WFullRow
 
 
 class ResponseJSON:
@@ -23,7 +31,7 @@ class ResponseJSON:
         self.color = self._get_color(self.is_valid_blitz_file)
 
         self._expansion: Expansion | None = None
-        self._expansion_is_open = True
+        self._expansion_is_open = self.is_valid_blitz_file
         self._dialog: Dialog | None = None
 
     @staticmethod
@@ -58,22 +66,17 @@ class ResponseJSON:
         return json.loads(match.group(1))
 
     async def copy_code(self) -> None:
-        ui.run_javascript("navigator.clipboard.writeText(`" + str(self.json) + "`)")
-        ui.notify("Copied to clipboard", type="info", color="green")
+        # Can't put it in a file without a better integration like a bridge to js function or something like this
+        ui.run_javascript(f"navigator.clipboard.writeText(`{json.dumps(self.json, indent=4)}`)")
+        notify.info("Copied to clipboard")
 
     def action_buttons(self) -> None:
-        with ui.row(wrap=False).classes("items-center"):
-            ui.button(
-                icon="content_copy",
-                color="transparent",
-                on_click=self.copy_code,
-            ).props("dense flat size=xm color=grey")
+        with ItemsCenterRow(wrap=False):
             if self._dialog is None:
                 # TODO: handle error
                 raise Exception
-            ui.button(icon="file_download", color="transparent", on_click=self._dialog.open).props(
-                "dense flat size=xm color=grey"
-            )
+            IconButton(icon="content_copy", icon_color="grey", on_click=self.copy_code)
+            IconButton(icon="file_download", icon_color="grey", on_click=self._dialog.open)
 
     def download_dialog(self) -> None:
         with ui.dialog() as self._dialog, ui.card().classes("w-full px-4"):
@@ -81,12 +84,9 @@ class ResponseJSON:
                 self.invalid_blitz_file()
             # with ui.expansion("Edit File", icon="edit").classes("w-full h-auto rounded-lg border-solid border overflow-hidden grow overflow-hidden"):
             #    JsonEditorComponent(self.json).render()
-            with ui.row().classes("w-full justify-end"):
-                ui.button(
-                    "Export as JSON",
-                    on_click=self._download_json,
-                ).props("flat")
-                ui.button("Export as YAML", on_click=self._download_yaml).props("flat")
+            with WFullRow(classes="justify-end"):
+                FlatButton("Export as JSON", on_click=self._download_json)
+                FlatButton("Export as YAML", on_click=self._download_yaml)
 
     def _download_json(self) -> None:
         ui.download(
@@ -101,9 +101,9 @@ class ResponseJSON:
         return f"{self.blitz_app_title.replace(' ', '_').replace('.', '_').lower()}.{extension}"
 
     def invalid_blitz_file(self) -> None:
-        with ui.row().classes("items-center"):
+        with ItemsCenterRow():
             ui.icon("error", color="red", size="sm")
-            ui.label("This is not a valid Blitz file.").classes("text-red")
+            ErrorLabel("This is not a valid Blitz file.")
 
     def _toggle_expansion(self) -> None:
         self._expansion_is_open = not self._expansion_is_open
@@ -115,7 +115,7 @@ class ResponseJSON:
     @ui.refreshable
     def render(self) -> None:
         self.download_dialog()
-        with ui.row(wrap=False).classes("items-center w-full"):
+        with WFullItemsCenterRow(wrap=False):
             with ui.expansion(
                 self.blitz_app_title,
                 icon="settings_suggest",
@@ -126,17 +126,8 @@ class ResponseJSON:
             ) as self._expansion:
                 if not self.is_valid_blitz_file:
                     self.invalid_blitz_file()
-                ui.markdown(self.text)
+                BaseMarkdown(self.text)
             self.action_buttons()
-
-
-class MarkdownResponse:
-    def __init__(self, text: str) -> None:
-        self.text = text
-
-    @ui.refreshable
-    def render(self) -> None:
-        ui.markdown(self.text)
 
 
 class GPTChatComponent:
@@ -156,13 +147,13 @@ class GPTChatComponent:
 
     @ui.refreshable
     def render(self) -> None:
-        with ui.row(wrap=False).classes("w-full"):
+        with WFullRow(wrap=False):
             ui.space().classes("w-1/3")
             with ui.column().classes("justify-start w-2/3"):
-                with ui.row(wrap=False).classes("items-center w-full"):
+                with ItemsCenterRow(wrap=False):
                     with ui.avatar(color=self.avatar_color).props("size=sm"):
-                        ui.icon(self.icon, size="xs", color="white")
-                    ui.label(self.label).classes("font-bold")
+                        Icon(self.icon, size="xs", color="white")
+                    BoldLabel(self.label)
 
                 if self.text_components:
                     for component in self.text_components:
@@ -170,7 +161,7 @@ class GPTChatComponent:
                             component.render()
                 else:
                     with ui.element().classes("px-10"):
-                        ui.markdown(self.text)
+                        BaseMarkdown(self.text)
             ui.space().classes("w-1/3")
 
     def as_gpt_dict(self) -> ChatCompletionMessageParam:
@@ -210,7 +201,7 @@ class GPTResponse(GPTChatComponent):
 
     def __init__(self, text: str = "", text_is_finished: bool = False) -> None:
         super().__init__(label=self.LABEL, text=text, icon=self.ICON, avatar_color=self.AVATAR_COLOR)
-        self._text_is_finished = text_is_finished
+        self._text_is_finished: bool
         self.text_is_finished = text_is_finished
 
     def add(self, text: str) -> None:

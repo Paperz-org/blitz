@@ -1,6 +1,9 @@
+import importlib.metadata
+
 from .core import BlitzCore
+
+__version__ = importlib.metadata.version("blitz")
 
 __all__ = [
     "BlitzCore",
 ]
-__version__ = "0.1.0"
