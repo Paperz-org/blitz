@@ -65,9 +65,7 @@ class BlitzProjectCreator:
     DEMO_BLITZ_APP_DESCRIPTION = "This is a demo blitz app"
     DEMO_BLITZ_APP_NAME = "Demo Blitz App"
 
-    def __init__(
-        self, name: str, description: str, file_format: str, demo: bool = False
-    ) -> None:
+    def __init__(self, name: str, description: str, file_format: str, demo: bool = False) -> None:
         self.name = name
         self.description = description
         self.file_format = file_format
@@ -95,9 +93,7 @@ class BlitzProjectCreator:
             raise typer.Exit(code=1)
 
     def print_success_message(self) -> None:
-        print(
-            f"\n[medium_purple1 bold]{self.name}[/medium_purple1 bold] created successfully !"
-        )
+        print(f"\n[medium_purple1 bold]{self.name}[/medium_purple1 bold] created successfully !")
         print("To start your app, you can use:")
         print(f"    [bold medium_purple1]blitz start {self.path}[/bold medium_purple1]")
 
@@ -127,9 +123,7 @@ class BlitzProjectCreator:
             raise Exception()
         match self.file_format:
             case "json":
-                blitz_file_data = self.blitz_file.model_dump_json(
-                    indent=4, by_alias=True, exclude_unset=True
-                )
+                blitz_file_data = self.blitz_file.model_dump_json(indent=4, by_alias=True, exclude_unset=True)
             case "yaml":
                 blitz_file_data = yaml.dump(
                     self.blitz_file.model_dump(by_alias=True, exclude_unset=True),
@@ -151,9 +145,7 @@ class BlitzProjectCreator:
 
     @staticmethod
     def _print_directory_error(error: Exception) -> None:
-        print(
-            f"[red bold]Error[/red bold] while creating the blitz app in the file system: {error}"
-        )
+        print(f"[red bold]Error[/red bold] while creating the blitz app in the file system: {error}")
 
 
 def create_blitz_app(

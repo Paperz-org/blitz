@@ -1,6 +1,11 @@
 from nicegui import ui
 
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
+from blitz.ui.components.buttons.flat import FlatButton
+from blitz.ui.components.grids.base import WFullGrid
+from blitz.ui.components.labels import Label
+from blitz.ui.components.links.base import WFullLink
+from blitz.ui.components.tooltip import Tooltip
 
 
 class ProjectDetail:
@@ -19,14 +24,14 @@ class ProjectDetail:
         self.version = version
 
     def render(self) -> None:
-        with ui.link(target=f"/projects/{self.app_name}").classes("w-full hover:bg-slate-700 rounded-sm"), ui.grid(
-            columns=20
-        ).classes("w-full my-2"):
-            ui.label(self.app_name).classes("col-span-2 pl-2")
-            ui.label(self.project_name).classes("col-span-2 pl-2")
-            ui.label(self.date).classes("col-span-4")
-            ui.label(self.description).classes("col-span-11")
-            ui.label(self.version).classes("col-span-1")
+        with WFullLink(target=f"/projects/{self.app_name}", classes="hover:bg-slate-700 rounded-sm"), WFullGrid(
+            columns=20, classes="my-2"
+        ):
+            Label(self.app_name).ng.classes("col-span-2 pl-2")
+            Label(self.project_name).ng.classes("col-span-2 pl-2")
+            Label(self.date).ng.classes("col-span-4")
+            Label(self.description).ng.classes("col-span-11")
+            Label(self.version).ng.classes("col-span-1")
 
 
 class HomePage:
@@ -37,18 +42,18 @@ class HomePage:
         with ui.element("div").classes("w-full justify-center items-center content-center p-10"):
             with ui.card().classes("no-shadow border align-center"):
                 with ui.row().classes("w-full justify-between items-center"):
-                    ui.label("Blitz Projects").classes("text-2xl")
-                    with ui.button("New").props("disabled").props("flat"):
-                        ui.tooltip("This feature is not developed yet. Create a new project with the CLI.")
+                    Label("Blitz Projects").ng.classes("text-2xl")
+                    with FlatButton("New").props("disabled"):
+                        Tooltip("This feature is not developed yet. Create a new project with the CLI.")
                 ui.input(label="Search for project").props("borderless standout dense").classes(
                     " rounded-lg px-2 border-solid border w-full my-5"
                 )
                 with ui.grid(columns=20).classes("w-full"):
-                    ui.label("App").classes("col-span-2 pl-2")
-                    ui.label("Name").classes("col-span-2 pl-2")
-                    ui.label("Last modified").classes("col-span-4")
-                    ui.label("Description").classes("col-span-11")
-                    ui.label("Version").classes("col-span-1")
+                    Label("App").ng.classes("col-span-2 pl-2")
+                    Label("Name").ng.classes("col-span-2 pl-2")
+                    Label("Last modified").ng.classes("col-span-4")
+                    Label("Description").ng.classes("col-span-11")
+                    Label("Version").ng.classes("col-span-1")
 
                 ui.separator()
 

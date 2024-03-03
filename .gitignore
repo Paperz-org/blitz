@@ -168,3 +168,4 @@ database.db
 .nicegui/
 demo-blitz-app/
 .idea/
+.ruff_cache/
