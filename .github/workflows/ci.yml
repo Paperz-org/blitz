@@ -17,7 +17,7 @@ jobs:
         id: setup-python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
       #----------------------------------------------
       #  -----  install & configure poetry  -----
       #----------------------------------------------
@@ -42,16 +42,18 @@ jobs:
         run: poetry install --with=dev --no-root
       - name: Ruff
         run: poetry run ruff check blitz/
+        run: poetry run ruff check tests/
       - name: Mypy
         run: poetry run mypy blitz/
+        run: poetry run mypy tests/
   test:
     needs: lint
     strategy:
       fail-fast: true
       matrix:
-        os: [ "ubuntu-latest", "macos-latest" ]
+        os: ["ubuntu-latest", "macos-latest"]
         # python-version: [ "3.8", "3.9", "3.10", "3.11", "3.12" ]
-        python-version: [ "3.12" ]
+        python-version: ["3.12"]
     runs-on: ${{ matrix.os }}
     steps:
       #----------------------------------------------
@@ -86,7 +88,8 @@ jobs:
       #----------------------------------------------
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction
+      - name: Install dev dependencies
+        run: poetry install --with=dev --no-root --no-interaction
       #----------------------------------------------
       #    add matrix specifics and run test suite
       #----------------------------------------------

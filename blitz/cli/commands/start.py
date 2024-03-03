@@ -1,26 +1,24 @@
 import contextlib
-import time
-from semver import Version
-import typer
 import os
-import uvicorn
-
+import time
 from pathlib import Path
 from typing import Annotated, Optional
+
+import typer
+import uvicorn
+from semver import Version
 from uvicorn.supervisors import ChangeReload
 
+from blitz import __version__
 from blitz.api import create_blitz_api
-from blitz.cli.utils import print_version
-from blitz.core import BlitzCore
-
-from blitz.settings import get_settings
 from blitz.cli.errors import (
     BlitzAppNotFoundError,
     BlitzAppVersionNotFoundError,
     MissingBlitzAppNameError,
 )
-
-from blitz import __version__
+from blitz.cli.utils import print_version
+from blitz.core import BlitzCore
+from blitz.settings import get_settings
 
 
 def start_blitz(
