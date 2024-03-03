@@ -86,7 +86,7 @@ jobs:
       #----------------------------------------------
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --with=dev --no-root --no-interaction
+        run: poetry install --with=dev --no-interaction
       #----------------------------------------------
       #    add matrix specifics and run test suite
       #----------------------------------------------
