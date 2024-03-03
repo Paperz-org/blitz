@@ -28,6 +28,7 @@ class BlitzAdmin:
             base_url="/admin/",
             templates_dir="blitz/api/templates",
             index_view=HomeView("Home"),
+            logo_url=""
         )
         for resource in blitz_app.resources:
             self.admin.add_view(ModelView(resource.model))

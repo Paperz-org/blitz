@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block header %}
+<div class="d-flex justify-content-between align-items-center">
+    <div class="row g-2 align-items-center">
+        <div class="col">
+            <h2 class="page-title">
+                Toto
+            </h2>
+        </div>
+    </div>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ url_for(__name__ ~ ':index')}}">Admin</a>
+        </li>
+        <li class="breadcrumb-item active">Home</li>
+    </ol>
+</div>
+{% endblock %}
+{% block content %}
+<div>Toto</div>
+{% endblock %}
