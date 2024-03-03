@@ -15,7 +15,7 @@ class BaseElement(BaseComponent[ui.element]):
         self.ng = ui.element(tag=self.tag, _client=self._client).props(self.props).classes(self.classes)
 
 
-class IFrame(BaseElement):  # type: ignore
+class IFrame(BaseElement):
     """
     IFrame element.
 
