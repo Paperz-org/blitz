@@ -11,7 +11,6 @@ async def test_blitz_app_urls(blitz_app: None) -> None:
         assert response.status_code == 200
         response = await client.get("http://localhost:8100/api/docs")
         assert response.status_code == 200
-    assert False
 
 
 @pytest.mark.asyncio

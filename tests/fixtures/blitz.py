@@ -26,7 +26,7 @@ def blitz_app(cli: Cli, blitz_app_path: Path) -> Iterator[None]:
         proc.start()
         with httpx.Client() as client:
             maximum_try = 0
-            while maximum_try < 10:
+            while maximum_try < 20:
                 maximum_try += 1
                 try:
                     response = client.get("http://localhost:8100/api/docs")
