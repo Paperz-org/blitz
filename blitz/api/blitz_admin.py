@@ -1,9 +1,8 @@
-from functools import lru_cache
 from fastapi import FastAPI
 from starlette_admin import CustomView
 from blitz.db.db import get_sqlite_engine
 from starlette_admin.contrib.sqla import Admin, ModelView
-from typing import TYPE_CHECKING, Any, List
+from typing import TYPE_CHECKING, Any
 from starlette_admin.views import Link
 from starlette.responses import Response
 from starlette.requests import Request

@@ -22,7 +22,6 @@ class BaseButton(BaseComponent[ui.button]):
         self.icon = icon
         super().__init__(props=props, classes=classes, **kwargs)
 
-
     def render(self) -> None:
         self.ng: NGButton = (
             ui.button(
