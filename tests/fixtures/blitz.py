@@ -20,7 +20,7 @@ def blitz_app_path(cli: Cli) -> Iterator[Path]:
 def blitz_app(cli: Cli, blitz_app_path: Path) -> Iterator[None]:
     proc = Process(
         target=cli.start,
-        kwargs={"blitz_app_name": blitz_app_path.name},
+        kwargs={"blitz_app_name": blitz_app_path.name, "hot_reload": False},
     )
     try:
         proc.start()
