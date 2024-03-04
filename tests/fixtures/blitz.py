@@ -32,7 +32,7 @@ def blitz_app(cli: Cli, blitz_app_path: Path) -> Iterator[None]:
                     response = client.get("http://localhost:8100/api/docs")
                     response.raise_for_status()
                 except Exception:
-                    time.sleep(0.2)
+                    time.sleep(0.5)
                     continue
                 break
             else:
