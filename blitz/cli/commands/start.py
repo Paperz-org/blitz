@@ -71,7 +71,7 @@ def start_blitz(
             host="localhost",
             port=port,
             reload=True,
-            reload_includes=str(blitz_app.file.path.relative_to(Path.cwd())),
+            reload_includes=[str(blitz_app.file.path.relative_to(Path.cwd()))],
             reload_excludes=["*_migration.py", "migrations/*.py"],
             log_config=None,
             log_level="info",

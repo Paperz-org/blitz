@@ -83,11 +83,11 @@ class HeaderComponent(Component[ui.header], reactive=True):
 
     def render(self) -> None:
         with ui.header(bordered=True).classes("pl-1 pr-8 justify-between content-center h-16 backdrop-blur-sm"):
-            with ItemsCenterContentCenterRow(classes="space-x-20 my-auto"):
+            with ItemsCenterContentCenterRow(classes="space-x-20 my-auto mx-2"):
                 with ItemsCenterContentCenterRow(classes="space-x-0"):
                     if self.drawer is not None:
-                        IconButton(icon="menu", on_click=self.drawer.toggle)
-                    Icon(name="bolt", color=DARK_PINK, size="32px")
+                        IconButton(icon="menu", icon_color="white", on_click=self.drawer.toggle)
+                    Icon(name="bolt", color="DARK_PINK", size="32px")
                     HeaderElement(label="Blitz Dashboard", link=f"/projects/{self.blitz_ui.current_project}")
 
                 with ItemsCenterContentCenterRow(classes="justify-between"):
