@@ -52,7 +52,7 @@ class BlitzAdmin:
             Link(
                 label="Go Back to Dashboard",
                 icon="fa fa-link",
-                url=f"http://localhost:{settings.BLITZ_PORT}/dashboard/projects/{self.blitz_app.name}",
+                url=f"http://0.0.0.0:{settings.BLITZ_PORT}/dashboard/projects/{self.blitz_app.name}",
             )
         )
         self.admin.add_view(Link(label="GitHub", icon="fa-brands fa-github", url="https://github.com/Paperz-org/blitz"))
