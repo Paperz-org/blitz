@@ -29,7 +29,7 @@ def blitz_app(cli: Cli, blitz_app_path: Path) -> Iterator[None]:
             while maximum_try < 20:
                 maximum_try += 1
                 try:
-                    response = client.get("http://localhost:8100/api/docs")
+                    response = client.get("http://0.0.0.0:8100/api/docs")
                     response.raise_for_status()
                 except Exception:
                     time.sleep(0.2)

@@ -16,7 +16,7 @@ class BlitzUI:
         self.preprompt = self._get_preprompt()
 
         self.settings = settings
-        self.localhost_url = f"http://localhost:{settings.BLITZ_PORT}"
+        self.localhost_url = f"http://0.0.0.0:{settings.BLITZ_PORT}"
         self.erd: str | None = None
         self._current_project: str | None = None
         self._current_app: BlitzApp | None = None

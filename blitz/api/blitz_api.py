@@ -1,27 +1,26 @@
-from functools import partial
 import os
+import warnings
+from functools import partial
 from typing import Any
 
-import warnings
-
+from fastapi import APIRouter, FastAPI
 from fastapi.responses import RedirectResponse
+from fastapi_crudrouter import SQLAlchemyCRUDRouter  # type: ignore
+from fastapi_crudrouter.core import CRUDGenerator  # type: ignore
+from rich import print
+from semver import Version
+from sqlalchemy.exc import SAWarning
+
 from blitz.api.blitz_admin import BlitzAdmin
+from blitz.api.logs import configure as configure_logs
+from blitz.app import BlitzApp
 from blitz.core import BlitzCore
 from blitz.db.db import get_db
 from blitz.db.errors import NoChangesDetectedError
-from blitz.app import BlitzApp
-from fastapi import FastAPI, APIRouter
-from fastapi_crudrouter.core import CRUDGenerator  # type: ignore
-from fastapi_crudrouter import SQLAlchemyCRUDRouter  # type: ignore
-from semver import Version
+from blitz.db.migrations import generate_migration, run_migrations
 from blitz.models.blitz.resource import BlitzResource
 from blitz.patch import patch_fastapi_crudrouter
 from blitz.settings import DBTypes, get_settings
-from blitz.db.migrations import generate_migration, run_migrations
-from blitz.api.logs import configure as configure_logs
-from rich import print
-
-from sqlalchemy.exc import SAWarning
 
 # Patch the crudrouter to work with pydantic v2
 patch_fastapi_crudrouter()
@@ -192,9 +191,9 @@ def create_blitz_api(
         "\n".join(
             (
                 "\n[bold medium_purple1]Blitz app deployed.",
-                f"  - Blitz UI            : http://localhost:{get_settings().BLITZ_PORT}",
-                f"  - Blitz admin         : http://localhost:{get_settings().BLITZ_PORT}/admin",
-                f"  - Swagger UI          : http://localhost:{get_settings().BLITZ_PORT}/api/docs[/bold medium_purple1]\n",
+                f"  - Blitz UI            : http://0.0.0.0:{get_settings().BLITZ_PORT}",
+                f"  - Blitz admin         : http://0.0.0.0:{get_settings().BLITZ_PORT}/admin",
+                f"  - Swagger UI          : http://0.0.0.0:{get_settings().BLITZ_PORT}/api/docs[/bold medium_purple1]\n",
             )
         )
     )
