@@ -23,17 +23,19 @@ class StatusComponent(BaseComponent[Grid], reactive=True):
         classes: str = "",
         **kwargs: Any,
     ) -> None:
+        
         Timer(10.0, self._set_status)
         super().__init__(*args, props=props, classes=classes, **kwargs)
 
     async def _is_api_up(self) -> bool:
         async with AsyncClient() as client:
-            response = await client.get(f"{self.blitz_ui.localhost_url}/api")
+            response = await client.get(f"{self.blitz_ui.settings.BLITZ_BASE_URL}/api")
             return response.status_code == 200
 
     async def _is_admin_up(self) -> bool:
         async with AsyncClient() as client:
-            response = await client.get(f"{self.blitz_ui.localhost_url}/admin/")
+            print(self.blitz_ui.settings.BLITZ_BASE_URL)
+            response = await client.get(f"{self.blitz_ui.settings.BLITZ_BASE_URL}/admin/")
             return response.status_code == 200
 
     async def _set_status(self) -> None:

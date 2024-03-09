@@ -91,7 +91,7 @@ class HeaderComponent(Component[ui.header], reactive=True):
                     HeaderElement(label="Blitz Dashboard", link=f"/projects/{self.blitz_ui.current_project}")
 
                 with ItemsCenterContentCenterRow(classes="justify-between"):
-                    with HeaderElement(label="Projects", link=f"{self.blitz_ui.localhost_url}/projects").disabled():
+                    with HeaderElement(label="Projects", link="/projects").disabled():
                         Tooltip("Multiple App management is coming soon")
                     HeaderElement(label="GPT Builder", link="/gpt")
                     HeaderElement("Documentation", "https://paperz-org.github.io/blitz/", new_tab=True)

@@ -1,7 +1,8 @@
 from pathlib import Path
-from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
+
 from nicegui import ui
 
+from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 from blitz.ui.components.element.base import IFrame
 
 
@@ -16,7 +17,7 @@ class Page:
     def render_page(self) -> None:
         self.resize_iframe()
         self.ng = IFrame(
-            src=f"{self.blitz_ui.localhost_url}/admin/",
+            src="/admin/",
             frameborder=0,
             classes="w-full rounded-sm bg-white h-screen overflow-hidden",
             props="onload=resizeIframe()",
