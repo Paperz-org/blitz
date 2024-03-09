@@ -44,7 +44,8 @@ class BlitzFileEditorComponent:
         else:
             self.content = content
         self.mode = mode
-        self._read_only = True
+        self.read_only = blitz_ui.read_only
+        self._editor_read_only = True
 
     async def get_data(self) -> None:
         raw_content: dict[str, str] = await self.editor.run_editor_method("get")
@@ -56,8 +57,8 @@ class BlitzFileEditorComponent:
         app.storage.user["blitz_file_content"] = self.content
 
     def enable_editor(self) -> None:
-        self._read_only = not self._read_only
-        self.editor.run_editor_method("updateProps", {"readOnly": self._read_only})
+        self._editor_read_only = not self._editor_read_only
+        self.editor.run_editor_method("updateProps", {"readOnly": self._editor_read_only})
 
     def reset_content(self) -> None:
         self.content = self._original_content
@@ -75,6 +76,9 @@ class BlitzFileEditorComponent:
             notify.success("Valid Blitz File")
 
     def save(self) -> None:
+        if self.read_only:
+            notify.error("Read Only Mode")
+            return
         try:
             BlitzFile.from_dict(self.content)
         except ValidationError:
@@ -104,12 +108,13 @@ class BlitzFileEditorComponent:
                 FlatButton("Reset", on_click=self.reset_content, icon="restart_alt")
             with JustifyBetweenRow():
                 FlatButton("Validate", on_click=self.validate, icon="verified")
+
                 FlatButton("Save", on_click=self.save, icon="save")
         self.editor = (
             ui.json_editor(
                 {
                     "content": {"json": self.content},
-                    "readOnly": self._read_only,
+                    "readOnly": self._editor_read_only,
                     "mode": self.mode,
                 },
                 on_change=self.get_data,

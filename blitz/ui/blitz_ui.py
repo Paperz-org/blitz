@@ -7,10 +7,6 @@ from blitz.core import BlitzCore
 from blitz.settings import Settings, get_settings
 from blitz.tools.erd import generate_mermaid_erd
 
-# @lru_cache
-# def get_erd(app: BlitzApp) -> str:
-#     return generate_mermaid_erd(app._base_resource_model.metadata)
-
 
 class BlitzUI:
     def __init__(self, settings: Settings = get_settings()) -> None:
