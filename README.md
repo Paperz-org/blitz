@@ -11,7 +11,11 @@
 > [!CAUTION]
 > Do not use in production, this is an alpha version.
 
-Full [Documentation](https://paperz-org.github.io/blitz/) here.
+# :link: Links 
+
+:books: [Documentation](https://blitz.paperz.app/)
+
+:game_die: [Dashboard Playground](https://blitz.paperz.app/playground)
 
 # **What is Blitz ?**
 Blitz is a tool that builds restfull APIs on the fly based on a simple and easy to maintain configuration file.
