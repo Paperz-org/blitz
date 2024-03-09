@@ -10,7 +10,7 @@ from blitz.tools.erd import generate_mermaid_erd
 
 class BlitzUI:
     def __init__(self, settings: Settings = get_settings()) -> None:
-        self.read_only = settings.READ_ONLY
+        self.read_only = settings.BLITZ_READ_ONLY
         self.blitz_app: BlitzCore = BlitzCore()
         self.apps = self.blitz_app.apps
         self.preprompt = self._get_preprompt()
