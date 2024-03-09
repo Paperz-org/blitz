@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     DEFAULT_FILE: str = "blitz.json"
     BLITZ_DB_TYPE: DBTypes = DBTypes.SQLITE
     BLITZ_OPENAI_API_KEY: str = ""
+    BLITZ_READ_ONLY: bool = False
 
 
 @lru_cache()
