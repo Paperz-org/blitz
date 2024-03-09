@@ -68,7 +68,7 @@ def start_blitz(
         server_config = uvicorn.Config(
             "blitz.api:create_blitz_api",
             factory=True,
-            host="localhost",
+            host="0.0.0.0",
             port=port,
             reload=True,
             reload_includes=[str(blitz_app.file.path.relative_to(Path.cwd()))],
@@ -80,4 +80,4 @@ def start_blitz(
         ChangeReload(server_config, target=server.run, sockets=[server_config.bind_socket()]).run()
     else:
         blitz_api = create_blitz_api(blitz_app, enable_config_route=config_route, admin=admin)
-        uvicorn.run(blitz_api, host="localhost", port=port, log_config=None, log_level="warning")
+        uvicorn.run(blitz_api, host="0.0.0.0", port=port, log_config=None, log_level="warning")
