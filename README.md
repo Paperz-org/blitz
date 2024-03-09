@@ -5,7 +5,7 @@
   <em>⚡️ Lightspeed API builder ⚡️</em>
 </p>
 
-![app version](https://img.shields.io/badge/version-0.1.0-brightgreen)
+![app version](https://img.shields.io/badge/version-0.2.0-brightgreen)
 ![app license](https://img.shields.io/badge/license-MIT-brightgreen)
 
 > [!CAUTION]
@@ -18,45 +18,57 @@ Blitz is a tool that builds restfull APIs on the fly based on a simple and easy 
 
 Here is an example of how simple a Blitz file is:
   ```yaml
-  config:
-    name: Hello world
-    description: Here is a simple blitz configuration file.
-    version: 0.1.0
-  resources:
-  - name: TodoList
-    fields:
-      name: str
-      description: str
-  - name: Todo
-    fields:
-      name: str
-      due_date: str
-      todo_list_id: TodoList.id
-      todo_list: TodoList
+    config:
+      name: Hello world
+      description: Here is a simple blitz configuration file.
+      version: 0.1.0
+    resources:
+      TodoList:
+        name: str
+        description: str
+      Todo:
+        name: str
+        due_date: str
+        todo_list_id: TodoList.id
+        todo_list: TodoList
   ```
 > [!NOTE]
 > Also available in Json format.
 
-# Quickstart
-
-## Installation
+# Installation
 
 ### Using [pipx](https://pipx.pypa.io/stable/installation/) (recommanded)
 ```bash
 pipx install git+https://github.com/Paperz-org/blitz.git@v0.1.0
 ```
 
+# Quickstart
+
+## Create a demo blitz app
+
+```console
+blitz create --demo
+```
+![Made with VHS](https://vhs.charm.sh/vhs-4fwHdy68qbYVz5RaZy2XJf.gif)
+
+## Start the demo
+
+```console
+blitz start
+```
+
+![Made with VHS](https://vhs.charm.sh/vhs-2TEc58IujiV0CB1WoasT99.gif)
+
+## Enjoy the demo
+
+The blitz demo already includes resources to explore all the functionalities of Blitz.
+
 ## Create a blitz app
 
 ```console
-blitz create your-blitz-app
+blitz create
 ```
-
-## Start your blitz app
-
-```console
-blitz start your-blitz-app
-```
+![Made with VHS](https://vhs.charm.sh/vhs-69aoDSUU50WfSQe3E8lXmv.gif)
 
 *And yeah, that's it.*
 
