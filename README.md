@@ -73,7 +73,7 @@ You can see the Dashboard of the demo blitz app in our [playground](https://blit
 ```console
 blitz create
 ```
-![Made with VHS](https://vhs.charm.sh/vhs-58YpR5PnVN0fw13fEVEf2u.gif)
+![Made with VHS](https://vhs.charm.sh/vhs-2v3VHiIehkXeSkPzXeLch6.gif)
 
 *And yeah, that's it.*
 
