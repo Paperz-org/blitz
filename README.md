@@ -53,7 +53,7 @@ pipx install git+https://github.com/Paperz-org/blitz.git@v0.1.0
 ```console
 blitz create --demo
 ```
-![Made with VHS](https://vhs.charm.sh/vhs-4fwHdy68qbYVz5RaZy2XJf.gif)
+![Made with VHS](https://vhs.charm.sh/vhs-1tqzLZNxe5qeNhXT26ZCt5.gif)
 
 ## Start the demo
 
@@ -73,7 +73,7 @@ You can see the Dashboard of the demo blitz app in our [playground](https://blit
 ```console
 blitz create
 ```
-![Made with VHS](https://vhs.charm.sh/vhs-69aoDSUU50WfSQe3E8lXmv.gif)
+![Made with VHS](https://vhs.charm.sh/vhs-58YpR5PnVN0fw13fEVEf2u.gif)
 
 *And yeah, that's it.*
 
