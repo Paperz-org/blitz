@@ -36,7 +36,7 @@ class HeaderElement(Component[ui.link]):
         return self
 
 
-class HeaderComponent(Component[ui.header], reactive=True):
+class HeaderComponent(Component[ui.header]):
     ThemeButton = IconButton.variant(props="fab-mini disabled")
 
     def __init__(
