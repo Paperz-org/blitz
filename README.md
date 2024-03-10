@@ -66,6 +66,7 @@ blitz start
 ## Enjoy the demo
 
 The blitz demo already includes resources to explore all the functionalities of Blitz.
+You can see the Dashboard of the demo blitz app in our [playground](https://blitz.paperz.app/playground).
 
 ## Create a blitz app
 
@@ -78,12 +79,12 @@ blitz create
 
 Just add some resources in the blitz file, and you now have a fully functional API and the corresponding database schema, along with all the modern features you can expect from a modern app like:
 
-- Automatic Swagger UI for the API
-- Admin
-- Dashboard
-- Data validation and error messages (thanks to Fastapi and SQLModel)
-- Automatic database migration based on the changes of your blitz file
-- Generated ERD diagram
+- **Automatic Swagger UI** for the API
+- **Admin Interface**
+- **Dashboard**: including GPT builder, Blitz file editor, logs ...
+- **Data Validation and Error Messages** (thanks to Fastapi and SQLModel)
+- **Automatic Database Migration**
+- **Generated ERD Diagram**
 - and more...
 
 <p align="center">
