@@ -165,7 +165,7 @@ class AskGPTPage(BasePage):
 
     @property
     def can_send_request(self) -> bool:
-        return self.gpt_request != "" or self.thinking is True or self.gpt_client.has_api_key
+        return self.gpt_request != "" or self.thinking is True
 
     @property
     def gpt_client_is_valid(self) -> bool:
