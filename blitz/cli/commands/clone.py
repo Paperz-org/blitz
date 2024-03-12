@@ -1,11 +1,8 @@
 from json import JSONDecodeError
-from pathlib import Path
-import time
 from typing import Annotated, Optional
 from urllib.parse import urlparse
 import requests
 import typer
-from rich.progress import Progress, SpinnerColumn, TextColumn
 from blitz.cli.commands.create import BlitzProjectCreator
 from blitz.cli.utils import progress
 from blitz.models.blitz.file import BlitzFile

@@ -23,7 +23,6 @@ from blitz.cli.utils import print_version, progress
 from blitz.core import BlitzCore
 from blitz.models.blitz.file import BlitzFile
 from blitz.settings import get_settings
-from rich.progress import Progress, SpinnerColumn, TextColumn
 
 
 def create_app_from_url(url: str) -> BlitzApp:
