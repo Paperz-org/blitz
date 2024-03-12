@@ -35,6 +35,7 @@ alembic = {git = "https://github.com/mde-pach/alembic.git"}
 semver = "^3.0.2"
 loguru = "^0.7.2"
 httpx = "^0.26.0"
+types-requests = "^2.31.0.20240311"
 
 [tool.poetry.group.doc.dependencies]
 mkdocs = "^1.5.3"
