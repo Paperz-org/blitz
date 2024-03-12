@@ -15,7 +15,7 @@
 
 :books: [Documentation](https://blitz.paperz.app/)
 
-:game_die: [Dashboard Playground](https://blitz.paperz.app/playground)
+:game_die: [Live Demo](https://demo.blitz.paperz.app/)
 
 # **What is Blitz ?**
 Blitz is a tool that builds restfull APIs on the fly based on a simple and easy to maintain configuration file.
@@ -43,7 +43,7 @@ Here is an example of how simple a Blitz file is:
 
 ### Using [pipx](https://pipx.pypa.io/stable/installation/) (recommanded)
 ```bash
-pipx install git+https://github.com/Paperz-org/blitz.git@v0.1.0
+pipx install git+https://github.com/Paperz-org/blitz.git@v0.2.0
 ```
 
 # Quickstart
@@ -66,7 +66,7 @@ blitz start
 ## Enjoy the demo
 
 The blitz demo already includes resources to explore all the functionalities of Blitz.
-You can see the Dashboard of the demo blitz app in our [playground](https://blitz.paperz.app/playground).
+You can see the Dashboard of the demo blitz app in our [Live Demo](https://demo.blitz.paperz.app/).
 
 ## Create a blitz app
 
