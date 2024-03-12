@@ -34,8 +34,7 @@ class Cli:
         input_description: str,
         input_file_format: Annotated[str, Literal["json", "yaml"]],
         demo: bool = False,
-    ) -> Result:
-        ...
+    ) -> Result: ...
 
     @overload
     def create(
@@ -46,8 +45,7 @@ class Cli:
         input_description: str,
         input_file_format: Annotated[str, Literal["json", "yaml"]],
         demo: bool = False,
-    ) -> Result:
-        ...
+    ) -> Result: ...
 
     @overload
     def create(
@@ -58,8 +56,7 @@ class Cli:
         input_description: None = None,
         input_file_format: None = None,
         demo: bool = True,
-    ) -> Result:
-        ...
+    ) -> Result: ...
 
     def create(
         self,
