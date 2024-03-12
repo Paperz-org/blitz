@@ -96,12 +96,12 @@ class BlitzFile(BaseModel):
         )
 
     @classmethod
-    def from_url(cls, url: str, name: str | None = None) -> "BlitzFile":
+    def from_url(cls, url: str, name: str | None = None, format: str = "yaml") -> "BlitzFile":
         response = requests.get(url)
         try:
             response.raise_for_status()
             project_data = response.json()
-            blitz_file = cls.from_dict(project_data)
+            blitz_file = cls.from_dict(project_data, file_type=cls.FileType(format))
         except Exception as err:
             raise err
         name = name or blitz_file.config.name

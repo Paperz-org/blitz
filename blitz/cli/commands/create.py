@@ -66,7 +66,7 @@ class BlitzProjectCreator:
     DEFAULT_VERSION = "0.1.0"
     DEFAULT_BLITZ_APP_NAME = "Random Blitz App"
     DEFAULT_BLIZ_APP_DESCRIPTION = ""
-    DEFAULT_BLITZ_FILE_FORMAT = "json"
+    DEFAULT_BLITZ_FILE_FORMAT = "yaml"
     DEMO_BLITZ_APP_DESCRIPTION = "This is a demo blitz app"
     DEMO_BLITZ_APP_NAME = "Demo Blitz App"
 

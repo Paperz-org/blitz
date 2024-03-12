@@ -25,7 +25,7 @@ def clone_project(
 
     with progress("Cloning Blitz App..."):
         try:
-            blitz_file = BlitzFile.from_url(url, name)
+            blitz_file = BlitzFile.from_url(url, name, format=format)
         except (requests.HTTPError, JSONDecodeError):
             print(f"Failed to clone the project from {url}")
             raise typer.Exit(1)
