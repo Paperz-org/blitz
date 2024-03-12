@@ -58,6 +58,10 @@ def get_blitz_demo_resources() -> list[BlitzResourceConfig]:
     ]
 
 
+class BlitzCreator:
+    pass
+
+
 class BlitzProjectCreator:
     DEFAULT_VERSION = "0.1.0"
     DEFAULT_BLITZ_APP_NAME = "Random Blitz App"
@@ -66,14 +70,21 @@ class BlitzProjectCreator:
     DEMO_BLITZ_APP_DESCRIPTION = "This is a demo blitz app"
     DEMO_BLITZ_APP_NAME = "Demo Blitz App"
 
-    def __init__(self, name: str, description: str, file_format: str, demo: bool = False) -> None:
+    def __init__(
+        self,
+        name: str,
+        description: str | None,
+        file_format: str,
+        blitz_file: BlitzFile | None = None,
+        demo: bool = False,
+    ) -> None:
         self.name = name
-        self.description = description
+        self.description = description or ""
         self.file_format = file_format
         self.path = Path(self.name.lower().replace(" ", "-"))
         self.demo = demo
 
-        self.blitz_file: BlitzFile | None = None
+        self.blitz_file = blitz_file
 
     def create_directory_or_exit(self) -> None:
         if not self.blitz_file:
@@ -107,16 +118,17 @@ class BlitzProjectCreator:
             blitz_app_file.write(str(blitz_file_path))
 
     def _create_file(self) -> None:
-        self.blitz_file = BlitzFile(
-            path=self.path / f"blitz.{self.file_format}",
-            config=BlitzAppConfig(
-                name=self.name,
-                description=self.description,
-                version=self.DEFAULT_VERSION,
-            ),
-            resources_configs=get_blitz_demo_resources() if self.demo else [],
-            raw_file={},
-        )
+        if not self.blitz_file:
+            self.blitz_file = BlitzFile(
+                path=self.path / f"blitz.{self.file_format}",
+                config=BlitzAppConfig(
+                    name=self.name,
+                    description=self.description,
+                    version=self.DEFAULT_VERSION,
+                ),
+                resources_configs=get_blitz_demo_resources() if self.demo else [],
+                raw_file={},
+            )
 
     def _write_blitz_file(self) -> Path:
         if self.blitz_file is None:
@@ -135,7 +147,7 @@ class BlitzProjectCreator:
 
         if self.blitz_file.path is None:
             # TODO: handle error
-            raise Exception
+            raise Exception("toto")
         with open(self.blitz_file.path, "w") as file:
             file.write(blitz_file_data)
         return self.blitz_file.path
@@ -178,7 +190,7 @@ def create_blitz_app(
             default=BlitzProjectCreator.DEFAULT_BLITZ_FILE_FORMAT,
         )
 
-    blitz_creator = BlitzProjectCreator(name, description, file_format, demo)
+    blitz_creator = BlitzProjectCreator(name, description, file_format, demo=demo)
     blitz_creator.create_file_or_exit()
     blitz_creator.create_directory_or_exit()
     blitz_creator.print_success_message()

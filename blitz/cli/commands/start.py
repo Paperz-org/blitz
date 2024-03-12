@@ -1,8 +1,10 @@
 import contextlib
+from json import JSONDecodeError
 import os
 import time
 from pathlib import Path
 from typing import Annotated, Optional
+import requests
 
 import typer
 import uvicorn
@@ -11,14 +13,31 @@ from uvicorn.supervisors import ChangeReload
 
 from blitz import __version__
 from blitz.api import create_blitz_api
+from blitz.app import BlitzApp
 from blitz.cli.errors import (
     BlitzAppNotFoundError,
     BlitzAppVersionNotFoundError,
     MissingBlitzAppNameError,
 )
-from blitz.cli.utils import print_version
+from blitz.cli.utils import print_version, progress
 from blitz.core import BlitzCore
+from blitz.models.blitz.file import BlitzFile
 from blitz.settings import get_settings
+from rich.progress import Progress, SpinnerColumn, TextColumn
+
+
+def create_app_from_url(url: str) -> BlitzApp:
+    with progress("Fetching Blitz app..."):
+        try:
+            blitz_file = BlitzFile.from_url(url)
+        except (requests.HTTPError, JSONDecodeError):
+            print(f"Failed to clone the project from {url}")
+            raise typer.Exit(1)
+    return BlitzApp(
+        name=blitz_file.config.name,
+        path=Path("."),
+        file=blitz_file,
+    )
 
 
 def start_blitz(
@@ -28,7 +47,18 @@ def start_blitz(
     config_route: Annotated[bool, typer.Option(help="Enable the blitz config route.")] = True,
     hot_reload: Annotated[bool, typer.Option(help="Enable the hot reload.")] = True,
     version: Annotated[Optional[str], typer.Option(help="Define the version of the app.")] = None,
+    url: Annotated[Optional[str], typer.Option(help="URL of the project")] = None,
 ) -> None:
+    # TODO REFACTO THIS FUNCTION
+    if url is not None:
+        blitz_app = create_app_from_url(url)
+        with contextlib.suppress(Exception):
+            print_version(__version__)
+            time.sleep(0.3)
+        blitz_api = create_blitz_api(blitz_app, enable_config_route=config_route, admin=admin)
+        uvicorn.run(blitz_api, host="0.0.0.0", port=port, log_config=None, log_level="warning")
+        raise typer.Exit()
+
     blitz = BlitzCore()
 
     if blitz_app_name is None:
