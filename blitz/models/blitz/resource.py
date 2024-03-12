@@ -35,9 +35,9 @@ class BlitzResourceConfig(BaseModel):
                 field_config = {}
                 for field_config_name, field_config_value in raw_field_value.items():
                     if field_config_name.startswith(BlitzField.Settings.FIELD_PREFIX):
-                        settings_fields_config[
-                            field_config_name[len(BlitzField.Settings.FIELD_PREFIX) :]
-                        ] = field_config_value
+                        settings_fields_config[field_config_name[len(BlitzField.Settings.FIELD_PREFIX) :]] = (
+                            field_config_value
+                        )
                     else:
                         field_config[field_config_name] = field_config_value
                 fields[field_name] = BlitzField(

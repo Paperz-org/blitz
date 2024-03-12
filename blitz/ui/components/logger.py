@@ -30,7 +30,6 @@ class LogComponent(BaseComponent[ui.log]):
         self._anonymize_log = self.blitz_ui.read_only
         super().__init__()
 
-
     def render(self) -> None:
         self.ng = ui.log(max_lines=None).classes("w-full h-64 text-sm")
         self._logger.addHandler(self.LogHandler(self.ng, is_anonymised=self._anonymize_log))

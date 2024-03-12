@@ -7,11 +7,9 @@ from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 
 
 class NiceGUIComponent(Protocol):
-    def __enter__(self) -> Any:
-        ...
+    def __enter__(self) -> Any: ...
 
-    def __exit__(self, exc_type: Any, exc_value: Any, traceback: Any) -> None:
-        ...
+    def __exit__(self, exc_type: Any, exc_value: Any, traceback: Any) -> None: ...
 
 
 V = TypeVar("V", bound=Any)
@@ -63,12 +61,10 @@ class BaseComponent(Generic[V], metaclass=BaseComponentMeta):
             self.render(*args, **kwargs)
 
     @overload
-    def render(self) -> None:
-        ...
+    def render(self) -> None: ...
 
     @overload
-    def render(self, *args: Any, **kwargs: Any) -> None:
-        ...
+    def render(self, *args: Any, **kwargs: Any) -> None: ...
 
     def render(self, *args: Any, **kwargs: Any) -> None:
         raise NotImplementedError
