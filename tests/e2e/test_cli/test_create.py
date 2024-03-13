@@ -34,5 +34,5 @@ def test_already_existing_blitz_app(cli: Cli, file_format: str) -> None:
 def test_create_demo_blitz_app(cli: Cli) -> None:
     t = cli.create(demo=True)
     blitz_app_path = cli.working_path / "demo-blitz-app"
-    check_blitz_app_structure(blitz_app_path, "json")
+    check_blitz_app_structure(blitz_app_path, "yaml")
     assert t.exit_code == OK_EXIT_CODE

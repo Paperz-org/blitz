@@ -1,5 +1,6 @@
 from typing import Any, ClassVar, NoReturn
 from pydantic import BaseModel, Field, field_serializer
+import requests
 from blitz.models.blitz.config import BlitzAppConfig
 from blitz.models.blitz.resource import BlitzResourceConfig
 from pathlib import Path
@@ -93,3 +94,16 @@ class BlitzFile(BaseModel):
             path=path,
             file_type=file_type,
         )
+
+    @classmethod
+    def from_url(cls, url: str, name: str | None = None, format: str = "yaml") -> "BlitzFile":
+        response = requests.get(url)
+        try:
+            response.raise_for_status()
+            project_data = response.json()
+            blitz_file = cls.from_dict(project_data, file_type=cls.FileType(format))
+        except Exception as err:
+            raise err
+        name = name or blitz_file.config.name
+        blitz_file.path = Path(name.lower().replace(" ", "-")) / f"blitz.{format}"
+        return blitz_file

@@ -1,4 +1,8 @@
+from typing import Any, Generator
 from rich import print
+from contextlib import contextmanager
+from rich.progress import Progress, SpinnerColumn, TextColumn
+
 
 ZERO = [
     " ██████╗ ",
@@ -127,3 +131,14 @@ def print_version(version: str) -> None:
 
     for line in zip(BLITZ, SPACE, major_list, POINT, minor_list, POINT, patch_list):
         print(f"[bold medium_purple1]{''.join(line)}[/bold medium_purple1]")
+
+
+@contextmanager
+def progress(description: str) -> Generator[Any, Any, Any]:
+    with Progress(
+        SpinnerColumn(spinner_name="dots"),
+        TextColumn("[progress.description]{task.description}"),
+        transient=True,
+    ) as progress:
+        progress.add_task(description=description, total=None)
+        yield
