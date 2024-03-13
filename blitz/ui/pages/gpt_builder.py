@@ -101,6 +101,7 @@ class GPTClient:
         if self.client is None:
             # TODO: handle this error
             raise Exception
+
         return cast(
             AsyncStream[ChatCompletion],
             await self.client.chat.completions.create(
@@ -116,6 +117,10 @@ class GPTClient:
             raise Exception
         return await self.client.models.list()
 
+    @property
+    def has_api_key(self) -> bool:
+        return bool(self._api_key)
+
 
 @lru_cache
 def get_gpt_client() -> GPTClient:
@@ -128,6 +133,10 @@ class AskGPTPage(BasePage):
 
     def setup(self, gpt_client: GPTClient = get_gpt_client()) -> None:
         self.gpt_client = gpt_client
+
+        if user_api_key := app.storage.user.get("gpt_api_key"):
+            self.gpt_client.refresh_client(api_key=user_api_key)
+
         self.gpt_client.pre_prompt = self.blitz_ui.preprompt
         self._gpt_client_error = False
         self.gpt_request: str = ""
@@ -173,8 +182,11 @@ class AskGPTPage(BasePage):
 
         # Allow the usage of cmd + enter to send the request
         ui.keyboard(on_key=self.handle_key, ignore=[])
-
         self.settings_dialog = ChatSettings(self.gpt_client)
+
+        if not self.gpt_client.has_api_key:
+            notify.error("You need to set your OpenAI API Key")
+
         # See https://github.com/zauberzeug/nicegui/issues/2174
         self.settings_dialog.render()  # type: ignore
         self.delete_conversation()
@@ -269,6 +281,9 @@ class AskGPTPage(BasePage):
             await self.ask_button_trigger()
 
     async def ask_button_trigger(self) -> None:
+        if not self.gpt_client.has_api_key:
+            notify.error("You need to set your OpenAI API Key")
+            return
         self.set_thinking(not self.thinking)
         if self.thinking:
             self.gpt_messages.append(UserQuestion(self.gpt_request))
@@ -441,6 +456,7 @@ class ChatSettings:
         self.gpt_client.model = self.model_select.value
         self.blitz_ui.preprompt = self.preprompt.value
         self.gpt_client.refresh_client(api_key=self.api_key_input.value)
+        app.storage.user["gpt_api_key"] = self.api_key_input.value
         notify.success("Settings saved")
         self.dialog.close()
 
