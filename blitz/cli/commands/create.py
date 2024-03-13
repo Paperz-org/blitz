@@ -143,7 +143,7 @@ class BlitzProjectCreator:
 
         if self.blitz_file.path is None:
             # TODO: handle error
-            raise Exception("toto")
+            raise Exception
         with open(self.blitz_file.path, "w") as file:
             file.write(blitz_file_data)
         return self.blitz_file.path
