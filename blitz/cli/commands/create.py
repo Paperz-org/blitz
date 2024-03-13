@@ -58,10 +58,6 @@ def get_blitz_demo_resources() -> list[BlitzResourceConfig]:
     ]
 
 
-class BlitzCreator:
-    pass
-
-
 class BlitzProjectCreator:
     DEFAULT_VERSION = "0.1.0"
     DEFAULT_BLITZ_APP_NAME = "Random Blitz App"
