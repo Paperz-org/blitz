@@ -22,6 +22,11 @@ def _get_data_from_yaml(file: Path) -> dict[str, dict[str, Any]]:
 def _no_parser_for_suffix(file: Path) -> NoReturn:
     raise ValueError(f"No parser for {file}")
 
+class InvalidFileTypeError(Exception):
+    def __init__(self, file_type: str) -> None:
+        self.file_type = file_type
+        super().__init__(f"Invalid file type: {file_type}")
+
 
 class BlitzFile(BaseModel):
     """
@@ -97,11 +102,16 @@ class BlitzFile(BaseModel):
 
     @classmethod
     def from_url(cls, url: str, name: str | None = None, format: str = "yaml") -> "BlitzFile":
+        try:
+            file_type = cls.FileType(format)
+        except ValueError:
+            raise InvalidFileTypeError(format) 
         response = requests.get(url)
         try:
             response.raise_for_status()
             project_data = response.json()
-            blitz_file = cls.from_dict(project_data, file_type=cls.FileType(format))
+            
+            blitz_file = cls.from_dict(project_data, file_type=file_type)
         except Exception as err:
             raise err
         name = name or blitz_file.config.name

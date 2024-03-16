@@ -5,7 +5,7 @@ import requests
 import typer
 from blitz.cli.commands.create import BlitzProjectCreator
 from blitz.cli.utils import progress
-from blitz.models.blitz.file import BlitzFile
+from blitz.models.blitz.file import BlitzFile, InvalidFileTypeError
 
 
 def clone_project(
@@ -25,6 +25,9 @@ def clone_project(
             blitz_file = BlitzFile.from_url(url, name, format=format)
         except (requests.HTTPError, JSONDecodeError):
             print(f"Failed to clone the project from {url}")
+            raise typer.Exit(1)
+        except InvalidFileTypeError as err:
+            print(err)
             raise typer.Exit(1)
 
     name = name or blitz_file.config.name

@@ -97,6 +97,7 @@ nav:
           - Start: cli/start.md
           - List: cli/list.md
           - Release: cli/release.md
+          - Clone: cli/clone.md
       - References: cli/references.md
   - API:
       - Blitz API: api/index.md
@@ -105,6 +106,7 @@ nav:
       - Admin: dashboard/admin.md
       - Swagger: dashboard/swagger.md
       - Blitz File Editor: dashboard/blitz_file.md
+      - GPT Builder: dashboard/gpt_builder.md
       - Diagram: dashboard/diagram.md
       - Logs: dashboard/logs.md
-      - GPT Builder: dashboard/gpt_builder.md
+
