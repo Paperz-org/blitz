@@ -14,6 +14,6 @@ Get a swagger UI for all you routes with automatic documentation.
 
 Internally manages database schema and generates data migration to keep your database up to date with your Blitz file.
 
-## Dashboard
+## Dashboard & Admin
 
 Use the intuitive dashboard to build your Blitz app, manage your data and test your API.

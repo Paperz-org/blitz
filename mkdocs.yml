@@ -85,7 +85,6 @@ nav:
       - Welcome to Blitz: index.md
       - Features: features.md
       - Installation: installation.md
-      - Quickstart: quickstart.md
   - Blitz file:
       - Overview: blitzfile/index.md
       - Config: blitzfile/config.md
@@ -93,14 +92,21 @@ nav:
       - Relationships: blitzfile/relationships.md
       - Blitz file reference: blitzfile/reference.md
   - CLI:
-      - Installation: cli/index.md
       - Commands:
           - Create: cli/create.md
           - Start: cli/start.md
           - List: cli/list.md
           - Release: cli/release.md
+          - Clone: cli/clone.md
       - References: cli/references.md
   - API:
       - Blitz API: api/index.md
   - Dashboard:
-      - Dashboard: dashboard.md
+      - Overview: dashboard/index.md
+      - Admin: dashboard/admin.md
+      - Swagger: dashboard/swagger.md
+      - Blitz File Editor: dashboard/blitz_file.md
+      - GPT Builder: dashboard/gpt_builder.md
+      - Diagram: dashboard/diagram.md
+      - Logs: dashboard/logs.md
+
