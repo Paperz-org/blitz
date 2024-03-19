@@ -6,7 +6,7 @@ from nicegui import ui, app
 from nicegui.events import KeyEventArguments
 from openai import APIConnectionError, AsyncOpenAI, AsyncStream, AuthenticationError
 
-from blitz.settings import get_settings
+from blitz.settings import Settings, get_settings
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 from blitz.ui.components import notify
 from blitz.ui.components.buttons.flat import FlatButton
@@ -334,14 +334,13 @@ class AskGPTPage(BasePage):
 
 class ChatSettings:
     def __init__(
-        self,
-        gpt_client: GPTClient,
-        blitz_ui: BlitzUI = get_blitz_ui(),
+        self, gpt_client: GPTClient, blitz_ui: BlitzUI = get_blitz_ui(), settings: Settings = get_settings()
     ) -> None:
         self.gpt_client = gpt_client
         self.dialog = ui.dialog().props("maximized transition-show=slide-up transition-hide=slide-down")
         self.blitz_ui = blitz_ui
         self.quit_dialog = ui.dialog(value=False)
+        self.read_only = settings.BLITZ_READ_ONLY
 
     @ui.refreshable
     def render(self) -> None:
@@ -401,6 +400,8 @@ class ChatSettings:
         with WFullItemsCenterRow():
             OutlineButton("Reset Pre-Prompt", on_click=self.reset_preprompt)
             switch = ui.switch("Edit Pre-Prompt", value=False)
+        if self.read_only:
+            switch.disable()
         self.preprompt = (
             ui.textarea(label="Pre-Prompt", value=self.blitz_ui.preprompt)
             .classes("w-full rounded-lg px-2 border-solid border")
