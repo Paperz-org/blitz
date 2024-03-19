@@ -10,6 +10,8 @@ from blitz.ui.pages import (
     SwaggerPage,
 )
 from pathlib import Path
+from blitz.ui.pages.new_model import NewModelPage
+from blitz.ui.pages.resources import ResourcePage
 from blitz.ui.router import BlitzRouter
 from nicegui import ui
 
@@ -27,6 +29,8 @@ def init_routers() -> None:
     project_router.add_page("blitz-file", BlitzFilePage)
     project_router.add_page("diagram", MermaidPage)
     project_router.add_page("", DashboardPage)
+    project_router.add_page("new", NewModelPage)
+    project_router.add_page("resources", ResourcePage)
 
 
 # @ui.page("/projects")

@@ -19,7 +19,6 @@ class BasePage:
 
         self.setup()
         super().__init__()
-        # self.frame()
         self.render()
 
     def __new__(cls, *args: Any, **kwargs: Any) -> Self:

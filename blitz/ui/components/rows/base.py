@@ -35,6 +35,8 @@ class WFullItemsCenterRow(WFullRow, ItemsCenterRow):
 class WFullContentCenterRow(WFullRow, ContentCenterRow):
     """Row with w-full and content-center classes."""
 
+class WFullSpaceBetweenRow(WFullRow, JustifyBetweenRow, ItemsCenterRow):
+    """Row with w-full and space-between classes."""
 
 class ItemsCenterContentCenterRow(ItemsCenterRow, ContentCenterRow):
     """Row with items-center and content-center classes."""

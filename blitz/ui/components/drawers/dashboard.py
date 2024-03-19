@@ -15,3 +15,4 @@ class DashboardDrawer(BaseLeftDrawer.variant(classes="px-0 bg-[#14151a]", props=
             MenuLink("Blitz File", f"/projects/{self.current_project}/blitz-file", "article")
             MenuLink("Diagram", f"/projects/{self.current_project}/diagram", "account_tree")
             MenuLink("Logs", f"/projects/{self.current_project}/logs", "list")
+            MenuLink("Resources", f"/projects/{self.current_project}/resources", "topic")
