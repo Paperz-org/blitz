@@ -6,7 +6,7 @@ from nicegui import ui, app
 from nicegui.events import KeyEventArguments
 from openai import APIConnectionError, AsyncOpenAI, AsyncStream, AuthenticationError
 
-from blitz.settings import get_settings
+from blitz.settings import Settings, get_settings
 from blitz.ui.blitz_ui import BlitzUI, get_blitz_ui
 from blitz.ui.components import notify
 from blitz.ui.components.buttons.flat import FlatButton
@@ -101,6 +101,7 @@ class GPTClient:
         if self.client is None:
             # TODO: handle this error
             raise Exception
+
         return cast(
             AsyncStream[ChatCompletion],
             await self.client.chat.completions.create(
@@ -116,6 +117,10 @@ class GPTClient:
             raise Exception
         return await self.client.models.list()
 
+    @property
+    def has_api_key(self) -> bool:
+        return bool(self._api_key)
+
 
 @lru_cache
 def get_gpt_client() -> GPTClient:
@@ -128,6 +133,10 @@ class AskGPTPage(BasePage):
 
     def setup(self, gpt_client: GPTClient = get_gpt_client()) -> None:
         self.gpt_client = gpt_client
+
+        if user_api_key := app.storage.user.get("gpt_api_key"):
+            self.gpt_client.refresh_client(api_key=user_api_key)
+
         self.gpt_client.pre_prompt = self.blitz_ui.preprompt
         self._gpt_client_error = False
         self.gpt_request: str = ""
@@ -173,8 +182,11 @@ class AskGPTPage(BasePage):
 
         # Allow the usage of cmd + enter to send the request
         ui.keyboard(on_key=self.handle_key, ignore=[])
-
         self.settings_dialog = ChatSettings(self.gpt_client)
+
+        if not self.gpt_client.has_api_key:
+            notify.error("You need to set your OpenAI API Key")
+
         # See https://github.com/zauberzeug/nicegui/issues/2174
         self.settings_dialog.render()  # type: ignore
         self.delete_conversation()
@@ -269,6 +281,9 @@ class AskGPTPage(BasePage):
             await self.ask_button_trigger()
 
     async def ask_button_trigger(self) -> None:
+        if not self.gpt_client.has_api_key:
+            notify.error("You need to set your OpenAI API Key")
+            return
         self.set_thinking(not self.thinking)
         if self.thinking:
             self.gpt_messages.append(UserQuestion(self.gpt_request))
@@ -319,14 +334,13 @@ class AskGPTPage(BasePage):
 
 class ChatSettings:
     def __init__(
-        self,
-        gpt_client: GPTClient,
-        blitz_ui: BlitzUI = get_blitz_ui(),
+        self, gpt_client: GPTClient, blitz_ui: BlitzUI = get_blitz_ui(), settings: Settings = get_settings()
     ) -> None:
         self.gpt_client = gpt_client
         self.dialog = ui.dialog().props("maximized transition-show=slide-up transition-hide=slide-down")
         self.blitz_ui = blitz_ui
         self.quit_dialog = ui.dialog(value=False)
+        self.read_only = settings.BLITZ_READ_ONLY
 
     @ui.refreshable
     def render(self) -> None:
@@ -386,6 +400,8 @@ class ChatSettings:
         with WFullItemsCenterRow():
             OutlineButton("Reset Pre-Prompt", on_click=self.reset_preprompt)
             switch = ui.switch("Edit Pre-Prompt", value=False)
+        if self.read_only:
+            switch.disable()
         self.preprompt = (
             ui.textarea(label="Pre-Prompt", value=self.blitz_ui.preprompt)
             .classes("w-full rounded-lg px-2 border-solid border")
@@ -441,6 +457,7 @@ class ChatSettings:
         self.gpt_client.model = self.model_select.value
         self.blitz_ui.preprompt = self.preprompt.value
         self.gpt_client.refresh_client(api_key=self.api_key_input.value)
+        app.storage.user["gpt_api_key"] = self.api_key_input.value
         notify.success("Settings saved")
         self.dialog.close()
 

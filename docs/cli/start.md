@@ -1,4 +1,4 @@
-The `blitz start` command is used to start an existing blitz app. It will start the blitz API, the blitz admin and the blitz UI.
+The `blitz start` command is used to start an existing Blitz App. It will start the Blitz API, the blitz admin and the blitz UI.
 
 <!-- termynal -->
 
@@ -24,3 +24,15 @@ $ blitz start your-blitz-app
 
 !!! note
     Use `blitz create --help` to see all available options.
+
+## --url
+
+With the `--url` option, you can start a Blitz App directly from a remote server Blitz File exposed on the `/blitz-file` route.
+
+You can try it with the demo:
+```console
+blitz start --url https://demo.blitz.paperz.app/blitz-file
+```
+
+!!! tips
+    You can clone the project locally with the [clone command](/blitz/cli/clone/)

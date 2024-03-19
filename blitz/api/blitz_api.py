@@ -71,14 +71,14 @@ class BlitzAPI(FastAPI):
         )
 
     def _create_blitz_config_router(self) -> APIRouter:
-        path = "/blitz-config"
+        path = "/blitz-file"
         router = APIRouter()
         router.add_api_route(
             path=path,
             endpoint=lambda: self.blitz_app.file.model_dump(by_alias=True),
             methods=["GET"],
-            summary="Get Blitz Config",
-            description="Returns the Blitz Config for all resources",
+            summary="Get the current Blitz file",
+            description="Returns the current Blitz File.",
         )
         return router
 
