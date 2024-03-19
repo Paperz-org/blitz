@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     BLITZ_DB_TYPE: DBTypes = DBTypes.SQLITE
     BLITZ_OPENAI_API_KEY: str = ""
     BLITZ_READ_ONLY: bool = False
+    BLITZ_BASE_URL: str = "http://0.0.0.0:8100"
 
 
 @lru_cache()

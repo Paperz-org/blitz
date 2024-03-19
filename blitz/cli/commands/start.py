@@ -104,6 +104,8 @@ def start_blitz(
             reload_excludes=["*_migration.py", "migrations/*.py"],
             log_config=None,
             log_level="info",
+            proxy_headers=True,
+            forwarded_allow_ips="*",
         )
         server = uvicorn.Server(server_config)
         ChangeReload(server_config, target=server.run, sockets=[server_config.bind_socket()]).run()
