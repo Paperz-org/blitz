@@ -1,8 +1,8 @@
 # API
 
-The Blitz API contains all the exposed CRUD operations defined on the [Blitz File](/blitz/blitzfile/), but also the `/blitz-file` which is, as its name suggests, the Json representation of the running Blitz File.
+The Blitz API contains all the exposed CRUD operations defined on the [Blitz File](/blitzfile), but also the `/blitz-file` which is, as its name suggests, the Json representation of the running Blitz File.
 
-This feature is used for the [clone command](/blitz/cli/clone/) and the [--url option of the start command](/blitz/cli/start).
+This feature is used for the [clone command](/cli/clone/) and the [--url option of the start command](/cli/start).
 
 This feature can be disabled with the `--no-config-route` option of the start command.
 
@@ -140,4 +140,4 @@ For exemple, this is the return of the demo `/blitz-file`:
 
 !!! tip "Want to master the syntax of Blitz?"
 
-    You can **[learn here](/blitz/blitzfile/)** how the Blitz File work.
+    You can **[learn here](/blitzfile)** how the Blitz File work.
