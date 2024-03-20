@@ -35,4 +35,4 @@ blitz start --url https://demo.blitz.paperz.app/blitz-file
 ```
 
 !!! tips
-    You can clone the project locally with the [clone command](/blitz/cli/clone/)
+    You can clone the project locally with the [clone command](/cli/clone/)
