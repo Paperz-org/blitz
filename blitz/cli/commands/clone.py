@@ -16,7 +16,7 @@ def clone_project(
 ) -> None:
     parsed_url = urlparse(url)
 
-    if force is False and not parsed_url.path.endswith("blitz-config"):
+    if force is False and not parsed_url.path.endswith("blitz-file"):
         print(f"Invalid URL: {url}")
         raise typer.Exit(1)
 

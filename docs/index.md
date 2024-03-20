@@ -133,7 +133,7 @@ To start your app, you can use:
 
 !!! tip "Want to master Blitz?"
 
-    You can **[learn here](/blitz/blitzfile/)** how to create resources.
+    You can **[learn here](/blitzfile)** how to create resources.
     
 Just add some resources in the blitz file, and you now have a fully functional API and the corresponding database schema, along with all the modern features you can expect from a modern app like:
 
