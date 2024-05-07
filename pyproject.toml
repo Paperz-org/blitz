@@ -36,6 +36,7 @@ semver = "^3.0.2"
 loguru = "^0.7.2"
 httpx = "^0.26.0"
 types-requests = "^2.31.0.20240311"
+psycopg2 = "^2.9.9"
 
 [tool.poetry.group.doc.dependencies]
 mkdocs = "^1.5.3"
@@ -58,10 +59,12 @@ line-length = 120
 indent-width = 4
 
 [tool.mypy]
+files = ["blitz", "tests"]
 plugins = [
   "pydantic.mypy"
 ]
 strict = true
+
 
 [tool.pytest.ini_options]
 filterwarnings = [

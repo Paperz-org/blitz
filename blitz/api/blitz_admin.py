@@ -9,7 +9,7 @@ from starlette_admin import CustomView
 from starlette_admin.contrib.sqla import Admin, ModelView
 from starlette_admin.views import Link
 
-from blitz.db.db import get_sqlite_engine
+from blitz.db.session import get_engine
 from blitz.settings import Settings, get_settings
 
 if TYPE_CHECKING:
@@ -38,7 +38,7 @@ class BlitzAdmin:
         self.admin = Admin(
             title=f"Blitz Admin - {blitz_app.name}",
             # FIXME find a better way to get the engine
-            engine=get_sqlite_engine(blitz_app, in_memory=blitz_app._in_memory, file_name="app.db"),
+            engine=get_engine(blitz_app, settings.BLITZ_DB_TYPE),
             base_url="/admin/",
             templates_dir=self.TEMPLATES_DIR_PATH,
             index_view=HomeView(blitz_app, "Home"),
