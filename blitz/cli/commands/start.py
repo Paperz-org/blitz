@@ -1,11 +1,11 @@
 import contextlib
-from json import JSONDecodeError
 import os
 import time
+from json import JSONDecodeError
 from pathlib import Path
 from typing import Annotated, Optional
-import requests
 
+import requests
 import typer
 import uvicorn
 from semver import Version
